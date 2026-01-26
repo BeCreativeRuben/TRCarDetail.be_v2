@@ -69,7 +69,7 @@ export default function BookingForm() {
       year: '',
       size: 'standard'
     },
-    preferredDate: null,
+    preferredDate: undefined,
     preferredTime: '',
     customerName: '',
     email: '',
@@ -109,7 +109,7 @@ export default function BookingForm() {
             year: '',
             size: 'standard'
           },
-          preferredDate: null,
+          preferredDate: undefined,
           preferredTime: '',
           customerName: '',
           email: '',

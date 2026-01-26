@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 interface BookingCalendarProps {
-  selectedDate: string | null
+  selectedDate: string | null | undefined
   onDateSelect: (date: string) => void
 }
 

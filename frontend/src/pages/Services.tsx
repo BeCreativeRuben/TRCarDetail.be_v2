@@ -4,7 +4,7 @@ import { Service } from '../types'
 import PricingCard from '../components/sections/PricingCard'
 import Button from '../components/ui/Button'
 import { motion } from 'framer-motion'
-import { FiCar, FiHome, FiShield } from 'react-icons/fi'
+import { FiHome, FiShield } from 'react-icons/fi'
 
 type ServiceCategory = 'interieur' | 'exterieur' | 'full'
 
@@ -163,7 +163,7 @@ export default function Services() {
               }
             `}
           >
-            <FiCar />
+            <FiHome />
             Exterieur
           </button>
           <button
