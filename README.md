@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Frontend runs on http://localhost:3000
+Frontend runs on http://localhost:3001 (or next available port)
 
 ### Backend
 
