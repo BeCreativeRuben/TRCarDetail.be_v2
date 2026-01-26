@@ -1,0 +1,77 @@
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Service } from '../../types'
+import Card from '../ui/Card'
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
+
+interface PricingCardProps {
+  service: Service
+  index: number
+}
+
+export default function PricingCard({ service, index }: PricingCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      <Card className={`overflow-hidden ${service.popular ? 'ring-2 ring-accent-red' : ''}`}>
+        {service.popular && (
+          <div className="bg-accent-red text-white text-center py-2 text-sm font-semibold mb-4 -mx-6 -mt-6">
+            Meest Populair
+          </div>
+        )}
+        
+        <div className="mb-4">
+          <h3 className="text-2xl font-bold text-primary-dark mb-2">{service.name}</h3>
+          {service.basePrice > 0 ? (
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-bold text-accent-red">€{service.basePrice}</span>
+              {service.largeCarSurcharge > 0 && (
+                <span className="text-primary-dark opacity-70">Grote wagen +€{service.largeCarSurcharge}</span>
+              )}
+            </div>
+          ) : (
+            <div>
+              <span className="text-lg text-primary-dark opacity-70">Prijzen op aanvraag</span>
+            </div>
+          )}
+        </div>
+
+        <p className="text-primary-dark opacity-80 mb-4">{service.description}</p>
+
+        <div className="space-y-2 mb-4">
+          {service.features.slice(0, isExpanded ? service.features.length : 4).map((feature, idx) => (
+            <div key={idx} className="flex items-start text-sm text-primary-dark opacity-80">
+              <span className="text-accent-red mr-2 mt-1">✓</span>
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+
+        {service.features.length > 4 && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex items-center text-accent-red hover:text-accent-dark-red transition-colors text-sm font-medium"
+          >
+            {isExpanded ? (
+              <>
+                <span>Minder tonen</span>
+                <FiChevronUp className="ml-1" />
+              </>
+            ) : (
+              <>
+                <span>Meer tonen ({service.features.length - 4} meer)</span>
+                <FiChevronDown className="ml-1" />
+              </>
+            )}
+          </button>
+        )}
+      </Card>
+    </motion.div>
+  )
+}
