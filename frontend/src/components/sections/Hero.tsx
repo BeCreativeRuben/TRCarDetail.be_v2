@@ -1,24 +1,31 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Button from '../ui/Button'
 
 export default function Hero() {
+  const [videoError, setVideoError] = useState(false)
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Video Background */}
+      {/* Video Background with Fallback */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            console.error('Video failed to load:', e)
-          }}
-        >
-          <source src="/videos/hero-video.mp4" type="video/mp4" />
-        </video>
+        {/* Fallback gradient background - always visible as background */}
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-primary-dark via-secondary-dark to-primary-dark" />
+        {/* Video overlay - shows on top if available */}
+        {!videoError && (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => setVideoError(true)}
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+          </video>
+        )}
       </div>
 
       {/* Overlay */}
