@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiArrowRight } from 'react-icons/fi'
 import { Service } from '../../types'
 import ServiceCard from './ServiceCard'
 import Button from '../ui/Button'
@@ -66,8 +67,9 @@ export default function ServicesPreview() {
 
         <div className="text-center">
           <Link to="/services">
-            <Button variant="primary" size="lg">
-              ✨ Bekijk Alle Diensten
+            <Button variant="primary" size="lg" className="flex items-center gap-2 mx-auto">
+              Bekijk Alle Diensten
+              <FiArrowRight className="w-5 h-5" />
             </Button>
           </Link>
         </div>

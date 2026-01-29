@@ -4,7 +4,7 @@ import { Service } from '../types'
 import PricingCard from '../components/sections/PricingCard'
 import Button from '../components/ui/Button'
 import { motion } from 'framer-motion'
-import { FiHome, FiShield } from 'react-icons/fi'
+import { FiCalendar, FiHome, FiShield } from 'react-icons/fi'
 
 type ServiceCategory = 'interieur' | 'exterieur' | 'full'
 
@@ -228,8 +228,9 @@ export default function Services() {
         {/* CTA */}
         <div className="text-center">
           <Link to="/booking">
-            <Button variant="primary" size="lg">
-              🚗 Boek Nu
+            <Button variant="primary" size="lg" className="flex items-center gap-2 mx-auto">
+              <FiCalendar className="w-5 h-5" />
+              Boek Nu
             </Button>
           </Link>
         </div>

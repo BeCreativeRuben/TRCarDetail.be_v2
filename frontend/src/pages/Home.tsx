@@ -1,9 +1,10 @@
 import Hero from '../components/sections/Hero'
 import ServicesPreview from '../components/sections/ServicesPreview'
 import Webshop from '../components/sections/Webshop'
-import YouTubeSection from '../components/sections/YouTubeSection'
+import SocialsSection from '../components/sections/SocialsSection'
 import Testimonials from '../components/sections/Testimonials'
 import { Link } from 'react-router-dom'
+import { FiCalendar, FiMail } from 'react-icons/fi'
 import Button from '../components/ui/Button'
 import { motion } from 'framer-motion'
 
@@ -12,11 +13,57 @@ export default function Home() {
     <>
       <Hero />
       
+      {/* About Section */}
+      <section className="py-16 bg-light">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center lg:text-left"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+                T&R Car Detailing
+              </h2>
+              <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
+                Bij T&R Car Detailing streven we ernaar om elke auto terug te brengen naar showroomkwaliteit. 
+                Met jarenlange ervaring en een passie voor perfectie, bieden we professionele autoreiniging 
+                diensten die uw voertuig de aandacht geven die het verdient. Onze ambitie is om de standaard 
+                te zetten voor kwaliteit en service in de car detailing industrie.
+              </p>
+            </motion.div>
+
+            {/* Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="relative h-80 lg:h-96 bg-secondary-dark rounded-lg flex items-center justify-center overflow-hidden"
+            >
+              <div className="text-center text-light opacity-50">
+                <svg
+                  className="w-32 h-32 mx-auto mb-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm">Foto placeholder</p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      
       <ServicesPreview />
 
       <Webshop />
 
-      <YouTubeSection />
+      <SocialsSection />
 
       <Testimonials />
 
@@ -37,12 +84,14 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/booking">
-                <Button variant="secondary" size="lg">
-                  🚗 Boek Nu
+                <Button variant="secondary" size="lg" className="flex items-center gap-2">
+                  <FiCalendar className="w-5 h-5" />
+                  Boek Nu
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white hover:text-accent-red">
+                <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white hover:text-accent-red flex items-center gap-2">
+                  <FiMail className="w-5 h-5" />
                   Contact
                 </Button>
               </Link>

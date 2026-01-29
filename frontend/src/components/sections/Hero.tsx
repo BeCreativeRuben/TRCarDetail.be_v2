@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { FiCalendar, FiList } from 'react-icons/fi'
 import Button from '../ui/Button'
 
 export default function Hero() {
@@ -47,13 +48,15 @@ export default function Hero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/booking">
-            <Button variant="primary" size="lg">
-              🚗 Boek Nu
+            <Button variant="primary" size="lg" className="flex items-center gap-2">
+              <FiCalendar className="w-5 h-5" />
+              Boek Nu
             </Button>
           </Link>
           <Link to="/services">
-            <Button variant="outline" size="lg">
-              ✨ Onze Diensten
+            <Button variant="outline" size="lg" className="flex items-center gap-2">
+              <FiList className="w-5 h-5" />
+              Onze Diensten
             </Button>
           </Link>
         </div>
