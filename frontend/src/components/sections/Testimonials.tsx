@@ -60,7 +60,7 @@ export default function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12"
+          className="mb-12 text-center"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">
             Wat Onze Klanten Zeggen

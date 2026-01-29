@@ -77,7 +77,7 @@ export default function Contact() {
                   <FiPhone className="text-accent-red mt-1 flex-shrink-0" size={20} />
                   <div>
                     <p className="text-primary-dark font-semibold">Telefoon</p>
-                    <a href="tel:+32499128500" className="text-primary-dark opacity-70 text-sm hover:text-accent-red transition-colors">04 99 12 85 00</a>
+                    <a href="tel:+32499128500" className="text-primary-dark opacity-70 text-sm hover:text-accent-red transition-colors">+32 499 12 85 00</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

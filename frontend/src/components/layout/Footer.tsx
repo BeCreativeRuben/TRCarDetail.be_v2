@@ -52,7 +52,7 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <FiPhone className="text-accent-red flex-shrink-0" />
                 <a href="tel:+32499128500" className="hover:text-accent-red transition-colors">
-                  04 99 12 85 00
+                  +32 499 12 85 00
                 </a>
               </li>
               <li className="flex items-center gap-2">

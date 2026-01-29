@@ -172,7 +172,7 @@ export default function BookingForm() {
       </div>
 
       {/* Date Selection */}
-      <div ref={calendarRef} className="flex flex-col justify-center min-h-[70vh]">
+      <div ref={calendarRef} className="flex flex-col justify-center min-h-[50vh] md:min-h-0 md:py-4">
         <label className="block text-sm font-medium text-primary-dark mb-3 text-center">
           Selecteer Datum *
         </label>
