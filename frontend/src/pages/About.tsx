@@ -113,7 +113,7 @@ export default function About() {
             Je kan hier terecht voor vrijblijvend advies en de aankoop van car detailing producten.
           </p>
           <p className="text-light opacity-80 mb-6">
-            Adres wordt later toegevoegd
+            Heidebloemstraat 66 Bus 11, 9100 Sint Niklaas
           </p>
           <Link to="/contact">
             <Button variant="primary" size="md">

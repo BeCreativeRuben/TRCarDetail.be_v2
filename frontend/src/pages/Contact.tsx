@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
-import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
+import { FiMail, FiPhone, FiMapPin, FiCalendar } from 'react-icons/fi'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -60,8 +61,52 @@ export default function Contact() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Contact Info */}
+          <div className="space-y-6 lg:order-1">
+            <Card>
+              <h3 className="text-xl font-bold text-primary-dark mb-4">Contactgegevens</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <FiMapPin className="text-accent-red mt-1 flex-shrink-0" size={20} />
+                  <div>
+                    <p className="text-primary-dark font-semibold">Adres</p>
+                    <p className="text-primary-dark opacity-70 text-sm">Heidebloemstraat 66 Bus 11<br />9100 Sint Niklaas</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <FiPhone className="text-accent-red mt-1 flex-shrink-0" size={20} />
+                  <div>
+                    <p className="text-primary-dark font-semibold">Telefoon</p>
+                    <a href="tel:+32499128500" className="text-primary-dark opacity-70 text-sm hover:text-accent-red transition-colors">04 99 12 85 00</a>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <FiMail className="text-accent-red mt-1 flex-shrink-0" size={20} />
+                  <div>
+                    <p className="text-primary-dark font-semibold">Email</p>
+                    <a href="mailto:info@trcardetail.be" className="text-primary-dark opacity-70 text-sm hover:text-accent-red transition-colors">info@trcardetail.be</a>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card>
+              <h3 className="text-xl font-bold text-primary-dark mb-4">Openingstijden</h3>
+              <p className="text-primary-dark opacity-80 text-sm mb-4">
+                Raadpleeg onze kalender voor de actuele beschikbare tijdslots en openingstijden.
+              </p>
+              <Link
+                to="/booking"
+                className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors"
+              >
+                <FiCalendar size={18} />
+                Bekijk kalender
+              </Link>
+            </Card>
+          </div>
+
           {/* Contact Form */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 lg:order-2">
             <Card>
               <h2 className="text-2xl font-bold text-primary-dark mb-6">Stuur ons een bericht</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -113,54 +158,6 @@ export default function Contact() {
                   {isSubmitting ? 'Verzenden...' : 'Verstuur Bericht'}
                 </Button>
               </form>
-            </Card>
-          </div>
-
-          {/* Contact Info */}
-          <div className="space-y-6">
-            <Card>
-              <h3 className="text-xl font-bold text-primary-dark mb-4">Contactgegevens</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <FiMapPin className="text-accent-red mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <p className="text-primary-dark font-semibold">Adres</p>
-                    <p className="text-primary-dark opacity-70 text-sm">Wordt later toegevoegd</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <FiPhone className="text-accent-red mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <p className="text-primary-dark font-semibold">Telefoon</p>
-                    <p className="text-primary-dark opacity-70 text-sm">Wordt later toegevoegd</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <FiMail className="text-accent-red mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <p className="text-primary-dark font-semibold">Email</p>
-                    <p className="text-primary-dark opacity-70 text-sm">Wordt later toegevoegd</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <h3 className="text-xl font-bold text-primary-dark mb-4">Openingstijden</h3>
-              <div className="space-y-2 text-primary-dark text-sm">
-                <div className="flex justify-between">
-                  <span>Maandag - Vrijdag</span>
-                  <span>09:00 - 18:00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Zaterdag</span>
-                  <span>09:00 - 17:00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Zondag</span>
-                  <span>Gesloten</span>
-                </div>
-              </div>
             </Card>
           </div>
         </div>

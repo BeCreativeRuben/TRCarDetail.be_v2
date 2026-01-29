@@ -15,7 +15,8 @@ export const images = {
 
   // Service cards (Interieur, Exterieur, Volledig)
   serviceInterieur: unsplash('1656077885491-3922185f3932', 600),
-  serviceExterieur: unsplash('1656077885832-4c1308418ee2', 600),
+  // Exterieur: car exterior being cleaned (luxury car - clean exterior)
+  serviceExterieur: unsplash('1549317661-b741d42a82f3', 600),
   serviceFull: unsplash('1682858110563-3f609263d418', 600),
 
   // New Car Coating - shiny luxury car

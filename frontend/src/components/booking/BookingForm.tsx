@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react'
+import { useState, useRef, FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import Input from '../ui/Input'
 import Button from '../ui/Button'
@@ -78,6 +78,8 @@ export default function BookingForm() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const calendarRef = useRef<HTMLDivElement>(null)
+  const timeRef = useRef<HTMLDivElement>(null)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -145,7 +147,12 @@ export default function BookingForm() {
             <motion.button
               key={service.id}
               type="button"
-              onClick={() => setFormData({ ...formData, serviceType: service.id })}
+              onClick={() => {
+                setFormData({ ...formData, serviceType: service.id })
+                setTimeout(() => {
+                  calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                }, 100)
+              }}
               className={`
                 p-4 rounded-lg border-2 text-left transition-all
                 ${formData.serviceType === service.id
@@ -165,19 +172,25 @@ export default function BookingForm() {
       </div>
 
       {/* Date Selection */}
-      <div>
-        <label className="block text-sm font-medium text-primary-dark mb-3">
+      <div ref={calendarRef} className="flex flex-col justify-center min-h-[70vh]">
+        <label className="block text-sm font-medium text-primary-dark mb-3 text-center">
           Selecteer Datum *
         </label>
         <BookingCalendar
           selectedDate={formData.preferredDate || null}
-          onDateSelect={(date) => setFormData({ ...formData, preferredDate: date })}
+          onDateSelect={(date) => {
+            setFormData({ ...formData, preferredDate: date })
+            setTimeout(() => {
+              timeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }, 150)
+          }}
         />
       </div>
 
       {/* Time Selection */}
       {formData.preferredDate && (
         <motion.div
+          ref={timeRef}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >

@@ -64,34 +64,36 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
   }
 
   return (
-    <div className="bg-light rounded-lg p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-light rounded-lg p-4 shadow-lg max-w-sm w-full mx-auto">
+      <div className="flex items-center justify-between mb-3">
         <button
+          type="button"
           onClick={previousMonth}
-          className="text-primary-dark hover:text-accent-red transition-colors"
+          className="text-primary-dark hover:text-accent-red transition-colors text-sm p-1"
         >
           ←
         </button>
-        <h3 className="text-xl font-bold text-primary-dark">
+        <h3 className="text-base font-bold text-primary-dark">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </h3>
         <button
+          type="button"
           onClick={nextMonth}
-          className="text-primary-dark hover:text-accent-red transition-colors"
+          className="text-primary-dark hover:text-accent-red transition-colors text-sm p-1"
         >
           →
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 mb-2">
+      <div className="grid grid-cols-7 gap-1 mb-1">
         {['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'].map((day) => (
-          <div key={day} className="text-center text-sm font-semibold text-primary-dark opacity-70">
+          <div key={day} className="text-center text-xs font-semibold text-primary-dark opacity-70">
             {day}
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1">
         {days.map((day, index) => {
           if (day === null) {
             return <div key={index} />
@@ -107,7 +109,7 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
               onClick={() => !past && onDateSelect(dateStr)}
               disabled={past}
               className={`
-                aspect-square rounded-lg text-sm font-medium transition-all
+                aspect-square max-w-[36px] max-h-[36px] w-full rounded text-xs font-medium transition-all
                 ${past
                   ? 'text-primary-dark opacity-30 cursor-not-allowed'
                   : selected
@@ -115,7 +117,7 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
                   : 'text-primary-dark hover:bg-secondary-dark hover:text-accent-red'
                 }
               `}
-              whileHover={!past ? { scale: 1.1 } : {}}
+              whileHover={!past ? { scale: 1.05 } : {}}
               whileTap={!past ? { scale: 0.95 } : {}}
             >
               {day}

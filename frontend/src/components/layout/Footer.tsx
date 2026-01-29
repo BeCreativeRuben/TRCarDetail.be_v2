@@ -45,17 +45,21 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-light mb-4">Contact</h4>
             <ul className="space-y-3 text-sm text-light">
-              <li className="flex items-center gap-2">
-                <FiMapPin className="text-accent-red" />
-                <span>Adres wordt later toegevoegd</span>
+              <li className="flex items-start gap-2">
+                <FiMapPin className="text-accent-red flex-shrink-0 mt-0.5" />
+                <span>Heidebloemstraat 66 Bus 11<br />9100 Sint Niklaas</span>
               </li>
               <li className="flex items-center gap-2">
-                <FiPhone className="text-accent-red" />
-                <span>Telefoon wordt later toegevoegd</span>
+                <FiPhone className="text-accent-red flex-shrink-0" />
+                <a href="tel:+32499128500" className="hover:text-accent-red transition-colors">
+                  04 99 12 85 00
+                </a>
               </li>
               <li className="flex items-center gap-2">
-                <FiMail className="text-accent-red" />
-                <span>Email wordt later toegevoegd</span>
+                <FiMail className="text-accent-red flex-shrink-0" />
+                <a href="mailto:info@trcardetail.be" className="hover:text-accent-red transition-colors">
+                  info@trcardetail.be
+                </a>
               </li>
             </ul>
           </div>
