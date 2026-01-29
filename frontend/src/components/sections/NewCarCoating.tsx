@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Button from '../ui/Button'
+import { images } from '../../utils/images'
 
 export default function NewCarCoating() {
   return (
@@ -32,19 +33,13 @@ export default function NewCarCoating() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative h-96 bg-secondary-dark rounded-lg flex items-center justify-center"
+            className="relative h-96 bg-secondary-dark rounded-lg overflow-hidden"
           >
-            <div className="text-center text-light opacity-50">
-              <svg
-                className="w-32 h-32 mx-auto mb-4"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
-              </svg>
-              <p>Afbeelding placeholder</p>
-            </div>
+            <img
+              src={images.newCarCoating}
+              alt="Keramische coating op nieuwe auto"
+              className="w-full h-full object-cover"
+            />
           </motion.div>
         </div>
       </div>

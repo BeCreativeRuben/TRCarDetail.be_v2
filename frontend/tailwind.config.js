@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         'heading': ['Bebas Neue', 'sans-serif'],
         'body': ['Inter', 'system-ui', 'sans-serif'],
+        'serif': ['Cormorant Garamond', 'Georgia', 'serif'],
       },
     },
   },

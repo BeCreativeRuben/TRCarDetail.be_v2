@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { FiCalendar, FiList } from 'react-icons/fi'
+import { images } from '../utils/images'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 
@@ -30,18 +31,13 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative h-96 bg-secondary-dark rounded-lg flex items-center justify-center"
+            className="relative h-96 bg-secondary-dark rounded-lg overflow-hidden"
           >
-            <div className="text-center text-light opacity-50">
-              <svg
-                className="w-32 h-32 mx-auto mb-4"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-              </svg>
-              <p>Afbeelding placeholder</p>
-            </div>
+            <img
+              src={images.aboutStory}
+              alt="Car detailing workshop"
+              className="w-full h-full object-cover"
+            />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}

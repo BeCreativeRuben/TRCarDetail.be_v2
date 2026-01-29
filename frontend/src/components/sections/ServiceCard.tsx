@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Service } from '../../types'
+import { images } from '../../utils/images'
 
 interface ServiceCardProps {
   service: Service
@@ -18,18 +19,11 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
     >
       <Link to="/services" className="block">
         <div className="relative overflow-hidden rounded-lg bg-secondary-dark aspect-[3/4] cursor-pointer">
-          {/* Image Placeholder */}
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary-dark via-primary-dark to-secondary-dark flex items-center justify-center">
-            <div className="text-center text-light opacity-30">
-              <svg
-                className="w-24 h-24 mx-auto mb-4"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-              </svg>
-            </div>
-          </div>
+          <img
+            src={service.id.startsWith('interieur') ? images.serviceInterieur : service.id.startsWith('exterieur') ? images.serviceExterieur : images.serviceFull}
+            alt={service.name}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
           
           {/* Bottom Section with Title and Description */}
           <div className="absolute bottom-0 left-0 right-0">
