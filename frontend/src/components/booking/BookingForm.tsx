@@ -1,9 +1,11 @@
-import { useState, useRef, FormEvent } from 'react'
+import { useState, useRef, useEffect, FormEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Input from '../ui/Input'
 import Button from '../ui/Button'
 import BookingCalendar from './BookingCalendar'
 import { Service, Booking } from '../../types'
+import { carBrands, getModelsForBrand } from '../../data/cars'
 
 const services: Service[] = [
   {
@@ -60,9 +62,14 @@ const timeSlots = [
   '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'
 ]
 
+const validServiceIds = ['interieur-basic', 'interieur-deepclean', 'exterieur-basic', 'exterieur-premium', 'full-basic', 'full-premium']
+
 export default function BookingForm() {
+  const [searchParams] = useSearchParams()
+  const serviceFromUrl = searchParams.get('service')
+
   const [formData, setFormData] = useState<Partial<Booking>>({
-    serviceType: '',
+    serviceType: validServiceIds.includes(serviceFromUrl || '') ? serviceFromUrl! : '',
     vehicleInfo: {
       make: '',
       model: '',
@@ -80,6 +87,16 @@ export default function BookingForm() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const calendarRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
+
+  // Scroll to calendar when arriving with pre-selected service from Services page
+  useEffect(() => {
+    if (serviceFromUrl && validServiceIds.includes(serviceFromUrl)) {
+      const timer = setTimeout(() => {
+        calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [serviceFromUrl])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -227,10 +244,23 @@ export default function BookingForm() {
             type="text"
             required
             value={formData.vehicleInfo?.make || ''}
-            onChange={(e) => setFormData({
-              ...formData,
-              vehicleInfo: { ...formData.vehicleInfo!, make: e.target.value }
-            })}
+            onChange={(e) => {
+              const make = e.target.value
+              const models = getModelsForBrand(make)
+              const currentModel = formData.vehicleInfo?.model || ''
+              const modelValid = models.includes(currentModel)
+              setFormData({
+                ...formData,
+                vehicleInfo: {
+                  ...formData.vehicleInfo!,
+                  make,
+                  model: modelValid ? currentModel : ''
+                }
+              })
+            }}
+            datalistId="merk-options"
+            datalistOptions={carBrands}
+            placeholder="bv. Volkswagen, BMW, Audi... of vul eigen merk in"
           />
           <Input
             label="Model *"
@@ -241,7 +271,13 @@ export default function BookingForm() {
               ...formData,
               vehicleInfo: { ...formData.vehicleInfo!, model: e.target.value }
             })}
+            datalistId="model-options"
+            datalistOptions={getModelsForBrand(formData.vehicleInfo?.make || '')}
+            placeholder={formData.vehicleInfo?.make ? 'Selecteer model of vul eigen in' : 'Selecteer eerst een merk of vul eigen in'}
           />
+          <p className="text-sm text-primary-dark opacity-60 -mt-2 md:col-span-2">
+            Nieuwe of minder bekende merken? Vul gerust uw eigen merk en model in.
+          </p>
           <Input
             label="Jaar *"
             type="text"

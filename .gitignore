@@ -36,10 +36,11 @@ yarn-error.log*
 *.sqlite
 *.sqlite3
 
-# Video files (large)
+# Video files (large) - hero-video.mp4 is allowed for production
 *.mp4
 frontend/public/videos/*.mp4
 !frontend/public/videos/.gitkeep
+!frontend/public/videos/hero-video.mp4
 
 # Temporary files
 *.tmp

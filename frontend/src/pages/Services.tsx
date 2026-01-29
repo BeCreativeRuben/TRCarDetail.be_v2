@@ -4,7 +4,7 @@ import { Service } from '../types'
 import PricingCard from '../components/sections/PricingCard'
 import Button from '../components/ui/Button'
 import { motion } from 'framer-motion'
-import { FiCalendar, FiHome, FiShield } from 'react-icons/fi'
+import { FiCalendar, FiHome, FiShield, FiCheck } from 'react-icons/fi'
 
 type ServiceCategory = 'interieur' | 'exterieur' | 'full'
 
@@ -105,7 +105,7 @@ const fullServices: Service[] = [
 ]
 
 export default function Services() {
-  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('interieur')
+  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('full')
 
   const getCurrentServices = () => {
     switch (activeCategory) {
@@ -138,8 +138,21 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* Category Tabs */}
+        {/* Category Tabs - Volledig eerst, dan Interieur en Exterieur */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <button
+            onClick={() => setActiveCategory('full')}
+            className={`
+              px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
+              ${activeCategory === 'full'
+                ? 'bg-accent-red text-white'
+                : 'bg-primary-dark text-light hover:bg-secondary-dark'
+              }
+            `}
+          >
+            <FiShield />
+            Volledig Pakket
+          </button>
           <button
             onClick={() => setActiveCategory('interieur')}
             className={`
@@ -166,19 +179,6 @@ export default function Services() {
             <FiHome />
             Exterieur
           </button>
-          <button
-            onClick={() => setActiveCategory('full')}
-            className={`
-              px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
-              ${activeCategory === 'full'
-                ? 'bg-accent-red text-white'
-                : 'bg-primary-dark text-light hover:bg-secondary-dark'
-              }
-            `}
-          >
-            <FiShield />
-            Volledig Pakket
-          </button>
         </div>
 
         {/* Services Grid */}
@@ -187,27 +187,50 @@ export default function Services() {
             <PricingCard key={service.id} service={service} index={index} />
           ))}
         </div>
+      </div>
 
-        {/* Info Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="bg-primary-dark rounded-lg p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-light mb-6">
-            Professionele autoreiniging
-          </h2>
-          <p className="text-light opacity-90 mb-4">
-            Wij maken gebruik van professionele producten en technieken om jouw wagen met de juiste zorg te reinigen. 
-            Iedere wagen wordt gereinigd met een contactloze voorwas, gevolgd door een veilige handwas volgens de 
-            '2-emmer methode'. Dit is een techniek die wordt gebruikt om jouw auto krasvrij en grondig schoon te maken. 
-            Bij deze methode worden twee emmers gebruikt: één voor shampoowater (pH-neutraal) en één voor het spoelen 
-            van onze washandschoen. Dit helpt om te voorkomen dat vuil tijdens het wassen opnieuw op de lak terechtkomt.
-          </p>
-        </motion.div>
+      {/* Info Section - styled like QualitySection */}
+      <section className="py-20 bg-primary-dark">
+        <div className="container-custom">
+          <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-4xl md:text-5xl font-bold text-light mb-4">
+                PROFESSIONELE AUTOREINIGING,
+                <span className="block text-accent-red">KRASVRIJ & GRONDIG</span>
+              </h2>
+              <p className="text-lg text-light opacity-90 mb-6">
+                Wij maken gebruik van professionele producten en technieken om jouw wagen met de juiste zorg te reinigen. 
+                Iedere wagen wordt gereinigd met een contactloze voorwas, gevolgd door een veilige handwas volgens de 
+                '2-emmer methode'.
+              </p>
+              <ul className="space-y-3 mb-6 text-light opacity-90">
+                {[
+                  'Contactloze voorwas voor veilige reiniging',
+                  '2-emmer methode – krasvrij en grondig',
+                  'pH-neutrale shampoos voor optimale bescherming',
+                  'Professionele producten en technieken',
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <FiCheck className="text-accent-red flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link to="/booking">
+                <Button variant="primary" size="md" className="flex items-center gap-2 w-fit">
+                  <FiCalendar className="w-5 h-5" />
+                  Boek Nu
+                </Button>
+              </Link>
+          </motion.div>
+        </div>
+      </section>
 
+      <div className="container-custom py-20">
         {/* Disclaimer */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

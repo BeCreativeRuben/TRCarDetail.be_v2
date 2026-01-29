@@ -4,8 +4,25 @@ import { Link } from 'react-router-dom'
 import { FiCalendar, FiList } from 'react-icons/fi'
 import Button from '../ui/Button'
 
+// Video: custom first, then fallback to hosted stock video (always works on prod)
+const HERO_VIDEO_SOURCES = [
+  import.meta.env.VITE_HERO_VIDEO_URL, // Optional: set in .env for external hosting
+  '/videos/hero-video.mp4', // Your own video - add to frontend/public/videos/
+  'https://assets.mixkit.co/videos/47588/47588-720.mp4' // Fallback: car detailing stock video (Mixkit)
+].filter(Boolean)
+
 export default function Hero() {
   const [videoError, setVideoError] = useState(false)
+  const [sourceIndex, setSourceIndex] = useState(0)
+  const currentSrc = HERO_VIDEO_SOURCES[sourceIndex]
+
+  const handleVideoError = () => {
+    if (sourceIndex < HERO_VIDEO_SOURCES.length - 1) {
+      setSourceIndex((i) => i + 1)
+    } else {
+      setVideoError(true)
+    }
+  }
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -16,15 +33,16 @@ export default function Hero() {
         {/* Video overlay - shows on top if available */}
         {!videoError && (
           <video
+            key={currentSrc}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
             className="absolute inset-0 w-full h-full object-cover"
-            onError={() => setVideoError(true)}
+            onError={handleVideoError}
           >
-            <source src="/videos/hero-video.mp4" type="video/mp4" />
+            <source src={currentSrc} type="video/mp4" />
           </video>
         )}
       </div>

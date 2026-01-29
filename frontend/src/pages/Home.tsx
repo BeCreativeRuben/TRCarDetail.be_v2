@@ -73,7 +73,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Klaar om uw Auto te Laten Detailing?
+              Klaar om uw Auto te Laten Detailen?
             </h2>
             <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
               Neem contact op of boek direct een afspraak
