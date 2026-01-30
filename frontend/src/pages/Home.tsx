@@ -4,9 +4,7 @@ import { images } from '../utils/images'
 import QualitySection from '../components/sections/QualitySection'
 import SocialsSection from '../components/sections/SocialsSection'
 import Testimonials from '../components/sections/Testimonials'
-import { Link } from 'react-router-dom'
-import { FiCalendar, FiMail } from 'react-icons/fi'
-import Button from '../components/ui/Button'
+import CTASection from '../components/sections/CTASection'
 import { motion } from 'framer-motion'
 
 export default function Home() {
@@ -63,38 +61,11 @@ export default function Home() {
 
       <Testimonials />
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-accent-red to-accent-dark-red">
-        <div className="container-custom text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Klaar om uw Auto te Laten Detailen?
-            </h2>
-            <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
-              Neem contact op of boek direct een afspraak
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/booking">
-                <Button variant="secondary" size="lg" className="flex items-center gap-2">
-                  <FiCalendar className="w-5 h-5" />
-                  Boek Nu
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white hover:text-accent-red flex items-center gap-2">
-                  <FiMail className="w-5 h-5" />
-                  Contact
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <CTASection
+        title="Klaar om uw Auto te Laten Detailen?"
+        description="Neem contact op of boek direct een afspraak"
+        secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }}
+      />
     </>
   )
 }

@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import Card from '../components/ui/Card'
-import Button from '../components/ui/Button'
+import CTASection from '../components/sections/CTASection'
 
 interface FAQItem {
   question: string
@@ -49,7 +48,7 @@ export default function FAQ() {
   }
 
   return (
-    <div className="py-20 bg-light min-h-screen">
+    <div className="pt-20 pb-0 bg-light min-h-screen">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -107,24 +106,14 @@ export default function FAQ() {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mt-12"
-        >
-          <p className="text-primary-dark opacity-80 mb-6">
-            Heeft u nog andere vragen? Neem gerust contact met ons op!
-          </p>
-          <Link to="/contact">
-            <Button variant="primary" size="md">
-              Contact Opnemen
-            </Button>
-          </Link>
-        </motion.div>
       </div>
+
+      <CTASection
+        title="Nog Vragen?"
+        description="Heeft u nog andere vragen? Neem gerust contact met ons op!"
+        primaryAction={{ label: 'Contact Opnemen', to: '/contact', icon: 'mail' }}
+        secondaryAction={{ label: 'Boek Nu', to: '/booking', icon: 'calendar' }}
+      />
     </div>
   )
 }

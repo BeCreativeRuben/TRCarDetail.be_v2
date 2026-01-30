@@ -44,7 +44,7 @@ export default function Contact() {
   }
 
   return (
-    <div className="py-20 bg-light min-h-screen">
+    <div className="pt-20 pb-0 bg-light min-h-screen">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

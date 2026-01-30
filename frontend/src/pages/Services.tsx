@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Service } from '../types'
 import PricingCard from '../components/sections/PricingCard'
 import Button from '../components/ui/Button'
+import CTASection from '../components/sections/CTASection'
 import { motion } from 'framer-motion'
 import { FiCalendar, FiHome, FiShield, FiCheck } from 'react-icons/fi'
 
@@ -121,7 +122,7 @@ export default function Services() {
   }
 
   return (
-    <div className="py-20 bg-light min-h-screen">
+    <div className="pt-20 pb-0 bg-light min-h-screen">
       <div className="container-custom">
         {/* Header */}
         <motion.div
@@ -138,8 +139,8 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* Category Tabs - Volledig eerst, dan Interieur en Exterieur */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        {/* Category Tabs - Volledig boven, Interieur en Exterieur eronder op desktop */}
+        <div className="flex flex-col items-center gap-4 mb-12">
           <button
             onClick={() => setActiveCategory('full')}
             className={`
@@ -153,32 +154,34 @@ export default function Services() {
             <FiShield />
             Volledig Pakket
           </button>
-          <button
-            onClick={() => setActiveCategory('interieur')}
-            className={`
-              px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
-              ${activeCategory === 'interieur'
-                ? 'bg-accent-red text-white'
-                : 'bg-primary-dark text-light hover:bg-secondary-dark'
-              }
-            `}
-          >
-            <FiHome />
-            Interieur
-          </button>
-          <button
-            onClick={() => setActiveCategory('exterieur')}
-            className={`
-              px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
-              ${activeCategory === 'exterieur'
-                ? 'bg-accent-red text-white'
-                : 'bg-primary-dark text-light hover:bg-secondary-dark'
-              }
-            `}
-          >
-            <FiHome />
-            Exterieur
-          </button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button
+              onClick={() => setActiveCategory('interieur')}
+              className={`
+                px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
+                ${activeCategory === 'interieur'
+                  ? 'bg-accent-red text-white'
+                  : 'bg-primary-dark text-light hover:bg-secondary-dark'
+                }
+              `}
+            >
+              <FiHome />
+              Interieur
+            </button>
+            <button
+              onClick={() => setActiveCategory('exterieur')}
+              className={`
+                px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2
+                ${activeCategory === 'exterieur'
+                  ? 'bg-accent-red text-white'
+                  : 'bg-primary-dark text-light hover:bg-secondary-dark'
+                }
+              `}
+            >
+              <FiHome />
+              Exterieur
+            </button>
+          </div>
         </div>
 
         {/* Services Grid */}
@@ -187,6 +190,23 @@ export default function Services() {
             <PricingCard key={service.id} service={service} index={index} />
           ))}
         </div>
+
+        {/* Disclaimer */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-accent-dark-red bg-opacity-10 border border-accent-red border-opacity-30 rounded-lg p-6 mb-12"
+        >
+          <h3 className="text-xl font-bold text-accent-red mb-3">DISCLAIMER</h3>
+          <p className="text-primary-dark text-sm opacity-90">
+            Bovenstaande prijzen zijn inclusief 21% BTW, indicatief en kunnen variëren afhankelijk van de grootte, 
+            de staat, vervuiling en complexiteit van de wagen. Oversize wagens zoals busjes en trucks enkel op aanvraag. 
+            Elke wagen op zich is uniek en heeft nood aan een andere aanpak of langere tijdsduur. Voor een exacte prijsopgave 
+            neem je best contact op of bezoek je vrijblijvend onze winkel.
+          </p>
+        </motion.div>
       </div>
 
       {/* Info Section - styled like QualitySection */}
@@ -230,34 +250,11 @@ export default function Services() {
         </div>
       </section>
 
-      <div className="container-custom py-20">
-        {/* Disclaimer */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="bg-accent-dark-red bg-opacity-10 border border-accent-red border-opacity-30 rounded-lg p-6 mb-8"
-        >
-          <h3 className="text-xl font-bold text-accent-red mb-3">DISCLAIMER</h3>
-          <p className="text-primary-dark text-sm opacity-90">
-            Bovenstaande prijzen zijn inclusief 21% BTW, indicatief en kunnen variëren afhankelijk van de grootte, 
-            de staat, vervuiling en complexiteit van de wagen. Oversize wagens zoals busjes en trucks enkel op aanvraag. 
-            Elke wagen op zich is uniek en heeft nood aan een andere aanpak of langere tijdsduur. Voor een exacte prijsopgave 
-            neem je best contact op of bezoek je vrijblijvend onze winkel.
-          </p>
-        </motion.div>
-
-        {/* CTA */}
-        <div className="text-center">
-          <Link to="/booking">
-            <Button variant="primary" size="lg" className="flex items-center gap-2 mx-auto">
-              <FiCalendar className="w-5 h-5" />
-              Boek Nu
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <CTASection
+        title="Klaar om te Boeken?"
+        description="Kies uw pakket en reserveer direct online. We nemen zo spoedig mogelijk contact op om te bevestigen."
+        secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }}
+      />
     </div>
   )
 }

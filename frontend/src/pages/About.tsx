@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { FiCalendar, FiList } from 'react-icons/fi'
 import { images } from '../utils/images'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
+import CTASection from '../components/sections/CTASection'
 
 export default function About() {
   return (
-    <div className="py-20 bg-light min-h-screen">
+    <div className="pt-20 pb-0 bg-light min-h-screen">
       <div className="container-custom">
         {/* Header */}
         <motion.div
@@ -121,32 +121,13 @@ export default function About() {
             </Button>
           </Link>
         </motion.div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-bold text-primary-dark mb-6">Klaar om te Starten?</h2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/booking">
-              <Button variant="primary" size="lg" className="flex items-center gap-2">
-                <FiCalendar className="w-5 h-5" />
-                Boek Nu
-              </Button>
-            </Link>
-            <Link to="/services">
-              <Button variant="outline" size="lg" className="flex items-center gap-2">
-                <FiList className="w-5 h-5" />
-                Bekijk Diensten
-              </Button>
-            </Link>
-          </div>
-        </motion.div>
       </div>
+
+      <CTASection
+        title="Klaar om te Starten?"
+        description="Boek direct een afspraak of ontdek onze diensten."
+        secondaryAction={{ label: 'Bekijk Diensten', to: '/services', icon: 'services' }}
+      />
     </div>
   )
 }
