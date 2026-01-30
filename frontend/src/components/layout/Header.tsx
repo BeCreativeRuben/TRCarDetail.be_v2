@@ -5,7 +5,7 @@ import Button from '../ui/Button'
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-primary-dark border-b border-secondary-dark corner-shape">
+    <header className="sticky top-0 z-50 bg-primary-dark border-b border-secondary-dark">
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center">
