@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { images } from '../utils/images'
 import Card from '../components/ui/Card'
-import Button from '../components/ui/Button'
 import CTASection from '../components/sections/CTASection'
 
 export default function About() {
@@ -97,29 +95,6 @@ export default function About() {
               </motion.div>
             ))}
           </div>
-        </motion.div>
-
-        {/* Location */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="bg-primary-dark rounded-lg p-8 mb-12"
-        >
-          <h2 className="text-3xl font-bold text-light mb-6">Bezoek Ons</h2>
-          <p className="text-light opacity-90 mb-4">
-            Benieuwd wat ons team voor jouw wagen kan betekenen? Bezoek onze winkel en detail studio. 
-            Je kan hier terecht voor vrijblijvend advies en de aankoop van car detailing producten.
-          </p>
-          <p className="text-light opacity-80 mb-6">
-            Heidebloemstraat 66 Bus 11, 9100 Sint Niklaas
-          </p>
-          <Link to="/contact">
-            <Button variant="primary" size="md">
-              Contact Opnemen
-            </Button>
-          </Link>
         </motion.div>
       </div>
 

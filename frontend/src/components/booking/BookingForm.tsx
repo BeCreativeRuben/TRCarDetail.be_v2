@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Input from '../ui/Input'
+import Autocomplete from '../ui/Autocomplete'
 import Button from '../ui/Button'
 import BookingCalendar from './BookingCalendar'
 import { Service, Booking } from '../../types'
@@ -239,13 +240,10 @@ export default function BookingForm() {
       <div>
         <h3 className="text-xl font-bold text-primary-dark mb-4">Voertuig Informatie</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Input
-            label="Merk *"
-            type="text"
-            required
+          <Autocomplete
+            label="Merk"
             value={formData.vehicleInfo?.make || ''}
-            onChange={(e) => {
-              const make = e.target.value
+            onChange={(make) => {
               const models = getModelsForBrand(make)
               const currentModel = formData.vehicleInfo?.model || ''
               const modelValid = models.includes(currentModel)
@@ -258,22 +256,20 @@ export default function BookingForm() {
                 }
               })
             }}
-            datalistId="merk-options"
-            datalistOptions={carBrands}
+            options={carBrands}
             placeholder="bv. Volkswagen, BMW, Audi... of vul eigen merk in"
-          />
-          <Input
-            label="Model *"
-            type="text"
             required
+          />
+          <Autocomplete
+            label="Model"
             value={formData.vehicleInfo?.model || ''}
-            onChange={(e) => setFormData({
+            onChange={(model) => setFormData({
               ...formData,
-              vehicleInfo: { ...formData.vehicleInfo!, model: e.target.value }
+              vehicleInfo: { ...formData.vehicleInfo!, model }
             })}
-            datalistId="model-options"
-            datalistOptions={getModelsForBrand(formData.vehicleInfo?.make || '')}
+            options={getModelsForBrand(formData.vehicleInfo?.make || '')}
             placeholder={formData.vehicleInfo?.make ? 'Selecteer model of vul eigen in' : 'Selecteer eerst een merk of vul eigen in'}
+            required
           />
           <p className="text-sm text-primary-dark opacity-60 -mt-2 md:col-span-2">
             Nieuwe of minder bekende merken? Vul gerust uw eigen merk en model in.
