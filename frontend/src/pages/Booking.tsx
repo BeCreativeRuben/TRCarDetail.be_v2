@@ -3,7 +3,7 @@ import BookingForm from '../components/booking/BookingForm'
 
 export default function Booking() {
   return (
-    <div className="pt-20 pb-0 bg-light min-h-screen">
+    <div className="pt-20 pb-16 md:pb-24 bg-light min-h-screen">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

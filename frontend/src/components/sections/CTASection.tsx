@@ -27,7 +27,7 @@ export default function CTASection({
     : FiList
 
   return (
-    <section className="py-20 bg-gradient-to-r from-accent-red to-accent-dark-red">
+    <section className="pt-24 md:pt-28 pb-20 bg-gradient-to-r from-accent-red to-accent-dark-red">
       <div className="container-custom text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
