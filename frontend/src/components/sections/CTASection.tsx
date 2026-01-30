@@ -48,7 +48,7 @@ export default function CTASection({
               <Button
                 variant="secondary"
                 size="lg"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg"
               >
                 <PrimaryIcon className="w-5 h-5" />
                 {primaryAction.label}
@@ -59,7 +59,7 @@ export default function CTASection({
                 <Button
                   variant="outline"
                   size="lg"
-                  className="bg-transparent border-white text-white hover:bg-white hover:text-accent-red flex items-center gap-2"
+                  className="bg-transparent border-white text-white hover:bg-white/95 hover:text-primary-dark hover:border-white flex items-center gap-2"
                 >
                   <SecondaryIcon className="w-5 h-5" />
                   {secondaryAction.label}

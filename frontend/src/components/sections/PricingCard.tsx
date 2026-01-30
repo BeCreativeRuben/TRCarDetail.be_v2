@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Service } from '../../types'
 import Card from '../ui/Card'
 import Button from '../ui/Button'
-import { FiChevronDown, FiChevronUp, FiCalendar } from 'react-icons/fi'
+import { FiCalendar } from 'react-icons/fi'
 
 interface PricingCardProps {
   service: Service
@@ -12,8 +11,6 @@ interface PricingCardProps {
 }
 
 export default function PricingCard({ service, index }: PricingCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -47,32 +44,13 @@ export default function PricingCard({ service, index }: PricingCardProps) {
         <p className="text-primary-dark opacity-80 mb-4">{service.description}</p>
 
         <div className="space-y-2 mb-4">
-          {service.features.slice(0, isExpanded ? service.features.length : 4).map((feature, idx) => (
+          {service.features.map((feature, idx) => (
             <div key={idx} className="flex items-start text-sm text-primary-dark opacity-80">
               <span className="text-accent-red mr-2 mt-1">✓</span>
               <span>{feature}</span>
             </div>
           ))}
         </div>
-
-        {service.features.length > 4 && (
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center text-accent-red hover:text-accent-dark-red transition-colors text-sm font-medium mb-4"
-          >
-            {isExpanded ? (
-              <>
-                <span>Minder tonen</span>
-                <FiChevronUp className="ml-1" />
-              </>
-            ) : (
-              <>
-                <span>Meer tonen ({service.features.length - 4} meer)</span>
-                <FiChevronDown className="ml-1" />
-              </>
-            )}
-          </button>
-        )}
 
         <Link to={`/booking?service=${service.id}`} className="block mt-auto">
           <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">

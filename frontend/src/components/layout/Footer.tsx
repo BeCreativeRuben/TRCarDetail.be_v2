@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FiFacebook, FiYoutube, FiInstagram, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
+import { FiFacebook, FiInstagram, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 
 export default function Footer() {
   return (
@@ -78,13 +78,6 @@ export default function Footer() {
               <a
                 href="#"
                 className="text-light hover:text-accent-red transition-colors"
-                aria-label="YouTube"
-              >
-                <FiYoutube size={24} />
-              </a>
-              <a
-                href="#"
-                className="text-light hover:text-accent-red transition-colors"
                 aria-label="Instagram"
               >
                 <FiInstagram size={24} />
@@ -92,9 +85,14 @@ export default function Footer() {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="mt-8 pt-8 border-t border-primary-dark text-center text-sm text-light">
-          <p>&copy; {new Date().getFullYear()} T&R Car Detail. Alle rechten voorbehouden.</p>
+      {/* Onderbalk - full-width copyright bar */}
+      <div className="w-full mt-8 pt-6 pb-6 border-t border-primary-dark bg-primary-dark bg-opacity-50">
+        <div className="container-custom">
+          <p className="text-center text-sm text-light opacity-90">
+            &copy; {new Date().getFullYear()} T&R Car Detail. Alle rechten voorbehouden.
+          </p>
         </div>
       </div>
     </footer>
