@@ -65,6 +65,7 @@ export default function Home() {
         title="Klaar om uw Auto te Laten Detailen?"
         description="Neem contact op of boek direct een afspraak"
         secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }}
+        noTopMargin
       />
     </>
   )

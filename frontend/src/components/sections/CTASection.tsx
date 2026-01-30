@@ -12,13 +12,16 @@ interface CTASectionProps {
   primaryAction?: { label: string; to: string; icon?: 'calendar' | 'mail' }
   /** Secondary action - e.g. Contact, Bekijk Diensten, Boek Nu */
   secondaryAction?: { label: string; to: string; icon?: 'contact' | 'services' | 'calendar' }
+  /** Remove top margin (e.g. when preceded by light section on Home) */
+  noTopMargin?: boolean
 }
 
 export default function CTASection({
   title,
   description,
   primaryAction = { label: 'Boek Nu', to: '/booking', icon: 'calendar' },
-  secondaryAction
+  secondaryAction,
+  noTopMargin = false
 }: CTASectionProps) {
   const PrimaryIcon = primaryAction?.icon === 'mail' ? FiMail : FiCalendar
   const SecondaryIcon =
@@ -27,7 +30,7 @@ export default function CTASection({
     : FiList
 
   return (
-    <section className="mt-16 md:mt-20 pt-24 md:pt-28 pb-20 bg-gradient-to-r from-accent-red to-accent-dark-red">
+    <section className={`pt-24 md:pt-28 pb-20 bg-gradient-to-r from-accent-red to-accent-dark-red ${!noTopMargin ? 'mt-16 md:mt-20' : ''}`}>
       <div className="container-custom text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
