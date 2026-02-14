@@ -13,18 +13,27 @@ interface Testimonial {
   service?: string
   date?: string
   image?: string
+  /** Toon een anonieme placeholder-avatar (geen foto, Facebook-stijl) */
+  placeholderAvatar?: boolean
 }
 
 const testimonials: Testimonial[] = [
   { id: '1', name: 'Jan V.', rating: 5, text: 'Uitstekende service. Mijn auto ziet er weer als nieuw uit – professioneel en met oog voor detail. Precies wat ik zocht.', car: 'BMW 3-serie', service: 'Volledig pakket', date: '2 weken geleden', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80' },
   { id: '2', name: 'Maria D.', rating: 5, text: 'Fantastische resultaten na de dieptereiniging. Het interieur ruikt weer fris en ziet er onberispelijk uit. Absoluut de moeite waard.', car: 'Audi A4', service: 'Interieur DeepClean', date: '1 maand geleden', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&h=200&q=80' },
   { id: '3', name: 'Tom S.', rating: 5, text: 'De premium handwash heeft mijn auto een glans gegeven die ik nog nooit eerder zag. Een echte aanrader.', car: 'Mercedes C-Klasse', service: 'Exterieur Premium', date: '3 weken geleden', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200&q=80' },
+  { id: '4', name: 'Anoniem', rating: 5, text: 'Mijn auto weer tip top in orde gebracht tot in de details door een vriendelijke jongeman.', date: 'Onlangs', placeholderAvatar: true },
 ]
 
 const getAvatarUrl = (name: string) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=96&background=22333B&color=F2F4F3&bold=true&font-size=0.4`
 
+/** Duplicaat voor naadloze oneindige loop */
+const CAROUSEL_DURATION = 45
+
 export default function Testimonials() {
+  const loop = [...testimonials, ...testimonials]
+  const count = testimonials.length
+
   return (
     <section className="py-24 bg-light">
       <div className="container-custom">
@@ -32,35 +41,54 @@ export default function Testimonials() {
           <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-2">Wat Onze Klanten Zeggen</h2>
           <p className="text-primary-dark opacity-70">Beoordeeld als uitstekend door onze klanten</p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, index) => (
-            <TestimonialCard key={t.id} testimonial={t} index={index} getAvatarUrl={getAvatarUrl} />
-          ))}
+
+        <div className="overflow-hidden -mx-4 md:-mx-6 w-full">
+          <motion.div
+            className="flex gap-6 will-change-transform"
+            style={{
+              width: 'max-content',
+              minWidth: '100%',
+              gap: '1.5rem',
+            }}
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{
+              x: { duration: CAROUSEL_DURATION, repeat: Infinity, repeatType: 'loop', ease: 'linear' },
+            }}
+          >
+            {loop.map((t, index) => (
+              <div
+                key={`testimonial-${index}`}
+                className="flex-shrink-0 w-[min(85vw,320px)] sm:w-[min(70vw,340px)] md:w-[min(calc(50vw-2rem),360px)] lg:w-[min(calc(33.333vw-1.5rem),380px)]"
+              >
+                <TestimonialCard testimonial={t} getAvatarUrl={getAvatarUrl} />
+              </div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>
   )
 }
 
-function TestimonialCard({ testimonial, index, getAvatarUrl }: { testimonial: Testimonial; index: number; getAvatarUrl: (name: string) => string }) {
+function TestimonialCard({ testimonial, getAvatarUrl }: { testimonial: Testimonial; getAvatarUrl: (name: string) => string }) {
   const [profileImageError, setProfileImageError] = useState(false)
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="bg-white rounded-lg border border-primary-dark/10 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
-    >
+    <article className="bg-white rounded-lg border border-primary-dark/10 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden h-full">
       <div className="p-6">
         <div className="flex items-start gap-4 mb-4">
-          <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden bg-secondary-dark">
-            <img
-              src={profileImageError ? getAvatarUrl(testimonial.name) : (testimonial.image ?? getAvatarUrl(testimonial.name))}
-              alt={testimonial.name}
-              className="w-full h-full object-cover"
-              onError={() => setProfileImageError(true)}
-            />
+          <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden bg-primary-dark/15 flex items-center justify-center">
+            {testimonial.placeholderAvatar ? (
+              <svg className="w-7 h-7 text-primary-dark/40" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
+            ) : (
+              <img
+                src={profileImageError ? getAvatarUrl(testimonial.name) : (testimonial.image ?? getAvatarUrl(testimonial.name))}
+                alt={testimonial.name}
+                className="w-full h-full object-cover"
+                onError={() => setProfileImageError(true)}
+              />
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -88,6 +116,6 @@ function TestimonialCard({ testimonial, index, getAvatarUrl }: { testimonial: Te
           </div>
         )}
       </div>
-    </motion.article>
+    </article>
   )
 }

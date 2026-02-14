@@ -58,7 +58,7 @@ export default function Hero() {
           <span className="block text-accent-red">VLAANDEREN</span>
         </h1>
         <p className="text-xl md:text-2xl text-light mb-8 max-w-2xl mx-auto">
-          Professionele autoreiniging
+          Professionele autoreiniging aan huis
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/booking">

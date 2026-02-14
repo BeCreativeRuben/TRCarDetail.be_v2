@@ -97,7 +97,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <CTASection title="Klaar om te Boeken?" description="Kies uw pakket en reserveer direct online." secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }} />
+      <CTASection title="Klaar om te Boeken?" description="Kies uw pakket en reserveer direct online." secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }} noTopMargin />
     </div>
   )
 }
