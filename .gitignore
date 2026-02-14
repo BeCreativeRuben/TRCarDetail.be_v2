@@ -9,10 +9,15 @@ frontend/dist/
 backend/dist/
 build/
 
-# Environment variables
+# Environment variables (NEVER commit – use Vercel env vars / .env.local only locally)
 .env
 .env.local
+.env.development
+.env.development.local
+.env.production
+.env.production.local
 .env.*.local
+!.env.example
 
 # IDE
 .vscode/
