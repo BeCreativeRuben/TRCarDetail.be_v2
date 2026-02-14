@@ -1,13 +1,10 @@
 # Dependencies
 node_modules/
-frontend/node_modules/
-backend/node_modules/
 
 # Build outputs
 dist/
-frontend/dist/
-backend/dist/
 build/
+.next/
 
 # Environment variables (NEVER commit – use Vercel env vars / .env.local only locally)
 .env
@@ -41,11 +38,11 @@ yarn-error.log*
 *.sqlite
 *.sqlite3
 
-# Video files (large) - hero-video.mp4 is allowed for production
+# Video files (large) - add hero-video.mp4 to public/videos/ for production
 *.mp4
-frontend/public/videos/*.mp4
-!frontend/public/videos/.gitkeep
-!frontend/public/videos/hero-video.mp4
+public/videos/*.mp4
+!public/videos/.gitkeep
+!public/videos/hero-video.mp4
 
 # Temporary files
 *.tmp

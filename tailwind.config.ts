@@ -2,8 +2,12 @@ import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx,css}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  safelist: [
+    { pattern: /^(bg|text|border)-(primary-dark|secondary-dark|light|accent-red|accent-dark-red)(\/[0-9]+)?$/ },
   ],
   theme: {
     extend: {

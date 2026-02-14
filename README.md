@@ -1,68 +1,70 @@
 # T&R Car Detail Website
 
-Moderne website voor T&R Car Detail: React-frontend en Express-API onder één project.
+Moderne website voor T&R Car Detail: één Next.js-app met pagina’s en API-routes. E-mail via Nodemailer + Gmail SMTP.
 
 ## Tech Stack
 
-**Frontend**
-- Vite + React 19 + TypeScript
-- React Router, Tailwind CSS, Framer Motion, React Icons
+- **Next.js 15** (App Router) + React 19 + TypeScript
+- **Tailwind CSS**, Framer Motion, React Icons
+- **API-routes:** `/api/contact`, `/api/bookings`, `/api/health`
+- **E-mail:** Nodemailer, Gmail SMTP (poort 587, TLS). Geen externe dienst (geen Resend/SendGrid).
+- **Config:** `lib/email.ts` (transport + handmatige HTML/plain templates)
 
-**Backend**
-- Node.js + Express + TypeScript
-- SQLite (better-sqlite3), Nodemailer
-
-## Waarom aparte frontend- en backend-mappen?
-
-- **Verschillende omgevingen:** frontend draait in de browser, backend op Node (API, database, e-mail).
-- **Verschillende dependencies:** React/Vite vs Express/SQLite; gescheiden `package.json` houdt installs en builds overzichtelijk.
-- **Flexibele deploy:** frontend kan statisch (bijv. Vercel), API apart (bijv. Railway/Render) of later gecombineerd.
-
-De mappen zijn dus vooral een logische scheiding; je runt alles vanuit de root.
-
-## Starten (aanbevolen)
-
-Vanuit de **projectroot**:
+## Starten
 
 ```bash
 npm install
 npm run dev
 ```
 
-- Frontend: http://localhost:3001 (Vite proxy stuurt `/api` door naar de backend)
-- Backend: http://localhost:5000
+- Site + API: http://localhost:3000  
+- Contact- en boekingsformulieren posten naar `/api/contact` en `/api/bookings`.
 
-Eén commando start dus zowel de site als de API.
+## Scripts
 
-## Scripts (root)
-
-| Script | Beschrijving |
-|--------|--------------|
-| `npm run dev` | Start frontend + backend tegelijk |
-| `npm run dev:frontend` | Alleen frontend (poort 3001) |
-| `npm run dev:backend` | Alleen backend (poort 5000) |
-| `npm run build` | Build frontend (o.a. voor deploy) |
-| `npm run build:backend` | Compileer backend TypeScript |
-| `npm run start:backend` | Start backend (na build) |
+| Script       | Beschrijving        |
+|-------------|---------------------|
+| `npm run dev`   | Next.js dev server (poort 3000) |
+| `npm run build` | Next.js productie-build        |
+| `npm run start` | Next.js start (na build)       |
+| `npm run lint`  | Next.js lint                    |
 
 ## Projectstructuur
 
 ```
 trcardetail/
-├── package.json       # Root: workspaces + dev-scripts
-├── frontend/          # React-app (Vite)
-│   ├── src/
-│   └── package.json
-├── backend/           # Express-API (bookings, contact, services)
-│   ├── src/
-│   └── package.json
+├── app/                 # Next.js App Router
+│   ├── api/             # API-routes (contact, bookings, health)
+│   ├── about/
+│   ├── booking/
+│   ├── contact/
+│   ├── faq/
+│   ├── services/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── globals.css
+├── components/          # Layout, UI, sections, booking
+├── lib/                 # email.ts, types, cars, images
+├── public/
+├── package.json
+├── next.config.mjs
+├── tailwind.config.ts
 └── README.md
+```
+
+## Oude mappen verwijderen
+
+Als de mappen `frontend/` en `backend/` nog bestaan (van vóór de migratie), kun je ze handmatig verwijderen. Sluit eerst eventuele dev-servers en IDE-processen die bestanden in die mappen gebruiken, daarna:
+
+```bash
+# PowerShell (in projectroot)
+Remove-Item -Recurse -Force frontend, backend
 ```
 
 ## Functies
 
-- Diensten- en prijspagina’s
-- Boekingssysteem (formulier + API)
-- Contactformulier
-- FAQ, Over ons, team (Thibo & Renzo)
+- Home, Diensten, Over ons, Contact, FAQ, Boeken
+- Boekingsformulier (service, datum, tijd, voertuig, gegevens) → e-mail
+- Contactformulier → e-mail naar admin + autoreply
+- Team (Thibo & Renzo), testimonials, CTA-secties
 - Responsive design

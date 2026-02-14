@@ -75,6 +75,29 @@ function bookingConfirmationText(booking: BookingPayload): string {
   ].join('\n')
 }
 
+function bookingNotificationHtml(booking: BookingPayload): string {
+  const specialLine = booking.specialRequests
+    ? `<p><strong>Opmerkingen:</strong> ${booking.specialRequests}</p>`
+    : ''
+  return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: sans-serif; line-height: 1.6; color: #333;">
+  <h2>Nieuwe boeking ontvangen</h2>
+  <p><strong>Naam:</strong> ${booking.customerName}</p>
+  <p><strong>Email:</strong> ${booking.email}</p>
+  <p><strong>Telefoon:</strong> ${booking.phone}</p>
+  <p><strong>Service:</strong> ${booking.serviceType}</p>
+  <p><strong>Datum:</strong> ${booking.preferredDate}</p>
+  <p><strong>Tijd:</strong> ${booking.preferredTime}</p>
+  <p><strong>Voertuig:</strong> ${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year}) – ${booking.vehicleInfo.size}</p>
+  ${specialLine}
+</body>
+</html>
+  `.trim()
+}
+
 function contactNotificationHtml(contact: ContactPayload): string {
   const phoneLine = contact.phone ? `<p><strong>Telefoon:</strong> ${contact.phone}</p>` : ''
   return `
@@ -114,6 +137,18 @@ export async function sendBookingConfirmation(booking: BookingPayload): Promise<
     return
   }
 
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER
+
+  // Notificatie naar jullie (info@trcardetail.be)
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to: adminEmail,
+    subject: 'Nieuwe boeking - T&R Car Detail',
+    html: bookingNotificationHtml(booking),
+  })
+  console.log('Booking notification sent to admin:', adminEmail)
+
+  // Bevestiging naar de klant
   await transporter.sendMail({
     from: process.env.SMTP_USER,
     to: booking.email,

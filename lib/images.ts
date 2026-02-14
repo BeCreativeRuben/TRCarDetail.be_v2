@@ -1,0 +1,17 @@
+/**
+ * Image URLs from Unsplash - free to use, matches car detailing vibe
+ */
+
+const unsplash = (id: string, w = 800) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`
+
+export const images = {
+  homeAbout: unsplash('1656077940782-11c47aaefd0c', 900),
+  aboutStory: unsplash('1656077885491-3922185f3932', 900),
+  serviceInterieur: unsplash('1656077885491-3922185f3932', 600),
+  serviceExterieur: unsplash('1549317661-b741d42a82f3', 600),
+  serviceFull: unsplash('1682858110563-3f609263d418', 600),
+  newCarCoating: unsplash('1549317661-b741d42a82f3', 900),
+  ceramicCoating: unsplash('1492144534655-ae79c964c9d7', 900),
+  qualityProducts: unsplash('1558618666-fcd25c85cd64', 900),
+}
