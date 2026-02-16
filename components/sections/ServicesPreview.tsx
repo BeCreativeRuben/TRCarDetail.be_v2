@@ -5,9 +5,9 @@ import ServiceCard from './ServiceCard'
 import Button from '../ui/Button'
 
 const services: Service[] = [
-  { id: 'interieur-basic', name: 'Interieur Reiniging', description: 'Basis en dieptereiniging van het interieur', basePrice: 0, largeCarSurcharge: 0, features: ['Interieur stofzuigen', 'Interieur afstoffen', 'Reinigen ramen en spiegels', 'Basis en dieptereiniging opties'] },
-  { id: 'exterieur-basic', name: 'Exterieur Reiniging', description: 'Basis en premium exterieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: ['Krasvrije wasbeurt (2 emmer methode)', 'Reinigen velgen en banden', 'Drogen met warme lucht', 'Basis en premium opties'] },
-  { id: 'full-basic', name: 'Volledig Pakket', description: 'Complete reiniging interieur en exterieur', basePrice: 0, largeCarSurcharge: 0, features: ['Alle interieur features', 'Alle exterieur features', 'Complete auto reiniging', 'Professionele behandeling'] },
+  { id: 'interieur-basis', name: 'Interieur', description: 'Basis, Deluxe en Premium interieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'exterieur-basis', name: 'Exterieur', description: 'Basis en Deluxe exterieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'full-basis', name: 'Volledig Pakket', description: 'Exterieur + interieur basis in één', basePrice: 0, largeCarSurcharge: 0, features: [] },
 ]
 
 export default function ServicesPreview() {

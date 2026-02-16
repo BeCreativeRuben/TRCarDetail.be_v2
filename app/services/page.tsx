@@ -9,32 +9,38 @@ import Button from '@/components/ui/Button'
 import CTASection from '@/components/sections/CTASection'
 import { FiCalendar, FiHome, FiShield, FiCheck } from 'react-icons/fi'
 
-type ServiceCategory = 'interieur' | 'exterieur' | 'full'
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren'
 
 const interieurServices: Service[] = [
-  { id: 'interieur-basic', name: 'Interieur Basic', description: 'Basis interieurreiniging voor regelmatig onderhoud', basePrice: 95, largeCarSurcharge: 15, features: ['Interieur stofzuigen', 'Interieur afstoffen', 'Reinigen ramen en spiegels', 'Dashboard reiniging', 'Basis interieur verzorging'] },
-  { id: 'interieur-deepclean', name: 'Interieur DeepClean', description: 'Grondige dieptereiniging van het interieur', basePrice: 175, largeCarSurcharge: 25, popular: true, features: ['Alle basis interieur features', 'Dieptereiniging van bekleding', 'Reinigen van alle oppervlakken', 'Lederverzorging (indien van toepassing)', 'Geurbehandeling', 'Professionele interieur detail behandeling'] },
+  { id: 'interieur-basis', name: 'Interieur Basis', description: 'Bedoeld voor mensen die hun wagen goed hebben onderhouden en hun wagen eens willen laten opfrissen. LET OP: dit is geen dieptereiniging.', basePrice: 50, largeCarSurcharge: 0, features: ['Interieur stofzuigen', 'Interieur afstoffen', 'Grondig stofzuigen en interieur behandelen met microvezeldoeken en product'] },
+  { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: 'Uitgebreide interieurreiniging waarbij geen enkel detail wordt overgeslagen. Van zichtbare oppervlakken tot verborgen hoeken – alles wordt zorgvuldig gereinigd.', basePrice: 130, largeCarSurcharge: 0, popular: true, features: ['Interieur stofzuigen', 'Interieur dieptereiniging', 'Interieur grondig uitblazen', 'Dieptereiniging dashboard, stuur, middenconsole', 'Stof, leder en alcantara worden gereinigd en onderhouden', 'Verfrissende geur'] },
+  { id: 'interieur-premium', name: 'Interieur Premium', description: 'De meest complete interieurdieptereiniging. Pakt zelfs verwaarloosde interieurs aan met krachtige reinigingstechnieken en professionele machines.', basePrice: 220, largeCarSurcharge: 0, features: ['Interieur stofzuigen', 'Interieur dieptereiniging', 'Interieur grondig uitblazen', 'Dieptereiniging dashboard, stuurwiel en middenconsole', 'Reiniging en onderhoud stof, leder en alcantara', 'Stoomreiniging voor optimale hygiëne', 'Extractor voor zetels, tapijten en vloermatten', 'Verfrissende geur'] },
 ]
 
 const exterieurServices: Service[] = [
-  { id: 'exterieur-basic', name: 'Exterieur Basic', description: 'Basis exterieurreiniging met professionele producten', basePrice: 95, largeCarSurcharge: 15, features: ['Krasvrije wasbeurt (2 emmer methode)', 'Reinigen deurstijlen en instaplijsten', 'Reinigen velgen, banden en wielkasten', 'Drogen met warme lucht en zachte microvezel', 'Spraywax of sealant', 'Bandendressing'] },
-  { id: 'exterieur-premium', name: 'Exterieur Premium', description: 'Dieptereiniging met teer- en vliegroest verwijdering', basePrice: 125, largeCarSurcharge: 25, features: ['Alle basis exterieur features', 'Teer en vliegroest verwijderen', 'Kleibehandeling*', 'Extra lakbescherming', 'Professionele exterieur detail behandeling'] },
+  { id: 'exterieur-basis', name: 'Exterieur Basis', description: 'Houd je auto glanzend en in topvorm! Grondige wasbeurt, zorgvuldige reiniging van alle details en een stralende afwerking.', basePrice: 60, largeCarSurcharge: 0, features: ['Dieptereiniging velgen', 'Dieptereiniging wielkasten', 'Pre-wash', 'Gepaste shampoo voor de wagen', '2-emmer methode (krasvrij wassen)', 'Deurlijsten + instaplijsten', 'Ramen + spiegels', 'Bandendressing', 'Wax (2-3 maanden)'] },
+  { id: 'exterieur-deluxe', name: 'Exterieur Deluxe (Decontaminatie was)', description: 'Voor auto\'s die een grondige opfrisbeurt verdienen! Verwijdert hardnekkig vuil, herstelt de glans en biedt een hoogwaardige beschermlaag.', basePrice: 90, largeCarSurcharge: 0, popular: true, features: ['Dieptereiniging velgen + wielkasten', 'Pre-wash + gepaste shampoo voor de wagen', '2-emmer methode (krasvrij wassen)', 'Deurlijsten + instaplijsten', 'Ramen + spiegels', 'Bandendressing', 'Wax (2-3 maanden)', 'Decontamineren van de lak', 'Teer en vliegroest verwijderen', 'Kleibehandeling'] },
 ]
 
 const fullServices: Service[] = [
-  { id: 'full-basic', name: 'Full Package Basic', description: 'Complete reiniging inclusief basis interieur en exterieur', basePrice: 175, largeCarSurcharge: 25, popular: true, features: ['Alle exterieur basic features', 'Alle interieur basic features', 'Complete auto reiniging', 'Professionele afwerking'] },
-  { id: 'full-premium', name: 'Full Package Premium', description: 'Complete dieptereiniging interieur en exterieur', basePrice: 275, largeCarSurcharge: 40, features: ['Alle exterieur premium features', 'Alle interieur deepclean features', 'Complete auto dieptereiniging', 'Maximale verzorging en bescherming', 'Professionele premium behandeling'] },
+  { id: 'full-basis', name: 'Exterieur Basis + Interieur Basis', description: 'Laat je auto van binnen en buiten weer helemaal stralen! Perfect voor een snelle opfrisbeurt en goed onderhouden voertuigen. Enkel mogelijk als de wagen zich in goede staat bevindt; anders raden we ons deluxe of premium pakket aan.', basePrice: 100, largeCarSurcharge: 0, features: ['Dieptereiniging velgen + wielkasten', 'Pre-wash + gepaste shampoo voor de wagen', '2-emmer methode (krasvrij wassen)', 'Deurlijsten + instaplijsten', 'Ramen + spiegels', 'Bandendressing', 'Wax (2-3 maanden)', 'Interieur stofzuigen', 'Interieur afstoffen'] },
+]
+
+const polierenServices: Service[] = [
+  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Verwijdert lichte krassen, swirl marks en doffe plekken. Herstelt glans en kleurdiepte. Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging. 1-staps polieren.', basePrice: 450, largeCarSurcharge: 100, features: ['Verwijdert lichte krassen, swirl marks en doffe plekken', 'Herstelt glans en kleurdiepte', 'Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging', '1-staps polieren', 'Sedan/Station +€60 · Jeep/SUV +€100'] },
+  { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Verwijdert hardnekkige krassen, diepe swirls en oxidatie. Herstelt maximale glans en diepte. Alle gevoelige onderdelen worden professioneel afgeschermd. Meerstaps polieren.', basePrice: 0, largeCarSurcharge: 0, features: ['Verwijdert hardnekkige krassen, diepe swirls en oxidatie', 'Herstelt maximale glans en diepte in de lak', 'Gevoelige onderdelen professioneel afgeschermd', 'Geschikt voor duidelijke lakbeschadiging of doffe plekken', 'Meerstaps polieren', 'Prijs op aanvraag · Sedan/Station +€60 · Jeep/SUV +€120'] },
 ]
 
 export default function ServicesPage() {
-  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('full')
+  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('exterieur')
 
   const getCurrentServices = () => {
     switch (activeCategory) {
       case 'interieur': return interieurServices
       case 'exterieur': return exterieurServices
       case 'full': return fullServices
-      default: return interieurServices
+      case 'polieren': return polierenServices
+      default: return fullServices
     }
   }
 
@@ -46,18 +52,19 @@ export default function ServicesPage() {
           <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Professionele auto detailing diensten op maat.</p>
         </motion.div>
 
-        <div className="flex flex-col items-center gap-4 mb-12">
-          <button onClick={() => setActiveCategory('full')} className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${activeCategory === 'full' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <button onClick={() => setActiveCategory('exterieur')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'exterieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+            Exterieur
+          </button>
+          <button onClick={() => setActiveCategory('interieur')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'interieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+            Interieur
+          </button>
+          <button onClick={() => setActiveCategory('full')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'full' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             <FiShield /> Volledig Pakket
           </button>
-          <div className="flex flex-wrap justify-center gap-4">
-            <button onClick={() => setActiveCategory('interieur')} className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${activeCategory === 'interieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
-              <FiHome /> Interieur
-            </button>
-            <button onClick={() => setActiveCategory('exterieur')} className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${activeCategory === 'exterieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
-              <FiHome /> Exterieur
-            </button>
-          </div>
+          <button onClick={() => setActiveCategory('polieren')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'polieren' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+            Polieren
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">

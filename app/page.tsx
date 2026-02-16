@@ -2,6 +2,7 @@
 
 import Hero from '@/components/sections/Hero'
 import ServicesPreview from '@/components/sections/ServicesPreview'
+import ProcessSection from '@/components/sections/ProcessSection'
 import QualitySection from '@/components/sections/QualitySection'
 import SocialsSection from '@/components/sections/SocialsSection'
 import Testimonials from '@/components/sections/Testimonials'
@@ -29,6 +30,7 @@ export default function HomePage() {
         </div>
       </section>
       <ServicesPreview />
+      <ProcessSection />
       <QualitySection />
       <SocialsSection />
       <Testimonials />

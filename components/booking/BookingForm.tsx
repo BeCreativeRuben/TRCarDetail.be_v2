@@ -11,16 +11,18 @@ import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand } from '@/lib/cars'
 
 const services: Service[] = [
-  { id: 'interieur-basic', name: 'Interieur Basic', description: 'Basis interieurreiniging', basePrice: 95, largeCarSurcharge: 15, features: [] },
-  { id: 'interieur-deepclean', name: 'Interieur DeepClean', description: 'Grondige dieptereiniging van het interieur', basePrice: 175, largeCarSurcharge: 25, features: [] },
-  { id: 'exterieur-basic', name: 'Exterieur Basic', description: 'Basis exterieurreiniging', basePrice: 95, largeCarSurcharge: 15, features: [] },
-  { id: 'exterieur-premium', name: 'Exterieur Premium', description: 'Dieptereiniging met teer- en vliegroest verwijdering', basePrice: 125, largeCarSurcharge: 25, features: [] },
-  { id: 'full-basic', name: 'Full Package Basic', description: 'Complete reiniging inclusief basis interieur en exterieur', basePrice: 175, largeCarSurcharge: 25, features: [] },
-  { id: 'full-premium', name: 'Full Package Premium', description: 'Complete dieptereiniging interieur en exterieur', basePrice: 275, largeCarSurcharge: 40, features: [] },
+  { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€60 · Glanzend en in topvorm', basePrice: 60, largeCarSurcharge: 0, features: [] },
+  { id: 'exterieur-deluxe', name: 'Exterieur Deluxe', description: '€90 · Decontaminatie was', basePrice: 90, largeCarSurcharge: 0, features: [] },
+  { id: 'full-basis', name: 'Exterieur Basis + Interieur Basis', description: '€100 · Binnen en buiten', basePrice: 100, largeCarSurcharge: 0, features: [] },
+  { id: 'interieur-basis', name: 'Interieur Basis', description: '€50 · Opfrissen', basePrice: 50, largeCarSurcharge: 0, features: [] },
+  { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: '€130 · Uitgebreide dieptereiniging', basePrice: 130, largeCarSurcharge: 0, features: [] },
+  { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
+  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: '€450 · Sedan/Station +€60, Jeep/SUV +€100', basePrice: 450, largeCarSurcharge: 100, features: [] },
+  { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
 ]
 
 const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
-const validServiceIds = ['interieur-basic', 'interieur-deepclean', 'exterieur-basic', 'exterieur-premium', 'full-basic', 'full-premium']
+const validServiceIds = ['exterieur-basis', 'exterieur-deluxe', 'full-basis', 'interieur-basis', 'interieur-deluxe', 'interieur-premium', 'polijsten-light', 'polijsten-full']
 
 export default function BookingForm() {
   const searchParams = useSearchParams()
@@ -108,7 +110,7 @@ export default function BookingForm() {
             >
               <h3 className="font-semibold text-primary-dark mb-1">{service.name}</h3>
               <p className="text-sm text-primary-dark opacity-70 mb-2">{service.description}</p>
-              <p className="text-accent-red font-bold">€{service.basePrice}</p>
+              <p className="text-accent-red font-bold">{service.basePrice > 0 ? `€${service.basePrice}` : 'Prijs op aanvraag'}</p>
             </motion.button>
           ))}
         </div>
@@ -203,15 +205,21 @@ export default function BookingForm() {
       {selectedService && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-primary-dark rounded-lg p-6">
           <h3 className="text-xl font-bold text-light mb-4">Prijs Overzicht</h3>
-          <div className="space-y-2 mb-4">
-            <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice}</span></div>
-            {formData.vehicleInfo?.size === 'large' && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge}</span></div>}
-          </div>
-          <div className="border-t border-light border-opacity-20 pt-4 flex justify-between">
-            <span className="text-xl font-bold text-light">Totaal</span>
-            <span className="text-2xl font-bold text-accent-red">€{totalPrice}</span>
-          </div>
-          <p className="text-sm text-light opacity-70 mt-2">* Prijzen zijn indicatief en kunnen variëren</p>
+          {selectedService.basePrice > 0 ? (
+            <>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice}</span></div>
+                {formData.vehicleInfo?.size === 'large' && selectedService.largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge}</span></div>}
+              </div>
+              <div className="border-t border-light border-opacity-20 pt-4 flex justify-between">
+                <span className="text-xl font-bold text-light">Totaal</span>
+                <span className="text-2xl font-bold text-accent-red">€{totalPrice}</span>
+              </div>
+            </>
+          ) : (
+            <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
+          )}
+          <p className="text-sm text-light opacity-70 mt-2">* Prijzen zijn inclusief BTW, indicatief en kunnen variëren</p>
         </motion.div>
       )}
 
