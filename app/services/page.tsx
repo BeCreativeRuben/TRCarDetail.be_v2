@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -38,7 +38,7 @@ function categoryFromParam(param: string | null): ServiceCategory {
   return param && VALID_CATEGORIES.includes(param as ServiceCategory) ? param as ServiceCategory : 'exterieur'
 }
 
-export default function ServicesPage() {
+function ServicesPageContent() {
   const searchParams = useSearchParams()
   const categoryParam = searchParams.get('category')
   const [activeCategory, setActiveCategory] = useState<ServiceCategory>(() => categoryFromParam(categoryParam))
@@ -85,13 +85,6 @@ export default function ServicesPage() {
             <PricingCard key={service.id} service={service} index={index} />
           ))}
         </div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-accent-dark-red bg-opacity-10 border border-accent-red border-opacity-30 rounded-lg p-6 mb-12">
-          <h3 className="text-xl font-bold text-accent-red mb-3">DISCLAIMER</h3>
-          <p className="text-primary-dark text-sm opacity-90">
-            Bovenstaande prijzen zijn inclusief 21% BTW, indicatief en kunnen variëren. Oversize wagens zoals busjes en trucks enkel op aanvraag.
-          </p>
-        </motion.div>
       </div>
 
       <section className="py-20 bg-primary-dark">
@@ -119,5 +112,13 @@ export default function ServicesPage() {
 
       <CTASection title="Klaar om te Boeken?" description="Kies uw pakket en reserveer direct online." secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }} noTopMargin />
     </div>
+  )
+}
+
+export default function ServicesPage() {
+  return (
+    <Suspense fallback={<div className="pt-20 pb-0 bg-light min-h-screen flex items-center justify-center"><p className="text-primary-dark opacity-70">Laden...</p></div>}>
+      <ServicesPageContent />
+    </Suspense>
   )
 }

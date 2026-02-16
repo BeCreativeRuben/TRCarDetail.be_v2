@@ -29,11 +29,14 @@ export default function PricingCard({ service, index }: PricingCardProps) {
         <div className="mb-4 flex-shrink-0">
           <h3 className="text-2xl font-bold text-primary-dark mb-2">{service.name}</h3>
           {service.basePrice > 0 ? (
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-bold text-accent-red">€{service.basePrice}</span>
-              {service.largeCarSurcharge > 0 && (
-                <span className="text-primary-dark opacity-70">Grote wagen +€{service.largeCarSurcharge}</span>
-              )}
+            <div>
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-4xl font-bold text-accent-red">€{service.basePrice}</span>
+                {service.largeCarSurcharge > 0 && (
+                  <span className="text-primary-dark opacity-70">Grote wagen +€{service.largeCarSurcharge}</span>
+                )}
+              </div>
+              <p className="text-xs text-primary-dark opacity-50 mt-1">excl. BTW</p>
             </div>
           ) : (
             <span className="text-lg text-primary-dark opacity-70">Prijzen op aanvraag</span>

@@ -164,7 +164,7 @@
   - **Phone:** +32 499 12 85 00
   - **Email:** info@trcardetail.be
   - **Footer copyright:** “© [Year] T&R Car Detail. Alle rechten voorbehouden.”
-  - **Disclaimer (e.g. services):** Prijzen inclusief 21% BTW, indicatief; oversize wagens op aanvraag.
+  - **Disclaimer (e.g. services):** Prijzen excl. BTW, indicatief; oversize wagens op aanvraag.
 
   ---
 

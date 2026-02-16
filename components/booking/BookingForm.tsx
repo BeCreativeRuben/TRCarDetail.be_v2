@@ -245,7 +245,7 @@ export default function BookingForm() {
           ) : (
             <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
           )}
-          <p className="text-sm text-light opacity-70 mt-2">* Prijzen zijn inclusief BTW, indicatief en kunnen variëren</p>
+          <p className="text-sm text-light opacity-70 mt-2">* Prijzen zijn excl. BTW, indicatief en kunnen variëren</p>
         </motion.div>
       )}
 
