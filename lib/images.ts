@@ -6,12 +6,14 @@ const unsplash = (id: string, w = 800) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`
 
 export const images = {
-  homeAbout: unsplash('1656077940782-11c47aaefd0c', 900),
-  aboutStory: unsplash('1552519507-da3b142c6e3d', 900),
-  serviceInterieur: unsplash('1552519507-da3b142c6e3d', 600),
-  serviceExterieur: unsplash('1552519507-da3b142c6e3d', 600),
-  serviceFull: unsplash('1682858110563-3f609263d418', 600),
+  homeAbout: '/images/home-about.webp',
+  aboutStory: '/images/about-story.webp',
+  serviceInterieur: '/images/service-interieur.webp',
+  serviceExterieur: '/images/service-exterieur.webp',
+  serviceFull: '/images/service-full.webp',
+  servicePolieren: '/images/service-polieren.webp',
   newCarCoating: unsplash('1552519507-da3b142c6e3d', 900),
   ceramicCoating: unsplash('1492144534655-ae79c964c9d7', 900),
-  qualityProducts: unsplash('1558618666-fcd25c85cd64', 900),
+  qualityProducts: '/images/quality-products.webp',
+  aandachtDetail: '/images/aandacht-detail.webp',
 }

@@ -20,7 +20,7 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service, index }: ServiceCardProps) {
-  const img = service.id.startsWith('interieur') ? images.serviceInterieur : service.id.startsWith('exterieur') ? images.serviceExterieur : images.serviceFull
+  const img = service.id.startsWith('interieur') ? images.serviceInterieur : service.id.startsWith('exterieur') ? images.serviceExterieur : service.id.startsWith('polijsten') ? images.servicePolieren : images.serviceFull
   const category = getCategoryFromServiceId(service.id)
   return (
     <motion.div

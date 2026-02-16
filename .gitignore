@@ -44,6 +44,9 @@ public/videos/*.mp4
 !public/videos/.gitkeep
 !public/videos/hero-video.mp4
 
+# Temporary / uploaded images (copied to public/images/)
+hf_*.webp
+
 # Temporary files
 *.tmp
 .cache/

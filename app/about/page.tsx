@@ -63,7 +63,7 @@ export default function AboutPage() {
             {[
               { title: 'Professionele Producten', description: 'We gebruiken alleen de beste producten van topmerken voor optimale resultaten.', icon: FiPackage, image: images.qualityProducts },
               { title: 'Ervaren Team', description: 'Ons team heeft jarenlange ervaring in auto detailing en perfectionering.', icon: FiUsers, image: images.aboutStory },
-              { title: 'Aandacht voor Detail', description: 'Elke auto wordt met de grootste zorg en aandacht behandeld.', icon: FiAward, image: images.serviceExterieur },
+              { title: 'Aandacht voor Detail', description: 'Elke auto wordt met de grootste zorg en aandacht behandeld.', icon: FiAward, image: images.aandachtDetail },
             ].map((item, index) => (
               <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
                 <Card hover className="h-full overflow-hidden p-0">
