@@ -8,7 +8,7 @@ import Autocomplete from '../ui/Autocomplete'
 import Button from '../ui/Button'
 import BookingCalendar from './BookingCalendar'
 import { Service, Booking } from '@/lib/types'
-import { carBrands, getModelsForBrand } from '@/lib/cars'
+import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 
 const services: Service[] = [
   { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€60 · Glanzend en in topvorm', basePrice: 60, largeCarSurcharge: 0, features: [] },
@@ -23,6 +23,13 @@ const services: Service[] = [
 
 const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
 const validServiceIds = ['exterieur-basis', 'exterieur-deluxe', 'full-basis', 'interieur-basis', 'interieur-deluxe', 'interieur-premium', 'polijsten-light', 'polijsten-full']
+
+const SERVICE_GROUPS: { label: string; ids: string[] }[] = [
+  { label: 'Volledig pakket', ids: ['full-basis'] },
+  { label: 'Exterieur', ids: ['exterieur-basis', 'exterieur-deluxe'] },
+  { label: 'Interieur', ids: ['interieur-basis', 'interieur-deluxe', 'interieur-premium'] },
+  { label: 'Polieren', ids: ['polijsten-light', 'polijsten-full'] },
+]
 
 export default function BookingForm() {
   const searchParams = useSearchParams()
@@ -94,25 +101,38 @@ export default function BookingForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <label className="block text-sm font-medium text-primary-dark mb-3">Selecteer Service *</label>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {services.map((service) => (
-            <motion.button
-              key={service.id}
-              type="button"
-              onClick={() => {
-                setFormData({ ...formData, serviceType: service.id })
-                setTimeout(() => calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
-              }}
-              className={`p-4 rounded-lg border-2 text-left transition-all ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10' : 'border-secondary-dark border-opacity-30 bg-light hover:border-accent-red'}`}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <h3 className="font-semibold text-primary-dark mb-1">{service.name}</h3>
-              <p className="text-sm text-primary-dark opacity-70 mb-2">{service.description}</p>
-              <p className="text-accent-red font-bold">{service.basePrice > 0 ? `€${service.basePrice}` : 'Prijs op aanvraag'}</p>
-            </motion.button>
-          ))}
+        <label className="block text-sm font-medium text-primary-dark mb-4">Selecteer Service *</label>
+        <div className="space-y-6">
+          {SERVICE_GROUPS.map((group) => {
+            const groupServices = services.filter((s) => group.ids.includes(s.id))
+            if (groupServices.length === 0) return null
+            return (
+              <div key={group.label} className="rounded-xl border-2 border-primary-dark/10 bg-white p-4 md:p-5">
+                <h3 className="text-base font-bold text-primary-dark mb-3 pb-2 border-b border-primary-dark/10">
+                  {group.label}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {groupServices.map((service) => (
+                    <motion.button
+                      key={service.id}
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, serviceType: service.id })
+                        setTimeout(() => calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
+                      }}
+                      className={`p-4 rounded-lg border-2 text-left transition-all ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10 ring-2 ring-accent-red ring-offset-2' : 'border-primary-dark/20 bg-light hover:border-accent-red hover:bg-accent-red/5'}`}
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                    >
+                      <h4 className="font-semibold text-primary-dark mb-1 text-sm md:text-base">{service.name}</h4>
+                      <p className="text-xs text-primary-dark opacity-70 mb-2 line-clamp-2">{service.description}</p>
+                      <p className="text-accent-red font-bold text-sm">{service.basePrice > 0 ? `€${service.basePrice}` : 'Prijs op aanvraag'}</p>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -154,9 +174,11 @@ export default function BookingForm() {
             onChange={(make) => {
               const models = getModelsForBrand(make)
               const currentModel = formData.vehicleInfo?.model || ''
+              const newModel = models.includes(currentModel) ? currentModel : ''
+              const size = isLargeCar(make, newModel) ? 'large' : 'standard'
               setFormData({
                 ...formData,
-                vehicleInfo: { ...formData.vehicleInfo!, make, model: models.includes(currentModel) ? currentModel : '' }
+                vehicleInfo: { ...formData.vehicleInfo!, make, model: newModel, size }
               })
             }}
             options={carBrands}
@@ -166,25 +188,29 @@ export default function BookingForm() {
           <Autocomplete
             label="Model"
             value={formData.vehicleInfo?.model || ''}
-            onChange={(model) => setFormData({ ...formData, vehicleInfo: { ...formData.vehicleInfo!, model } })}
+            onChange={(model) => {
+              const make = formData.vehicleInfo?.make || ''
+              const size = isLargeCar(make, model) ? 'large' : 'standard'
+              setFormData({ ...formData, vehicleInfo: { ...formData.vehicleInfo!, model, size } })
+            }}
             options={getModelsForBrand(formData.vehicleInfo?.make || '')}
             placeholder={formData.vehicleInfo?.make ? 'Selecteer model of vul eigen in' : 'Selecteer eerst een merk of vul eigen in'}
             required
           />
-          <p className="text-sm text-primary-dark opacity-60 -mt-2 md:col-span-2">Nieuwe of minder bekende merken? Vul gerust uw eigen merk en model in.</p>
+          <p className="text-sm text-primary-dark opacity-60 -mt-2 md:col-span-2">Nieuwe of minder bekende merken? Vul gerust uw eigen merk en model in. Grote wagens (SUV, bus, enz.) worden automatisch herkend voor de toeslag.</p>
           <Input label="Jaar *" type="text" required value={formData.vehicleInfo?.year || ''} onChange={(e) => setFormData({ ...formData, vehicleInfo: { ...formData.vehicleInfo!, year: e.target.value } })} />
-          <div>
-            <label className="block text-sm font-medium text-primary-dark mb-2">Grootte *</label>
-            <select
-              required
-              value={formData.vehicleInfo?.size || 'standard'}
-              onChange={(e) => setFormData({ ...formData, vehicleInfo: { ...formData.vehicleInfo!, size: e.target.value as 'standard' | 'large' } })}
-              className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent"
-            >
-              <option value="standard">Standaard</option>
-              <option value="large">Groot (+€{selectedService?.largeCarSurcharge || 0})</option>
-            </select>
-          </div>
+          {formData.vehicleInfo?.make && formData.vehicleInfo?.model && (
+            <p className="text-sm text-primary-dark md:col-span-2">
+              {formData.vehicleInfo?.size === 'large' ? (
+                <span className="inline-flex items-center gap-1.5 text-accent-red font-medium">
+                  Groot voertuig – toeslag van toepassing
+                  {selectedService && selectedService.largeCarSurcharge > 0 && ` (+€${selectedService.largeCarSurcharge})`}
+                </span>
+              ) : (
+                <span className="text-primary-dark opacity-70">Standaard voertuig</span>
+              )}
+            </p>
+          )}
         </div>
       </div>
 

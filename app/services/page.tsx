@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
@@ -31,8 +32,20 @@ const polierenServices: Service[] = [
   { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Verwijdert hardnekkige krassen, diepe swirls en oxidatie. Herstelt maximale glans en diepte. Alle gevoelige onderdelen worden professioneel afgeschermd. Meerstaps polieren.', basePrice: 0, largeCarSurcharge: 0, features: ['Verwijdert hardnekkige krassen, diepe swirls en oxidatie', 'Herstelt maximale glans en diepte in de lak', 'Gevoelige onderdelen professioneel afgeschermd', 'Geschikt voor duidelijke lakbeschadiging of doffe plekken', 'Meerstaps polieren', 'Prijs op aanvraag · Sedan/Station +€60 · Jeep/SUV +€120'] },
 ]
 
+const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren']
+
+function categoryFromParam(param: string | null): ServiceCategory {
+  return param && VALID_CATEGORIES.includes(param as ServiceCategory) ? param as ServiceCategory : 'exterieur'
+}
+
 export default function ServicesPage() {
-  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('exterieur')
+  const searchParams = useSearchParams()
+  const categoryParam = searchParams.get('category')
+  const [activeCategory, setActiveCategory] = useState<ServiceCategory>(() => categoryFromParam(categoryParam))
+
+  useEffect(() => {
+    setActiveCategory(categoryFromParam(searchParams.get('category')))
+  }, [searchParams])
 
   const getCurrentServices = () => {
     switch (activeCategory) {
@@ -67,7 +80,7 @@ export default function ServicesPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
           {getCurrentServices().map((service, index) => (
             <PricingCard key={service.id} service={service} index={index} />
           ))}

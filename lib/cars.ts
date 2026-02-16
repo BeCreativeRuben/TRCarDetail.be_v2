@@ -73,9 +73,69 @@ const carModelsByBrand: Record<string, string[]> = {
 export const carBrands = Object.keys(carModelsByBrand).sort()
 export { carModelsByBrand }
 
+/** Merk|model-combinaties die als "groot" voertuig gelden (toeslag). Gebaseerd op SUV, busjes, grote sedans. */
+const LARGE_CAR_KEYS = new Set<string>([
+  'Audi|Q7', 'Audi|Q8', 'Audi|A8', 'Audi|e-tron',
+  'BMW|X5', 'BMW|X6', 'BMW|X7', 'BMW|6-serie', 'BMW|7-serie',
+  'Ford|Explorer', 'Ford|Transit', 'Ford|Tourneo',
+  'Mercedes-Benz|GLE', 'Mercedes-Benz|GLS', 'Mercedes-Benz|S-klasse', 'Mercedes-Benz|V-klasse',
+  'Volkswagen|Touareg', 'Volkswagen|Transporter', 'Volkswagen|Multivan', 'Volkswagen|ID.Buzz',
+  'Jeep|Grand Cherokee', 'Jeep|Wrangler',
+  'Porsche|Cayenne', 'Porsche|Panamera',
+  'Volvo|XC90', 'Volvo|V90',
+  'Renault|Master', 'Renault|Kangoo',
+  'Fiat|Ducato',
+  'Peugeot|Expert', 'Peugeot|5008', 'Peugeot|Rifter', 'Peugeot|Partner',
+  'Opel|Vivaro', 'Opel|Zafira', 'Opel|Combo',
+  'Citroën|Berlingo',
+  'Land Rover|Defender', 'Land Rover|Discovery', 'Land Rover|Discovery Sport', 'Land Rover|Range Rover', 'Land Rover|Range Rover Sport', 'Land Rover|Range Rover Velar',
+  'Range Rover|Range Rover', 'Range Rover|Range Rover Sport', 'Range Rover|Range Rover Velar', 'Range Rover|Range Rover Evoque',
+  'Jaguar|F-PACE', 'Jaguar|I-PACE',
+  'Lexus|RX', 'Lexus|RZ',
+  'Kia|Sorento', 'Kia|EV9',
+  'Hyundai|Santa Fe',
+  'Nissan|X-Trail', 'Nissan|Navara',
+  'Mazda|CX-60',
+  'Toyota|Land Cruiser', 'Toyota|Hilux', 'Toyota|Proace',
+  'Skoda|Kodiaq', 'Skoda|Enyaq', 'Skoda|Enyaq Coupé',
+  'Seat|Tarraco',
+  'Cupra|Tavascan',
+  'Tesla|Model X',
+  'BYD|Tang', 'BYD|Song',
+  'Nio|ES8', 'Nio|EL7',
+  'Bentley|Bentayga', 'Bentley|Flying Spur', 'Bentley|Mulsanne',
+  'Lamborghini|Urus',
+  'Rolls-Royce|Cullinan', 'Rolls-Royce|Ghost', 'Rolls-Royce|Phantom', 'Rolls-Royce|Spectre',
+  'Maserati|Levante', 'Maserati|Quattroporte',
+  'Aston Martin|DBX',
+  'Ferrari|Purosangue',
+  'Ineos|Grenadier', 'Ineos|Fusilier',
+  'KGM|Rexton', 'KGM|Musso',
+  'Subaru|Outback',
+  'Suzuki|Across',
+  'Mitsubishi|Outlander',
+  'BMW Alpina|XB7',
+].map(s => s.toLowerCase()))
+
 export function getModelsForBrand(brand: string): string[] {
   const normalized = Object.keys(carModelsByBrand).find(
     b => b.toLowerCase() === brand.trim().toLowerCase()
   )
   return normalized ? carModelsByBrand[normalized] : []
+}
+
+/** Bepaalt of het voertuig als "groot" telt (toeslag). Onbekend merk/model = standaard. */
+export function isLargeCar(make: string, model: string): boolean {
+  const m = make.trim().toLowerCase()
+  const mod = model.trim().toLowerCase()
+  if (!m || !mod) return false
+  const key = `${m}|${mod}`
+  if (LARGE_CAR_KEYS.has(key)) return true
+  // Ook check op genormaliseerde merknaam uit onze lijst (bv. gebruiker typt "VW" i.p.v. "Volkswagen")
+  const brandKey = Object.keys(carModelsByBrand).find(b => b.toLowerCase() === m)
+  if (brandKey) {
+    const keyAlt = `${brandKey.toLowerCase()}|${mod}`
+    return LARGE_CAR_KEYS.has(keyAlt)
+  }
+  return false
 }

@@ -5,6 +5,15 @@ import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
 import { images } from '@/lib/images'
 
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren'
+
+function getCategoryFromServiceId(id: string): ServiceCategory {
+  if (id.startsWith('interieur')) return 'interieur'
+  if (id.startsWith('exterieur')) return 'exterieur'
+  if (id.startsWith('polijsten')) return 'polieren'
+  return 'full'
+}
+
 interface ServiceCardProps {
   service: Service
   index: number
@@ -12,6 +21,7 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ service, index }: ServiceCardProps) {
   const img = service.id.startsWith('interieur') ? images.serviceInterieur : service.id.startsWith('exterieur') ? images.serviceExterieur : images.serviceFull
+  const category = getCategoryFromServiceId(service.id)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,7 +30,7 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group"
     >
-      <Link href="/services" className="block">
+      <Link href={`/services?category=${category}`} className="block">
         <div className="relative overflow-hidden rounded-lg bg-secondary-dark aspect-[3/4] cursor-pointer">
           <img
             src={img}

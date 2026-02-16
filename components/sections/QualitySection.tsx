@@ -31,7 +31,7 @@ export default function QualitySection() {
               <span className="block text-accent-red">HET BESTE RESULTAAT</span>
             </h2>
             <p className="text-lg text-light opacity-90 mb-6">
-              Wij werken uitsluitend met professionele producten van topmerken zoals CARPRO. Geen compromissen op kwaliteit – uw auto verdient de beste behandeling.
+              Wij werken uitsluitend met professionele producten van topmerken zoals CARPRO, P&S, Koch Chemie en Soft99. Geen compromissen op kwaliteit – uw auto verdient de beste behandeling.
             </p>
             <ul className="space-y-3 mb-6 text-light opacity-90">
               {['Professionele producten van topmerken', 'pH-neutrale wasmiddelen voor veilige reiniging', 'Keramische coatings voor langdurige bescherming', 'Microvezel materialen – krasvrij en zacht'].map((item, i) => (

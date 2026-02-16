@@ -7,8 +7,8 @@ const unsplash = (id: string, w = 800) =>
 
 export const images = {
   homeAbout: unsplash('1656077940782-11c47aaefd0c', 900),
-  aboutStory: unsplash('1656077885491-3922185f3932', 900),
-  serviceInterieur: unsplash('1656077885491-3922185f3932', 600),
+  aboutStory: unsplash('1552519507-da3b142c6e3d', 900),
+  serviceInterieur: unsplash('1552519507-da3b142c6e3d', 600),
   serviceExterieur: unsplash('1552519507-da3b142c6e3d', 600),
   serviceFull: unsplash('1682858110563-3f609263d418', 600),
   newCarCoating: unsplash('1552519507-da3b142c6e3d', 900),
