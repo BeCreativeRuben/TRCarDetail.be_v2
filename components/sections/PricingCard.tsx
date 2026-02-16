@@ -53,12 +53,21 @@ export default function PricingCard({ service, index }: PricingCardProps) {
           ))}
           </div>
         </div>
-        <Link href={`/booking?service=${service.id}`} className="block mt-auto flex-shrink-0">
-          <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
-            <FiCalendar className="w-4 h-4" />
-            Boek dit pakket
-          </Button>
-        </Link>
+        <div className="mt-auto flex-shrink-0 space-y-2">
+          <Link href={`/booking?service=${service.id}`} className="block">
+            <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
+              <FiCalendar className="w-4 h-4" />
+              Boek dit pakket
+            </Button>
+          </Link>
+          {(service.id === 'interieur-basis' || service.id === 'exterieur-basis') && (
+            <p className="text-center text-xs text-primary-dark opacity-60">
+              <Link href="/services?category=full" className="text-accent-red hover:underline">
+                Of kies het Volledig Pakket (interieur + exterieur) →
+              </Link>
+            </p>
+          )}
+        </div>
       </Card>
     </motion.div>
   )
