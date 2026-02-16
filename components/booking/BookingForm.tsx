@@ -17,7 +17,7 @@ const services: Service[] = [
   { id: 'interieur-basis', name: 'Interieur Basis', description: '€50 · Opfrissen', basePrice: 50, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: '€130 · Uitgebreide dieptereiniging', basePrice: 130, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
-  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: '€450 · Sedan/Station +€60, Jeep/SUV +€100', basePrice: 450, largeCarSurcharge: 100, features: [] },
+  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
 ]
 

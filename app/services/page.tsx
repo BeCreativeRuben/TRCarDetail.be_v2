@@ -28,7 +28,7 @@ const fullServices: Service[] = [
 ]
 
 const polierenServices: Service[] = [
-  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Verwijdert lichte krassen, swirl marks en doffe plekken. Herstelt glans en kleurdiepte. Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging. 1-staps polieren.', basePrice: 450, largeCarSurcharge: 100, features: ['Verwijdert lichte krassen, swirl marks en doffe plekken', 'Herstelt glans en kleurdiepte', 'Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging', '1-staps polieren', 'Sedan/Station +€60 · Jeep/SUV +€100'] },
+  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Verwijdert lichte krassen, swirl marks en doffe plekken. Herstelt glans en kleurdiepte. Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging. 1-staps polieren.', basePrice: 0, largeCarSurcharge: 0, features: ['Verwijdert lichte krassen, swirl marks en doffe plekken', 'Herstelt glans en kleurdiepte', 'Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging', '1-staps polieren', 'Prijs op aanvraag · Sedan/Station +€60 · Jeep/SUV +€100'] },
   { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Verwijdert hardnekkige krassen, diepe swirls en oxidatie. Herstelt maximale glans en diepte. Alle gevoelige onderdelen worden professioneel afgeschermd. Meerstaps polieren.', basePrice: 0, largeCarSurcharge: 0, features: ['Verwijdert hardnekkige krassen, diepe swirls en oxidatie', 'Herstelt maximale glans en diepte in de lak', 'Gevoelige onderdelen professioneel afgeschermd', 'Geschikt voor duidelijke lakbeschadiging of doffe plekken', 'Meerstaps polieren', 'Prijs op aanvraag · Sedan/Station +€60 · Jeep/SUV +€120'] },
 ]
 
