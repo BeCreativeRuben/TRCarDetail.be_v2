@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Bebas_Neue, Inter } from 'next/font/google'
+import Script from 'next/script'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ScrollToTop from '@/components/ScrollToTop'
@@ -21,6 +22,18 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${bebas.variable} ${inter.variable}`}>
       <body className="bg-primary-dark text-light min-h-screen">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-2Z07BE36YG"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-2Z07BE36YG');
+          `}
+        </Script>
         <div className="min-h-screen flex flex-col">
           <ScrollToTop />
           <Header />
