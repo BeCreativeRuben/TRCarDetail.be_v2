@@ -7,7 +7,7 @@ const unsplash = (id: string, w = 800) =>
 
 export const images = {
   homeAbout: '/images/home-about.webp',
-  aboutStory: 'https://placehold.co/1200x384/1a1a1a/888?text=Car+detailing+workshop',
+  aboutStory: '/images/about-story.jpg',
   serviceInterieur: '/images/service-interieur.webp',
   serviceExterieur: '/images/service-exterieur.webp',
   serviceFull: '/images/service-full.webp',

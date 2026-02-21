@@ -56,7 +56,10 @@ export default function Footer() {
       </div>
 
       <div className="w-full mt-8 pt-6 pb-6 border-t border-primary-dark bg-primary-dark bg-opacity-50">
-        <div className="container-custom">
+        <div className="container-custom space-y-2">
+          <p className="text-center text-xs text-light opacity-80 max-w-2xl mx-auto">
+            Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.
+          </p>
           <p className="text-center text-sm text-light opacity-90">
             &copy; {new Date().getFullYear()} T&R Car Detail. Alle rechten voorbehouden.
           </p>

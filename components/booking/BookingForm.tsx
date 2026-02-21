@@ -249,7 +249,14 @@ export default function BookingForm() {
         </motion.div>
       )}
 
-      {submitStatus === 'success' && <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg p-4 text-green-400">Bedankt! Uw boeking is verzonden. We nemen zo spoedig mogelijk contact met u op om de afspraak te bevestigen.</div>}
+      <p className="text-sm text-primary-dark opacity-70 mt-2 mb-2">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
+
+      {submitStatus === 'success' && (
+        <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg p-4 text-green-400 space-y-2">
+          <p>Bedankt! Uw boeking is verzonden. We nemen zo spoedig mogelijk contact met u op om de afspraak te bevestigen.</p>
+          <p className="text-sm opacity-90">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
+        </div>
+      )}
       {submitStatus === 'error' && <div className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-red">Er is een fout opgetreden. Controleer of alle verplichte velden zijn ingevuld en probeer het opnieuw.</div>}
 
       <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">

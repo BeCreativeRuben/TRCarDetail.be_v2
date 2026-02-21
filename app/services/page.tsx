@@ -85,6 +85,10 @@ function ServicesPageContent() {
             <PricingCard key={service.id} service={service} index={index} />
           ))}
         </div>
+
+        <p className="text-center text-sm text-primary-dark opacity-70 max-w-2xl mx-auto mb-12">
+          Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.
+        </p>
       </div>
 
       <section className="py-20 bg-primary-dark">

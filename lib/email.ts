@@ -102,6 +102,7 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
       </table>
     </div>
     <p style="margin:24px 0 0;">Vragen? Antwoord gewoon op deze mail of bel ons.</p>
+    <p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted}; font-style:italic;">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
     <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong></p>
   `
   return emailWrapper(
@@ -124,6 +125,8 @@ function bookingConfirmationText(booking: BookingPayload): string {
     `- Datum: ${booking.preferredDate}`,
     `- Tijd: ${booking.preferredTime}`,
     `- Voertuig: ${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})`,
+    '',
+    'Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.',
     '',
     'Met vriendelijke groet,',
     BRAND.name,
