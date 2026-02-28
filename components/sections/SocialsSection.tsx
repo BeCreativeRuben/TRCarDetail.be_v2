@@ -1,14 +1,25 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FiInstagram } from 'react-icons/fi'
 import Button from '../ui/Button'
-
-const INSTAGRAM_HANDLE = 'trcardetail'
-const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`
-const INSTAGRAM_POST_SHORTCODES = ['C1ABC123', 'C2DEF456', 'C3GHI789']
+import { instagram } from '@/lib/socials'
 
 export default function SocialsSection() {
+  const [shortcodes, setShortcodes] = useState<string[]>(instagram.postShortcodes)
+
+  useEffect(() => {
+    fetch('/api/instagram-posts')
+      .then((res) => res.json())
+      .then((data: { shortcodes?: string[] }) => {
+        if (Array.isArray(data.shortcodes) && data.shortcodes.length > 0) {
+          setShortcodes(data.shortcodes)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <section className="py-20 bg-light">
       <div className="container-custom">
@@ -26,7 +37,7 @@ export default function SocialsSection() {
             <p className="text-lg text-primary-dark opacity-80 mb-6">
               Blijf op de hoogte van onze laatste projecten, voor & na foto&apos;s en exclusieve acties.
             </p>
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+            <a href={instagram.url} target="_blank" rel="noopener noreferrer">
               <Button variant="primary" size="md" className="flex items-center gap-2 w-fit">
                 <FiInstagram className="w-5 h-5" />
                 Volg ons op Instagram
@@ -41,14 +52,14 @@ export default function SocialsSection() {
             className="bg-primary-dark rounded-lg p-8 text-center flex flex-col items-center justify-center min-h-[280px]"
           >
             <FiInstagram className="w-24 h-24 mb-6 text-accent-red" />
-            <p className="text-light opacity-80 text-sm mb-4">@{INSTAGRAM_HANDLE}</p>
+            <p className="text-light opacity-80 text-sm mb-4">@{instagram.handle}</p>
             <p className="text-light opacity-70 text-sm">Ontdek onze laatste werkzaamheden en resultaten</p>
           </motion.div>
         </div>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
           <h3 className="text-2xl font-bold text-primary-dark mb-8 text-center">Laatste posts</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {INSTAGRAM_POST_SHORTCODES.map((shortcode, index) => (
+            {shortcodes.map((shortcode, index) => (
               <motion.div
                 key={shortcode}
                 initial={{ opacity: 0, y: 20 }}

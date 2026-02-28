@@ -33,6 +33,21 @@
 
   .corner-shape {
     corner-shape: bevel round;
-    border-radius: 1em 0 / 3em 0;
+    border-radius: 1em 0 0 0 / 3em 0 0 0;
+  }
+
+  .corner-shape-tr {
+    corner-shape: bevel round;
+    border-radius: 0 1em 0 0 / 0 3em 0 0;
+  }
+
+  .corner-shape-br {
+    corner-shape: bevel round;
+    border-radius: 0 0 1em 0 / 0 0 3em 0;
+  }
+
+  .corner-shape-bl {
+    corner-shape: bevel round;
+    border-radius: 0 0 0 1em / 0 0 0 3em;
   }
 }
