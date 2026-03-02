@@ -9,8 +9,8 @@ import Countdown from '@/components/Countdown'
 // Thursday 5 March 2026 @ 17:00 Brussels (UTC+1) = 16:00 UTC
 const TARGET = new Date('2026-03-05T16:00:00.000Z')
 
-/** Standaard uit: timer verborgen, volledige site. Zet NEXT_PUBLIC_COUNTDOWN_HIDDEN=false om de timer te tonen. */
-const COUNTDOWN_HIDDEN = process.env.NEXT_PUBLIC_COUNTDOWN_HIDDEN !== 'false'
+/** Timer standaard aan. Zet NEXT_PUBLIC_COUNTDOWN_HIDDEN=true om de timer te verbergen en meteen de volledige site te tonen. */
+const COUNTDOWN_HIDDEN = process.env.NEXT_PUBLIC_COUNTDOWN_HIDDEN === 'true'
 
 /** Testmodus: toon de volledige site alsof de timer op 0 staat. Zet NEXT_PUBLIC_COUNTDOWN_FORCE_REACHED=true in .env.local */
 const FORCE_REACHED = process.env.NEXT_PUBLIC_COUNTDOWN_FORCE_REACHED === 'true'
