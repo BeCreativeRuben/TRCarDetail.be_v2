@@ -44,17 +44,20 @@ export default function SocialsSection() {
               </Button>
             </a>
           </motion.div>
-          <motion.div
+          <motion.a
+            href={instagram.url}
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-primary-dark rounded-lg p-8 text-center flex flex-col items-center justify-center min-h-[280px]"
+            className="bg-primary-dark rounded-lg p-8 text-center flex flex-col items-center justify-center min-h-[280px] hover:opacity-95 transition-opacity block"
           >
             <FiInstagram className="w-24 h-24 mb-6 text-accent-red" />
             <p className="text-light opacity-80 text-sm mb-4">@{instagram.handle}</p>
             <p className="text-light opacity-70 text-sm">Ontdek onze laatste werkzaamheden en resultaten</p>
-          </motion.div>
+          </motion.a>
         </div>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
           <h3 className="text-2xl font-bold text-primary-dark mb-8 text-center">Laatste posts</h3>

@@ -22,7 +22,12 @@ function pad(n: number) {
   return n.toString().padStart(2, '0')
 }
 
-export default function Countdown() {
+interface CountdownProps {
+  /** Optionele testknop: toon volledige site alsof timer op 0 staat */
+  onTestReached?: () => void
+}
+
+export default function Countdown({ onTestReached }: CountdownProps) {
   const [mounted, setMounted] = useState(false)
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(new Date()))
 
@@ -96,6 +101,18 @@ export default function Countdown() {
             )
           })}
         </div>
+
+        {onTestReached && process.env.NODE_ENV === 'development' && (
+          <div className="mt-12 flex justify-center">
+            <button
+              type="button"
+              onClick={onTestReached}
+              className="px-4 py-2 text-sm font-body border-2 border-light/60 text-light/90 rounded hover:bg-light/10 hover:border-light transition-colors"
+            >
+              Test: toon volledige site
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   )
