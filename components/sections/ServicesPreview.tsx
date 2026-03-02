@@ -9,6 +9,7 @@ const services: Service[] = [
   { id: 'exterieur-basis', name: 'Exterieur', description: 'Basis en Deluxe exterieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'full-basis', name: 'Volledig Pakket', description: 'Exterieur + interieur basis in één', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-light', name: 'Polieren', description: 'Light Polish en Full Polish – lakcorrectie en glansherstel', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'moto-detailing', name: 'Moto', description: 'Binnenkort: professionele moto- en motordetailing', basePrice: 0, largeCarSurcharge: 0, features: [], comingSoon: true },
 ]
 
 export default function ServicesPreview() {

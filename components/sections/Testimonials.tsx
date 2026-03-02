@@ -18,10 +18,8 @@ interface Testimonial {
 }
 
 const testimonials: Testimonial[] = [
-  { id: '1', name: 'Jan V.', rating: 5, text: 'Uitstekende service. Mijn auto ziet er weer als nieuw uit – professioneel en met oog voor detail. Precies wat ik zocht.', car: 'BMW 3-serie', service: 'Volledig pakket', date: '2 weken geleden', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: '2', name: 'Maria D.', rating: 5, text: 'Fantastische resultaten na de dieptereiniging. Het interieur ruikt weer fris en ziet er onberispelijk uit. Absoluut de moeite waard.', car: 'Audi A4', service: 'Interieur DeepClean', date: '1 maand geleden', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: '3', name: 'Tom S.', rating: 5, text: 'De premium handwash heeft mijn auto een glans gegeven die ik nog nooit eerder zag. Een echte aanrader.', car: 'Mercedes C-Klasse', service: 'Exterieur Premium', date: '3 weken geleden', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200&q=80' },
-  { id: '4', name: 'Anoniem', rating: 5, text: 'Mijn auto weer tip top in orde gebracht tot in de details door een vriendelijke jongeman.', date: 'Onlangs', placeholderAvatar: true },
+  { id: '1', name: 'Jorrith De Jonghe', rating: 5, text: 'Thanks for the amazing service!', car: 'Porsche Taycan', date: 'Onlangs' },
+  { id: '2', name: 'Anoniem', rating: 5, text: 'Mijn auto weer tip top in orde gebracht tot in de details door een vriendelijke jongeman.', car: 'Fiat', date: 'Onlangs', placeholderAvatar: true },
 ]
 
 const getAvatarUrl = (name: string) =>

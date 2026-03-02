@@ -8,6 +8,51 @@ import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import { FiMail, FiPhone, FiMapPin, FiCalendar } from 'react-icons/fi'
 
+/** Vanaf 1 april: weekdagen 18–21u, weekend 08–22u. Voor april: bel of mail. */
+function OpeningHours() {
+  const now = new Date()
+  const isFromApril = now.getMonth() >= 3 // april = index 3
+
+  if (!isFromApril) {
+    return (
+      <>
+        <p className="text-primary-dark opacity-80 text-sm mb-4">
+          Tot begin april zijn er geen vaste openingstijden. Neem contact op via telefoon of e-mail voor beschikbaarheid.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a href="tel:+32499128500" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors text-sm">
+            <FiPhone size={18} />
+            Bel ons
+          </a>
+          <a href="mailto:info@trcardetail.be" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors text-sm">
+            <FiMail size={18} />
+            Mail ons
+          </a>
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <ul className="text-primary-dark opacity-80 text-sm space-y-2 mb-4">
+        <li className="flex justify-between gap-4">
+          <span>Maandag – Vrijdag</span>
+          <span className="font-medium text-primary-dark">18:00 – 21:00</span>
+        </li>
+        <li className="flex justify-between gap-4">
+          <span>Zaterdag – Zondag</span>
+          <span className="font-medium text-primary-dark">08:00 – 22:00</span>
+        </li>
+      </ul>
+      <Link href="/booking" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors">
+        <FiCalendar size={18} />
+        Bekijk kalender
+      </Link>
+    </>
+  )
+}
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -72,11 +117,7 @@ export default function ContactPage() {
             </Card>
             <Card>
               <h3 className="text-xl font-bold text-primary-dark mb-4">Openingstijden</h3>
-              <p className="text-primary-dark opacity-80 text-sm mb-4">Raadpleeg onze kalender voor de actuele beschikbare tijdslots en openingstijden.</p>
-              <Link href="/booking" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors">
-                <FiCalendar size={18} />
-                Bekijk kalender
-              </Link>
+              <OpeningHours />
             </Card>
           </div>
 

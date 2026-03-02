@@ -170,10 +170,11 @@
 
   ## 11. Email (transactional)
   - **Sender name:** T&R Car Detail
-  - **Header bar:** Dark `#0f172a`, white text, “T&R Car Detail” + “Professionele auto-verzorging”.
-  - **Body:** White background, dark text `#334155`, muted `#64748b`, links/accent `#0ea5e9` (or align to accent-red for full brand match).
-  - **Footer:** “T&R Car Detail · Wij zorgen voor uw wagen”, small, muted.
-  - **Layout:** Max width ~600px, single column, inline CSS for compatibility.
+  - **Header bar:** Primary dark `#0A0908`, light text `#F2F4F3`, “T&R Car Detail” + tagline “Professionele autoreiniging aan huis”.
+  - **Body:** White background, primary dark text `#0A0908`, secondary dark for muted `#22333B`, links and CTAs accent red `#FF2E00`.
+  - **Footer:** “T&R Car Detail · Wij zorgen voor uw wagen”, small, muted. Footer bar background light `#F2F4F3`, border secondary dark.
+  - **Layout:** Max width ~600px, single column, inline CSS for compatibility. Outer padding uses secondary dark for framing.
+  - **Tone:** “U” in all transactional emails (consistent with brand voice).
 
   ---
 

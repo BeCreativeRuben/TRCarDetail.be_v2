@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendBookingConfirmation } from '@/lib/email'
+import { saveBooking } from '@/lib/bookings-store'
 
 export async function POST(request: Request) {
   try {
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
       )
     }
 
-    await sendBookingConfirmation({
+    const payload = {
       customerName,
       email,
       phone,
@@ -39,7 +40,11 @@ export async function POST(request: Request) {
       preferredDate,
       preferredTime,
       specialRequests,
-    })
+    }
+
+    await sendBookingConfirmation(payload)
+
+    await saveBooking(payload)
 
     return NextResponse.json(
       { message: 'Booking received successfully' },

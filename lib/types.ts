@@ -6,6 +6,7 @@ export interface Service {
   largeCarSurcharge: number
   features: string[]
   popular?: boolean
+  comingSoon?: boolean
 }
 
 export interface Booking {

@@ -34,17 +34,20 @@ export type ContactPayload = {
   message: string
 }
 
-// —— Brand & layout (moderne mailing: max 600px, duidelijke hiërarchie, inline CSS) ——
+// —— T&R Car Detail branding (BRAND-BOOK.md): primary-dark, secondary-dark, light, accent-red ——
 const BRAND = {
   name: 'T&R Car Detail',
-  headerBg: '#0f172a',
-  accent: '#0ea5e9',
-  accentMuted: '#e0f2fe',
-  text: '#334155',
-  textMuted: '#64748b',
-  border: '#e2e8f0',
-  bg: '#f8fafc',
+  tagline: 'Professionele autoreiniging aan huis',
+  primaryDark: '#0A0908',
+  secondaryDark: '#22333B',
+  light: '#F2F4F3',
+  accentRed: '#FF2E00',
+  accentDarkRed: '#B80C09',
   white: '#ffffff',
+  border: '#22333B',
+  bg: '#F2F4F3',
+  text: '#0A0908',
+  textMuted: '#22333B',
 }
 
 function emailWrapper(previewText: string, title: string, content: string): string {
@@ -57,19 +60,19 @@ function emailWrapper(previewText: string, title: string, content: string): stri
   <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
   <title>${title}</title>
 </head>
-<body style="margin:0; padding:0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color:${BRAND.bg}; color:${BRAND.text}; font-size:16px; line-height:1.6;">
+<body style="margin:0; padding:0; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color:${BRAND.bg}; color:${BRAND.text}; font-size:16px; line-height:1.6;">
   <div style="display:none; max-height:0; overflow:hidden;">${previewText}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${BRAND.bg}; padding:24px 16px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${BRAND.secondaryDark}; padding:24px 16px;">
     <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:${BRAND.white}; border-radius:12px; overflow:hidden; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:${BRAND.white}; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid ${BRAND.border};">
         <tr>
-          <td style="background:${BRAND.headerBg}; color:${BRAND.white}; padding:24px 32px; text-align:center;">
-            <span style="font-size:22px; font-weight:700; letter-spacing:0.02em;">T&amp;R Car Detail</span>
-            <p style="margin:6px 0 0; font-size:13px; opacity:0.9;">Professionele auto-verzorging</p>
+          <td style="background:${BRAND.primaryDark}; color:${BRAND.light}; padding:28px 32px; text-align:center;">
+            <span style="font-size:26px; font-weight:700; letter-spacing:0.04em;">T&amp;R Car Detail</span>
+            <p style="margin:8px 0 0; font-size:14px; opacity:0.9;">${BRAND.tagline}</p>
           </td>
         </tr>
         <tr>
-          <td style="padding:32px;">
+          <td style="padding:32px; background:${BRAND.white}; color:${BRAND.text};">
             ${content}
           </td>
         </tr>
@@ -88,20 +91,20 @@ function emailWrapper(previewText: string, title: string, content: string): stri
 
 function bookingConfirmationHtml(booking: BookingPayload): string {
   const content = `
-    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.headerBg};">Bedankt voor je boeking</h1>
-    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">We hebben je aanvraag goed ontvangen.</p>
+    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.primaryDark};">Bedankt voor uw boeking</h1>
+    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">We hebben uw aanvraag goed ontvangen.</p>
     <p style="margin:0 0 20px;">Beste ${booking.customerName},</p>
-    <p style="margin:0 0 24px;">We zullen <strong>je afspraak nog bevestigen</strong>. Je ontvangt zo snel mogelijk een bericht van ons om de datum en het tijdstip definitief te maken.</p>
-    <div style="background:${BRAND.accentMuted}; border-left:4px solid ${BRAND.accent}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;">
-      <p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Jouw aanvraag</p>
-      <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px;">
+    <p style="margin:0 0 24px;">We zullen <strong>uw afspraak nog bevestigen</strong>. U ontvangt zo snel mogelijk een bericht van ons om de datum en het tijdstip definitief te maken.</p>
+    <div style="background:${BRAND.bg}; border-left:4px solid ${BRAND.accentRed}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;">
+      <p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Uw aanvraag</p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px; color:${BRAND.text};">
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Service</td><td style="padding:4px 0;"><strong>${booking.serviceType}</strong></td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Datum</td><td style="padding:4px 0;">${booking.preferredDate}</td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Tijd</td><td style="padding:4px 0;">${booking.preferredTime}</td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Voertuig</td><td style="padding:4px 0;">${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})</td></tr>
       </table>
     </div>
-    <p style="margin:24px 0 0;">Vragen? Antwoord gewoon op deze mail of bel ons.</p>
+    <p style="margin:24px 0 0;">Vragen? Antwoord op deze mail of bel ons op <a href="tel:+32499128500" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">+32 499 12 85 00</a>.</p>
     <p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted}; font-style:italic;">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
     <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong></p>
   `
@@ -114,11 +117,11 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
 
 function bookingConfirmationText(booking: BookingPayload): string {
   return [
-    'Bedankt voor je boeking!',
+    'Bedankt voor uw boeking!',
     '',
     `Beste ${booking.customerName},`,
     '',
-    'We hebben je aanvraag ontvangen. We zullen je afspraak nog bevestigen – je ontvangt zo snel mogelijk een bericht van ons om de datum en het tijdstip definitief te maken.',
+    'We hebben uw aanvraag ontvangen. We zullen uw afspraak nog bevestigen – u ontvangt zo snel mogelijk een bericht van ons om de datum en het tijdstip definitief te maken.',
     '',
     'Jouw aanvraag:',
     `- Service: ${booking.serviceType}`,
@@ -138,12 +141,12 @@ function bookingNotificationHtml(booking: BookingPayload): string {
     ? `<tr><td colspan="2" style="padding:12px 0 0; border-top:1px solid ${BRAND.border};"><strong>Opmerkingen</strong><br><span style="color:${BRAND.text};">${booking.specialRequests}</span></td></tr>`
     : ''
   const content = `
-    <h1 style="margin:0 0 8px; font-size:22px; color:${BRAND.headerBg};">Nieuwe boeking</h1>
+    <h1 style="margin:0 0 8px; font-size:22px; color:${BRAND.primaryDark};">Nieuwe boeking</h1>
     <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Via de website</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px; border:1px solid ${BRAND.border}; border-radius:8px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px; border:1px solid ${BRAND.border}; border-radius:8px; color:${BRAND.text};">
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; width:140px;">Naam</td><td style="padding:12px 16px;">${booking.customerName}</td></tr>
-      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${booking.email}" style="color:${BRAND.accent}; text-decoration:none;">${booking.email}</a></td></tr>
-      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${booking.phone}" style="color:${BRAND.accent}; text-decoration:none;">${booking.phone}</a></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${booking.email}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${booking.email}</a></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${booking.phone}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${booking.phone}</a></td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Service</td><td style="padding:12px 16px;">${booking.serviceType}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Datum</td><td style="padding:12px 16px;">${booking.preferredDate}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Tijd</td><td style="padding:12px 16px;">${booking.preferredTime}</td></tr>
@@ -156,14 +159,14 @@ function bookingNotificationHtml(booking: BookingPayload): string {
 
 function contactNotificationHtml(contact: ContactPayload): string {
   const phoneRow = contact.phone
-    ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; width:140px;">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${contact.phone}" style="color:${BRAND.accent}; text-decoration:none;">${contact.phone}</a></td></tr>`
+    ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; width:140px;">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${contact.phone}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${contact.phone}</a></td></tr>`
     : ''
   const content = `
-    <h1 style="margin:0 0 8px; font-size:22px; color:${BRAND.headerBg};">Nieuw contactbericht</h1>
+    <h1 style="margin:0 0 8px; font-size:22px; color:${BRAND.primaryDark};">Nieuw contactbericht</h1>
     <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Via het contactformulier</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px; border:1px solid ${BRAND.border}; border-radius:8px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px; border:1px solid ${BRAND.border}; border-radius:8px; color:${BRAND.text};">
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; width:140px;">Naam</td><td style="padding:12px 16px;">${contact.name}</td></tr>
-      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${contact.email}" style="color:${BRAND.accent}; text-decoration:none;">${contact.email}</a></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${contact.email}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${contact.email}</a></td></tr>
       ${phoneRow}
       <tr><td colspan="2" style="padding:16px; border-top:1px solid ${BRAND.border};"><strong>Bericht</strong><br><span style="white-space:pre-wrap;">${contact.message}</span></td></tr>
     </table>
@@ -173,10 +176,10 @@ function contactNotificationHtml(contact: ContactPayload): string {
 
 function contactAutoReplyHtml(contact: ContactPayload): string {
   const content = `
-    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.headerBg};">Bedankt voor je bericht</h1>
+    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.primaryDark};">Bedankt voor uw bericht</h1>
     <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">We hebben het goed ontvangen.</p>
     <p style="margin:0 0 20px;">Beste ${contact.name},</p>
-    <p style="margin:0 0 24px;">We hebben je bericht ontvangen en nemen zo spoedig mogelijk contact met je op.</p>
+    <p style="margin:0 0 24px;">We hebben uw bericht ontvangen en nemen zo spoedig mogelijk contact met u op.</p>
     <p style="margin:24px 0 0;">Tot dan,<br><strong>${BRAND.name}</strong></p>
   `
   return emailWrapper(
@@ -212,6 +215,58 @@ export async function sendBookingConfirmation(booking: BookingPayload): Promise<
     html: bookingConfirmationHtml(booking),
   })
   console.log('Booking confirmation email sent to:', booking.email)
+}
+
+function reviewRequestHtml(customerName: string, serviceType: string, preferredDate: string): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trcardetail.be'
+  const content = `
+    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.primaryDark};">Hoe was uw ervaring?</h1>
+    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Uw afspraak is geweest – we horen graag wat u ervan vond.</p>
+    <p style="margin:0 0 20px;">Beste ${customerName},</p>
+    <p style="margin:0 0 24px;">Onlangs heeft u bij ons een <strong>${serviceType}</strong> laten uitvoeren (${preferredDate}). We hopen dat u tevreden bent!</p>
+    <p style="margin:0 0 24px;">Zou u een korte review willen achterlaten? Dat helpt andere klanten en ons om de service verder te verbeteren. U kunt uw ervaring met ons delen door te antwoorden op deze e-mail of via onze website.</p>
+    <p style="margin:24px 0 0;">
+      <a href="${siteUrl}/contact" style="display:inline-block; background:${BRAND.accentRed}; color:${BRAND.white}; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600;">Review achterlaten</a>
+    </p>
+    <p style="margin:24px 0 0;">Alvast bedankt,<br><strong>${BRAND.name}</strong></p>
+  `
+  return emailWrapper(
+    'Laat een review achter na uw bezoek bij T&R Car Detail',
+    'Review aanvraag - T&R Car Detail',
+    content
+  )
+}
+
+function reviewRequestText(customerName: string, serviceType: string, preferredDate: string): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trcardetail.be'
+  return [
+    'Hoe was uw ervaring?',
+    '',
+    `Beste ${customerName},`,
+    '',
+    `Onlangs heeft u bij ons een ${serviceType} laten uitvoeren (${preferredDate}). We hopen dat u tevreden bent!`,
+    '',
+    'Zou u een korte review willen achterlaten? Antwoord op deze e-mail of ga naar onze website:',
+    siteUrl + '/contact',
+    '',
+    'Alvast bedankt,',
+    BRAND.name,
+  ].join('\n')
+}
+
+export async function sendReviewRequest(booking: { customerName: string; email: string; serviceType: string; preferredDate: string }): Promise<void> {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('Email not configured. Review request skipped for:', booking.email)
+    return
+  }
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to: booking.email,
+    subject: 'Hoe was uw ervaring? – T&R Car Detail',
+    text: reviewRequestText(booking.customerName, booking.serviceType, booking.preferredDate),
+    html: reviewRequestHtml(booking.customerName, booking.serviceType, booking.preferredDate),
+  })
+  console.log('Review request email sent to:', booking.email)
 }
 
 export async function sendContactNotification(contact: ContactPayload): Promise<void> {

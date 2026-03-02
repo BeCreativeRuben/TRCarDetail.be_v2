@@ -43,7 +43,7 @@ export async function GET() {
 
     const items = data?.data ?? []
     const shortcodes = items
-      .map((item: { permalink?: string }) => shortcodeFromPermalink(item.permalink))
+      .map((item: { permalink?: string }) => shortcodeFromPermalink(item.permalink ?? ''))
       .filter((s: string | null): s is string => Boolean(s))
 
     return NextResponse.json({ shortcodes })

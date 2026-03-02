@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button'
 import CTASection from '@/components/sections/CTASection'
 import { FiCalendar, FiHome, FiShield, FiCheck } from 'react-icons/fi'
 
-type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren'
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto'
 
 const interieurServices: Service[] = [
   { id: 'interieur-basis', name: 'Interieur Basis', description: 'Bedoeld voor mensen die hun wagen goed hebben onderhouden en hun wagen eens willen laten opfrissen. LET OP: dit is geen dieptereiniging.', basePrice: 50, largeCarSurcharge: 0, features: ['Interieur stofzuigen', 'Interieur afstoffen', 'Grondig stofzuigen en interieur behandelen met microvezeldoeken en product'] },
@@ -32,7 +32,11 @@ const polierenServices: Service[] = [
   { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Verwijdert hardnekkige krassen, diepe swirls en oxidatie. Herstelt maximale glans en diepte. Alle gevoelige onderdelen worden professioneel afgeschermd. Meerstaps polieren.', basePrice: 0, largeCarSurcharge: 0, features: ['Verwijdert hardnekkige krassen, diepe swirls en oxidatie', 'Herstelt maximale glans en diepte in de lak', 'Gevoelige onderdelen professioneel afgeschermd', 'Geschikt voor duidelijke lakbeschadiging of doffe plekken', 'Meerstaps polieren', 'Prijs op aanvraag · Sedan/Station +€60 · Jeep/SUV +€120'] },
 ]
 
-const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren']
+const motoServices: Service[] = [
+  { id: 'moto-detailing', name: 'Moto Detailing', description: 'Professionele reiniging en detailing voor moto\'s en motorfietsen. Binnenkort beschikbaar – wij breiden onze diensten uit zodat ook uw motor dezelfde zorg en glans krijgt als uw auto.', basePrice: 0, largeCarSurcharge: 0, features: ['Exterieur reiniging', 'Velgen en banden', 'Lak- en onderhoudsbehandeling', 'Details en optiek'], comingSoon: true },
+]
+
+const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren', 'moto']
 
 function categoryFromParam(param: string | null): ServiceCategory {
   return param && VALID_CATEGORIES.includes(param as ServiceCategory) ? param as ServiceCategory : 'exterieur'
@@ -53,7 +57,8 @@ function ServicesPageContent() {
       case 'exterieur': return exterieurServices
       case 'full': return fullServices
       case 'polieren': return polierenServices
-      default: return fullServices
+      case 'moto': return motoServices
+      default: return exterieurServices
     }
   }
 
@@ -77,6 +82,9 @@ function ServicesPageContent() {
           </button>
           <button onClick={() => setActiveCategory('polieren')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'polieren' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Polieren
+          </button>
+          <button onClick={() => setActiveCategory('moto')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'moto' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+            Moto
           </button>
         </div>
 

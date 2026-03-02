@@ -26,9 +26,16 @@ export default function PricingCard({ service, index }: PricingCardProps) {
             Meest Populair
           </div>
         )}
+        {service.comingSoon && (
+          <div className="bg-secondary-dark text-light text-center py-2 text-sm font-semibold mb-4 -mx-6 -mt-6 uppercase tracking-wider">
+            Coming soon
+          </div>
+        )}
         <div className="mb-4 flex-shrink-0">
           <h3 className="text-2xl font-bold text-primary-dark mb-2">{service.name}</h3>
-          {service.basePrice > 0 ? (
+          {service.comingSoon ? (
+            <span className="text-lg text-primary-dark opacity-70">Binnenkort beschikbaar</span>
+          ) : service.basePrice > 0 ? (
             <div>
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-4xl font-bold text-accent-red">€{service.basePrice}</span>
@@ -54,18 +61,26 @@ export default function PricingCard({ service, index }: PricingCardProps) {
           </div>
         </div>
         <div className="mt-auto flex-shrink-0 space-y-2">
-          <Link href={`/booking?service=${service.id}`} className="block">
-            <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
-              <FiCalendar className="w-4 h-4" />
-              Boek dit pakket
-            </Button>
-          </Link>
-          {(service.id === 'interieur-basis' || service.id === 'exterieur-basis') && (
-            <p className="text-center text-xs text-primary-dark opacity-60">
-              <Link href="/services?category=full" className="text-accent-red hover:underline">
-                Of kies het Volledig Pakket (interieur + exterieur) →
+          {service.comingSoon ? (
+            <div className="py-3 px-4 rounded-lg bg-secondary-dark bg-opacity-50 border-2 border-dashed border-secondary-dark text-center">
+              <span className="font-semibold text-primary-dark uppercase tracking-wider text-sm">Coming soon</span>
+            </div>
+          ) : (
+            <>
+              <Link href={`/booking?service=${service.id}`} className="block">
+                <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
+                  <FiCalendar className="w-4 h-4" />
+                  Boek dit pakket
+                </Button>
               </Link>
-            </p>
+              {(service.id === 'interieur-basis' || service.id === 'exterieur-basis') && (
+                <p className="text-center text-xs text-primary-dark opacity-60">
+                  <Link href="/services?category=full" className="text-accent-red hover:underline">
+                    Of kies het Volledig Pakket (interieur + exterieur) →
+                  </Link>
+                </p>
+              )}
+            </>
           )}
         </div>
       </Card>

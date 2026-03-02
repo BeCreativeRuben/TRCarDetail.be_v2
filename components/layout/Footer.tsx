@@ -21,6 +21,7 @@ export default function Footer() {
               <li><Link href="/services" className="text-light hover:text-accent-red transition-colors text-sm">Diensten</Link></li>
               <li><Link href="/faq" className="text-light hover:text-accent-red transition-colors text-sm">FAQ</Link></li>
               <li><Link href="/contact" className="text-light hover:text-accent-red transition-colors text-sm">Contact</Link></li>
+              <li><Link href="/privacy" className="text-light hover:text-accent-red transition-colors text-sm">Privacy</Link></li>
             </ul>
           </div>
 

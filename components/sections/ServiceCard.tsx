@@ -5,12 +5,13 @@ import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
 import { images } from '@/lib/images'
 
-type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren'
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto'
 
 function getCategoryFromServiceId(id: string): ServiceCategory {
   if (id.startsWith('interieur')) return 'interieur'
   if (id.startsWith('exterieur')) return 'exterieur'
   if (id.startsWith('polijsten')) return 'polieren'
+  if (id.startsWith('moto')) return 'moto'
   return 'full'
 }
 
@@ -20,7 +21,7 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service, index }: ServiceCardProps) {
-  const img = service.id.startsWith('interieur') ? images.serviceInterieur : service.id.startsWith('exterieur') ? images.serviceExterieur : service.id.startsWith('polijsten') ? images.servicePolieren : images.serviceFull
+  const img = service.id.startsWith('interieur') ? images.serviceInterieur : service.id.startsWith('exterieur') ? images.serviceExterieur : service.id.startsWith('polijsten') ? images.servicePolieren : service.id.startsWith('moto') ? images.serviceMoto : images.serviceFull
   const category = getCategoryFromServiceId(service.id)
   return (
     <motion.div
@@ -32,6 +33,11 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
     >
       <Link href={`/services?category=${category}`} className="block">
         <div className="relative overflow-hidden rounded-lg bg-secondary-dark aspect-[3/4] cursor-pointer">
+          {service.comingSoon && (
+            <div className="absolute top-3 right-3 z-10 bg-secondary-dark text-light text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded">
+              Coming soon
+            </div>
+          )}
           <img
             src={img}
             alt={service.name}
