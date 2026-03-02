@@ -13,11 +13,18 @@ export type StoredBooking = BookingPayload & {
   reviewRequestSent: boolean
 }
 
-async function getKv(): Promise<{ lpush: (k: string, v: string) => Promise<number>; set: (k: string, v: string) => Promise<string>; get: (k: string) => Promise<unknown>; lrange: (k: string, s: number, e: number) => Promise<string[]> } | null> {
+type KvStore = {
+  lpush: (k: string, v: string) => Promise<number>
+  set: (k: string, v: string) => Promise<string | null>
+  get: (k: string) => Promise<unknown>
+  lrange: (k: string, s: number, e: number) => Promise<string[]>
+}
+
+async function getKv(): Promise<KvStore | null> {
   if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) return null
   try {
     const { kv } = await import('@vercel/kv')
-    return kv
+    return kv as KvStore
   } catch {
     return null
   }
