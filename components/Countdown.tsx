@@ -22,12 +22,7 @@ function pad(n: number) {
   return n.toString().padStart(2, '0')
 }
 
-interface CountdownProps {
-  /** Optionele testknop: toon volledige site alsof timer op 0 staat */
-  onTestReached?: () => void
-}
-
-export default function Countdown({ onTestReached }: CountdownProps) {
+export default function Countdown() {
   const [mounted, setMounted] = useState(false)
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(new Date()))
 
@@ -54,6 +49,9 @@ export default function Countdown({ onTestReached }: CountdownProps) {
     { value: timeLeft.minutes, label: 'Minuten' },
     { value: timeLeft.seconds, label: 'Seconden' },
   ]
+
+  const totalSecondsLeft = timeLeft.days * 86400 + timeLeft.hours * 3600 + timeLeft.minutes * 60 + timeLeft.seconds
+  const isLastMinute = !timeLeft.done && totalSecondsLeft <= 60
 
   return (
     <div className="min-h-screen bg-primary-dark flex flex-col items-center justify-center overflow-hidden">
@@ -102,16 +100,15 @@ export default function Countdown({ onTestReached }: CountdownProps) {
           })}
         </div>
 
-        {onTestReached && process.env.NODE_ENV === 'development' && (
-          <div className="mt-12 flex justify-center">
-            <button
-              type="button"
-              onClick={onTestReached}
-              className="px-4 py-2 text-sm font-body border-2 border-light/60 text-light/90 rounded hover:bg-light/10 hover:border-light transition-colors"
-            >
-              Test: toon volledige site
-            </button>
-          </div>
+        {isLastMinute && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mt-10 max-w-xl mx-auto text-light/90 font-body text-sm sm:text-base leading-relaxed"
+          >
+            Bedankt om erbij te zijn voor de launch. Onze nummer 1 prioriteit: uw auto weer in volle showroomkwaliteit brengen.
+          </motion.p>
         )}
       </motion.div>
     </div>
