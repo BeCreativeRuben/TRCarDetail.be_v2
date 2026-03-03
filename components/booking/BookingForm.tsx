@@ -1,14 +1,16 @@
 'use client'
 
-import { useState, useRef, useEffect, FormEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Input from '../ui/Input'
 import Autocomplete from '../ui/Autocomplete'
+import AddressAutocomplete from '../ui/AddressAutocomplete'
 import Button from '../ui/Button'
 import BookingCalendar from './BookingCalendar'
 import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
+import { TRAVEL_CONFIG } from '@/lib/distance'
 
 const services: Service[] = [
   { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€60 · Glanzend en in topvorm', basePrice: 60, largeCarSurcharge: 0, features: [] },
@@ -43,12 +45,18 @@ export default function BookingForm() {
     customerName: '',
     email: '',
     phone: '',
+    address: '',
     specialRequests: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [travelFeeLoading, setTravelFeeLoading] = useState(false)
+  const [travelFeeUnavailable, setTravelFeeUnavailable] = useState<string | null>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
+  const travelFeeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastFetchedAddressRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (serviceFromUrl && validServiceIds.includes(serviceFromUrl)) {
@@ -57,10 +65,91 @@ export default function BookingForm() {
     }
   }, [serviceFromUrl])
 
+  const fetchTravelFee = useCallback(async (address: string) => {
+    if (!address || address.trim().length < 5) {
+      setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+      setTravelFeeUnavailable(null)
+      return
+    }
+    setTravelFeeLoading(true)
+    setTravelFeeUnavailable(null)
+    try {
+      const res = await fetch(`/api/travel-fee?address=${encodeURIComponent(address.trim())}`)
+      const data = await res.json()
+      if (!res.ok) {
+        setTravelFeeUnavailable('Kon afstand niet bepalen.')
+        setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+        return
+      }
+      if (data.error && data.distanceKm == null) {
+        setTravelFeeUnavailable('Adres niet herkend voor afstandsberekening.')
+        setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+        return
+      }
+      lastFetchedAddressRef.current = address.trim()
+      setTravelFeeUnavailable(null)
+      setFormData((prev) => ({
+        ...prev,
+        travelDistanceKm: data.distanceKm ?? undefined,
+        travelFeeEuro: data.travelFeeEuro ?? undefined,
+      }))
+    } catch {
+      setTravelFeeUnavailable('Afstand kon niet worden berekend.')
+      setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+    } finally {
+      setTravelFeeLoading(false)
+    }
+  }, [])
+
+  const fetchTravelFeeByCoords = useCallback(async (lat: number, lon: number) => {
+    setTravelFeeLoading(true)
+    setTravelFeeUnavailable(null)
+    try {
+      const res = await fetch(`/api/travel-fee?lat=${lat}&lon=${lon}`)
+      const data = await res.json()
+      if (data.error && data.distanceKm == null) {
+        setTravelFeeUnavailable('Kon afstand niet bepalen.')
+        setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+        return
+      }
+      setTravelFeeUnavailable(null)
+      setFormData((prev) => ({
+        ...prev,
+        travelDistanceKm: data.distanceKm ?? undefined,
+        travelFeeEuro: data.travelFeeEuro ?? undefined,
+      }))
+    } catch {
+      setTravelFeeUnavailable('Afstand kon niet worden berekend.')
+      setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+    } finally {
+      setTravelFeeLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    const address = formData.address?.trim() ?? ''
+    if (address.length < 5) {
+      setFormData((prev) => ({ ...prev, travelDistanceKm: undefined, travelFeeEuro: undefined }))
+      setTravelFeeUnavailable(null)
+      lastFetchedAddressRef.current = null
+      return
+    }
+    if (travelFeeTimeoutRef.current) clearTimeout(travelFeeTimeoutRef.current)
+    travelFeeTimeoutRef.current = setTimeout(() => {
+      if (address === lastFetchedAddressRef.current) return
+      fetchTravelFee(address)
+    }, 500)
+    return () => {
+      if (travelFeeTimeoutRef.current) clearTimeout(travelFeeTimeoutRef.current)
+    }
+  }, [formData.address, fetchTravelFee])
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!formData.preferredDate || !formData.preferredTime || !formData.serviceType) {
+    setSubmitError(null)
+    if (!formData.preferredDate || !formData.preferredTime || !formData.serviceType || !formData.address?.trim()) {
       setSubmitStatus('error')
+      setSubmitError('Vul alle verplichte velden in, inclusief het adres (kies een suggestie of vul handmatig in).')
       return
     }
     setIsSubmitting(true)
@@ -81,9 +170,16 @@ export default function BookingForm() {
           customerName: '',
           email: '',
           phone: '',
+          address: '',
+          travelDistanceKm: undefined,
+          travelFeeEuro: undefined,
           specialRequests: ''
         })
-      } else setSubmitStatus('error')
+      } else {
+        const data = await response.json().catch(() => ({}))
+        setSubmitStatus('error')
+        setSubmitError(data?.error || 'Er is iets misgegaan. Controleer of alle velden zijn ingevuld.')
+      }
     } catch {
       setSubmitStatus('error')
     } finally {
@@ -92,11 +188,13 @@ export default function BookingForm() {
   }
 
   const selectedService = services.find(s => s.id === formData.serviceType)
-  const totalPrice = selectedService
+  const servicePrice = selectedService
     ? formData.vehicleInfo?.size === 'large'
       ? selectedService.basePrice + selectedService.largeCarSurcharge
       : selectedService.basePrice
     : 0
+  const travelFee = formData.travelFeeEuro ?? 0
+  const totalPrice = servicePrice + travelFee
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -219,7 +317,36 @@ export default function BookingForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input label="Naam *" type="text" required value={formData.customerName || ''} onChange={(e) => setFormData({ ...formData, customerName: e.target.value })} />
           <Input label="Email *" type="email" required value={formData.email || ''} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-          <Input label="Telefoon *" type="tel" required value={formData.phone || ''} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="md:col-span-2" />
+          <Input label="Telefoon *" type="tel" required value={formData.phone || ''} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+          <div className="md:col-span-2">
+            <AddressAutocomplete
+              label="Adres (aan huis) *"
+              value={formData.address || ''}
+              onChange={(address, coords) => {
+                setFormData((prev) => ({ ...prev, address }))
+                if (coords) {
+                  lastFetchedAddressRef.current = address.trim()
+                  fetchTravelFeeByCoords(coords.lat, coords.lon)
+                }
+              }}
+              placeholder="Typ straat, postcode of gemeente (bv. 9100 Sint-Niklaas)"
+              required
+            />
+            <p className="text-sm text-primary-dark opacity-60 mt-1">
+              Wij rijden naar u toe. Binnen {TRAVEL_CONFIG.freeRadiusKm} km van Heidebloemstraat 66, Sint-Niklaas is de kilometervergoeding gratis. Vanaf {TRAVEL_CONFIG.freeRadiusKm} km: €{TRAVEL_CONFIG.pricePerKmEuro.toFixed(2)} per extra km.
+            </p>
+            {travelFeeLoading && <p className="text-sm text-primary-dark opacity-70 mt-1">Afstand wordt berekend…</p>}
+            {travelFeeUnavailable && (
+              <p className="text-sm text-primary-dark/80 mt-1">
+                {travelFeeUnavailable} U kunt gewoon verzenden; de kilometervergoeding wordt dan na uw aanvraag bepaald.
+              </p>
+            )}
+            {!travelFeeLoading && !travelFeeUnavailable && formData.address && formData.address.trim().length >= 5 && formData.travelDistanceKm != null && (
+              <p className="text-sm text-primary-dark mt-1">
+                Afstand: {formData.travelDistanceKm} km — Kilometervergoeding: {formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -236,6 +363,12 @@ export default function BookingForm() {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice}</span></div>
                 {formData.vehicleInfo?.size === 'large' && selectedService.largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge}</span></div>}
+                {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
+                  <div className="flex justify-between text-light">
+                    <span>Kilometervergoeding{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</span>
+                    <span>{formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}</span>
+                  </div>
+                )}
               </div>
               <div className="border-t border-light border-opacity-20 pt-4 flex justify-between">
                 <span className="text-xl font-bold text-light">Totaal</span>
@@ -243,7 +376,12 @@ export default function BookingForm() {
               </div>
             </>
           ) : (
-            <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
+            <>
+              <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
+              {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
+                <p className="text-light mt-2">Kilometervergoeding: {formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</p>
+              )}
+            </>
           )}
           <p className="text-sm text-light opacity-70 mt-2">* Prijzen zijn excl. BTW, indicatief en kunnen variëren</p>
         </motion.div>
@@ -257,7 +395,7 @@ export default function BookingForm() {
           <p className="text-sm opacity-90">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
         </div>
       )}
-      {submitStatus === 'error' && <div className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-red">Er is een fout opgetreden. Controleer of alle verplichte velden zijn ingevuld en probeer het opnieuw.</div>}
+      {submitStatus === 'error' && <div className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-red">{submitError || 'Er is een fout opgetreden. Controleer of alle verplichte velden zijn ingevuld en probeer het opnieuw.'}</div>}
 
       <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Verzenden...' : 'Boeking Versturen'}

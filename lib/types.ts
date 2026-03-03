@@ -23,6 +23,12 @@ export interface Booking {
   }
   preferredDate: string
   preferredTime: string
+  /** Adres voor aan huis (gebruikt voor kilometervergoeding) */
+  address?: string
+  /** Afstand in km (vanuit Heidebloemstraat 66, Sint-Niklaas) */
+  travelDistanceKm?: number
+  /** Kilometervergoeding in EUR (gratis ≤15 km, daarna €0,40/km extra) */
+  travelFeeEuro?: number
   specialRequests?: string
   status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
   createdAt?: string

@@ -24,6 +24,10 @@ export type BookingPayload = {
   vehicleInfo: { make: string; model: string; year: string; size: string }
   preferredDate: string
   preferredTime: string
+  /** Adres voor aan huis (gebruikt voor kilometervergoeding) */
+  address?: string
+  travelDistanceKm?: number
+  travelFeeEuro?: number
   specialRequests?: string
 }
 
@@ -102,6 +106,8 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Datum</td><td style="padding:4px 0;">${booking.preferredDate}</td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Tijd</td><td style="padding:4px 0;">${booking.preferredTime}</td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Voertuig</td><td style="padding:4px 0;">${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})</td></tr>
+        ${booking.address ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Adres</td><td style="padding:4px 0;">${booking.address}</td></tr>` : ''}
+        ${booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">€${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}</td></tr>` : booking.address && booking.travelDistanceKm != null ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">Gratis (binnen 15 km)</td></tr>` : ''}
       </table>
     </div>
     <p style="margin:24px 0 0;">Vragen? Antwoord op deze mail of bel ons op <a href="tel:+32499128500" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">+32 499 12 85 00</a>.</p>
@@ -128,6 +134,8 @@ function bookingConfirmationText(booking: BookingPayload): string {
     `- Datum: ${booking.preferredDate}`,
     `- Tijd: ${booking.preferredTime}`,
     `- Voertuig: ${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})`,
+    ...(booking.address ? [`- Adres: ${booking.address}`] : []),
+    ...(booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? [`- Kilometervergoeding: €${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}`] : booking.address && booking.travelDistanceKm != null ? ['- Kilometervergoeding: Gratis (binnen 15 km)'] : []),
     '',
     'Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.',
     '',
@@ -137,6 +145,9 @@ function bookingConfirmationText(booking: BookingPayload): string {
 }
 
 function bookingNotificationHtml(booking: BookingPayload): string {
+  const addressRow = booking.address
+    ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Adres</td><td style="padding:12px 16px;">${booking.address}${booking.travelDistanceKm != null ? ` · ${booking.travelDistanceKm} km` : ''}${booking.travelFeeEuro != null ? ` · Vergoeding: ${booking.travelFeeEuro > 0 ? `€${booking.travelFeeEuro.toFixed(2)}` : 'Gratis'}` : ''}</td></tr>`
+    : ''
   const specialBlock = booking.specialRequests
     ? `<tr><td colspan="2" style="padding:12px 0 0; border-top:1px solid ${BRAND.border};"><strong>Opmerkingen</strong><br><span style="color:${BRAND.text};">${booking.specialRequests}</span></td></tr>`
     : ''
@@ -151,6 +162,7 @@ function bookingNotificationHtml(booking: BookingPayload): string {
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Datum</td><td style="padding:12px 16px;">${booking.preferredDate}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Tijd</td><td style="padding:12px 16px;">${booking.preferredTime}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Voertuig</td><td style="padding:12px 16px;">${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year}) · ${booking.vehicleInfo.size}</td></tr>
+      ${addressRow}
       ${specialBlock}
     </table>
   `

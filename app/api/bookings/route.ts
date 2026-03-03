@@ -13,8 +13,13 @@ export async function POST(request: Request) {
       preferredDate,
       preferredTime,
       vehicleInfo,
+      address: rawAddress,
+      travelDistanceKm,
+      travelFeeEuro,
       specialRequests,
     } = body
+
+    const address = typeof rawAddress === 'string' ? rawAddress.trim() : ''
 
     if (
       !customerName ||
@@ -23,10 +28,11 @@ export async function POST(request: Request) {
       !serviceType ||
       !preferredDate ||
       !preferredTime ||
-      !vehicleInfo
+      !vehicleInfo ||
+      !address
     ) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Niet alle verplichte velden zijn ingevuld. Controleer vooral het adres.', field: !address ? 'address' : undefined },
         { status: 400 }
       )
     }
@@ -39,6 +45,9 @@ export async function POST(request: Request) {
       vehicleInfo,
       preferredDate,
       preferredTime,
+      address,
+      travelDistanceKm: travelDistanceKm != null ? Number(travelDistanceKm) : undefined,
+      travelFeeEuro: travelFeeEuro != null ? Number(travelFeeEuro) : undefined,
       specialRequests,
     }
 
