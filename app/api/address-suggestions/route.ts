@@ -24,8 +24,8 @@ export async function GET(request: Request) {
 
     const suggestions = data.map((item: { display_name?: string; lat?: string; lon?: string }) => {
       const name = item.display_name || ''
-      const lat = parseFloat(item.lat)
-      const lon = parseFloat(item.lon)
+      const lat = parseFloat(item.lat ?? '')
+      const lon = parseFloat(item.lon ?? '')
       if (!name || Number.isNaN(lat) || Number.isNaN(lon)) return null
       return { display_name: name, lat, lon }
     }).filter((s): s is { display_name: string; lat: number; lon: number } => s !== null)
