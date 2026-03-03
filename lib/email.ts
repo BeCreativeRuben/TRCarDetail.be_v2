@@ -110,7 +110,7 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
         ${booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">€${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}</td></tr>` : booking.address && booking.travelDistanceKm != null ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">Gratis (binnen 15 km)</td></tr>` : ''}
       </table>
     </div>
-    <p style="margin:24px 0 0;">Vragen? Antwoord op deze mail of bel ons op <a href="tel:+32499128500" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">+32 499 12 85 00</a>.</p>
+    <p style="margin:24px 0 0;">Vragen? Contacteer ons via WhatsApp op <a href="tel:+32499128500" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">+32 499 12 85 00</a> of antwoord op deze mail.</p>
     <p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted}; font-style:italic;">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
     <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong></p>
   `
@@ -136,6 +136,8 @@ function bookingConfirmationText(booking: BookingPayload): string {
     `- Voertuig: ${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})`,
     ...(booking.address ? [`- Adres: ${booking.address}`] : []),
     ...(booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? [`- Kilometervergoeding: €${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}`] : booking.address && booking.travelDistanceKm != null ? ['- Kilometervergoeding: Gratis (binnen 15 km)'] : []),
+    '',
+    'Vragen? Contacteer ons via WhatsApp op +32 499 12 85 00 of antwoord op deze mail.',
     '',
     'Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.',
     '',
