@@ -16,6 +16,7 @@ export async function POST(request: Request) {
       address: rawAddress,
       travelDistanceKm,
       travelFeeEuro,
+      totalExclBtw,
       specialRequests,
     } = body
 
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
       address,
       travelDistanceKm: travelDistanceKm != null ? Number(travelDistanceKm) : undefined,
       travelFeeEuro: travelFeeEuro != null ? Number(travelFeeEuro) : undefined,
+      totalExclBtw: totalExclBtw != null ? Number(totalExclBtw) : undefined,
       specialRequests,
     }
 

@@ -55,6 +55,7 @@ export default function BookingForm() {
   const [travelFeeUnavailable, setTravelFeeUnavailable] = useState<string | null>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
+  const successRef = useRef<HTMLDivElement>(null)
   const travelFeeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastFetchedAddressRef = useRef<string | null>(null)
 
@@ -144,6 +145,15 @@ export default function BookingForm() {
     }
   }, [formData.address, fetchTravelFee])
 
+  useEffect(() => {
+    if (submitStatus === 'success') {
+      const t = setTimeout(() => {
+        successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 150)
+      return () => clearTimeout(t)
+    }
+  }, [submitStatus])
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setSubmitError(null)
@@ -158,7 +168,10 @@ export default function BookingForm() {
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          totalExclBtw: totalPrice > 0 ? totalPrice : undefined,
+        }),
       })
       if (response.ok) {
         setSubmitStatus('success')
@@ -187,6 +200,7 @@ export default function BookingForm() {
     }
   }
 
+  const BTW_RATE = 0.21
   const selectedService = services.find(s => s.id === formData.serviceType)
   const servicePrice = selectedService
     ? formData.vehicleInfo?.size === 'large'
@@ -195,6 +209,9 @@ export default function BookingForm() {
     : 0
   const travelFee = formData.travelFeeEuro ?? 0
   const totalPrice = servicePrice + travelFee
+  const totalExclBtw = totalPrice
+  const btwAmount = Math.round(totalExclBtw * BTW_RATE * 100) / 100
+  const totalInclBtw = Math.round(totalExclBtw * (1 + BTW_RATE) * 100) / 100
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -370,9 +387,19 @@ export default function BookingForm() {
                   </div>
                 )}
               </div>
-              <div className="border-t border-light border-opacity-20 pt-4 flex justify-between">
-                <span className="text-xl font-bold text-light">Totaal</span>
-                <span className="text-2xl font-bold text-accent-red">€{totalPrice}</span>
+              <div className="border-t border-light border-opacity-20 pt-4 space-y-2">
+                <div className="flex justify-between text-light">
+                  <span>Subtotaal excl. BTW</span>
+                  <span>€{totalExclBtw.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-light">
+                  <span>BTW (21%)</span>
+                  <span>€{btwAmount.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-light pt-2 border-t border-light border-opacity-20">
+                  <span className="text-xl font-bold text-light">Totaal incl. BTW</span>
+                  <span className="text-2xl font-bold text-accent-red">€{totalInclBtw.toFixed(2)}</span>
+                </div>
               </div>
             </>
           ) : (
@@ -380,6 +407,13 @@ export default function BookingForm() {
               <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
               {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
                 <p className="text-light mt-2">Kilometervergoeding: {formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</p>
+              )}
+              {totalPrice > 0 && (
+                <div className="mt-4 pt-4 border-t border-light border-opacity-20 space-y-1">
+                  <div className="flex justify-between text-light"><span>Subtotaal excl. BTW</span><span>€{totalExclBtw.toFixed(2)}</span></div>
+                  <div className="flex justify-between text-light"><span>BTW (21%)</span><span>€{btwAmount.toFixed(2)}</span></div>
+                  <div className="flex justify-between text-light pt-2"><span className="font-bold">Totaal incl. BTW</span><span className="font-bold text-accent-red">€{totalInclBtw.toFixed(2)}</span></div>
+                </div>
               )}
             </>
           )}
@@ -390,7 +424,7 @@ export default function BookingForm() {
       <p className="text-sm text-primary-dark opacity-70 mt-2 mb-2">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
 
       {submitStatus === 'success' && (
-        <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg p-4 text-green-400 space-y-2">
+        <div ref={successRef} className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg p-4 text-green-400 space-y-2">
           <p>Bedankt! Uw boeking is verzonden. We nemen zo spoedig mogelijk contact met u op om de afspraak te bevestigen.</p>
           <p className="text-sm opacity-90">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
         </div>

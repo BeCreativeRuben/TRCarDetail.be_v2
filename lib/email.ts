@@ -28,6 +28,8 @@ export type BookingPayload = {
   address?: string
   travelDistanceKm?: number
   travelFeeEuro?: number
+  /** Totaal excl. BTW (voor eindberekening in mails) */
+  totalExclBtw?: number
   specialRequests?: string
 }
 
@@ -110,6 +112,7 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
         ${booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">€${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}</td></tr>` : booking.address && booking.travelDistanceKm != null ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">Gratis (binnen 15 km)</td></tr>` : ''}
       </table>
     </div>
+    ${booking.totalExclBtw != null && booking.totalExclBtw > 0 ? (() => { const excl = booking.totalExclBtw!; const btw = Math.round(excl * 0.21 * 100) / 100; const incl = Math.round(excl * 1.21 * 100) / 100; return `<div style="background:${BRAND.bg}; border-left:4px solid ${BRAND.accentRed}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;"><p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Eindberekening</p><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px; color:${BRAND.text};"><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Subtotaal excl. BTW</td><td style="padding:4px 0;">€${excl.toFixed(2)}</td></tr><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">BTW (21%)</td><td style="padding:4px 0;">€${btw.toFixed(2)}</td></tr><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted}; font-weight:700;">Totaal incl. BTW</td><td style="padding:4px 0; font-weight:700; color:${BRAND.accentRed};">€${incl.toFixed(2)}</td></tr></table></div>`; })() : ''}
     <p style="margin:24px 0 0;">Vragen? Contacteer ons via WhatsApp op <a href="tel:+32499128500" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">+32 499 12 85 00</a> of antwoord op deze mail.</p>
     <p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted}; font-style:italic;">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
     <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong></p>
@@ -136,6 +139,7 @@ function bookingConfirmationText(booking: BookingPayload): string {
     `- Voertuig: ${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})`,
     ...(booking.address ? [`- Adres: ${booking.address}`] : []),
     ...(booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? [`- Kilometervergoeding: €${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}`] : booking.address && booking.travelDistanceKm != null ? ['- Kilometervergoeding: Gratis (binnen 15 km)'] : []),
+    ...(booking.totalExclBtw != null && booking.totalExclBtw > 0 ? ['', 'Eindberekening:', `- Subtotaal excl. BTW: €${booking.totalExclBtw.toFixed(2)}`, `- BTW (21%): €${(Math.round(booking.totalExclBtw * 0.21 * 100) / 100).toFixed(2)}`, `- Totaal incl. BTW: €${(Math.round(booking.totalExclBtw * 1.21 * 100) / 100).toFixed(2)}`] : []),
     '',
     'Vragen? Contacteer ons via WhatsApp op +32 499 12 85 00 of antwoord op deze mail.',
     '',
@@ -153,6 +157,14 @@ function bookingNotificationHtml(booking: BookingPayload): string {
   const specialBlock = booking.specialRequests
     ? `<tr><td colspan="2" style="padding:12px 0 0; border-top:1px solid ${BRAND.border};"><strong>Opmerkingen</strong><br><span style="color:${BRAND.text};">${booking.specialRequests}</span></td></tr>`
     : ''
+  const btwBlock = booking.totalExclBtw != null && booking.totalExclBtw > 0
+    ? (() => {
+        const excl = booking.totalExclBtw!
+        const btw = Math.round(excl * 0.21 * 100) / 100
+        const incl = Math.round(excl * 1.21 * 100) / 100
+        return `<div style="margin-top:16px; padding:12px 16px; background:${BRAND.bg}; border-radius:8px; font-size:15px;"><p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase;">Eindberekening</p><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="padding:2px 8px 2px 0; color:${BRAND.textMuted};">Subtotaal excl. BTW</td><td style="padding:2px 0;">€${excl.toFixed(2)}</td></tr><tr><td style="padding:2px 8px 2px 0; color:${BRAND.textMuted};">BTW (21%)</td><td style="padding:2px 0;">€${btw.toFixed(2)}</td></tr><tr><td style="padding:4px 8px 0 0; font-weight:700;">Totaal incl. BTW</td><td style="padding:4px 0; font-weight:700; color:${BRAND.accentRed};">€${incl.toFixed(2)}</td></tr></table></div>`
+      })()
+    : ''
   const content = `
     <h1 style="margin:0 0 8px; font-size:22px; color:${BRAND.primaryDark};">Nieuwe boeking</h1>
     <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Via de website</p>
@@ -167,6 +179,7 @@ function bookingNotificationHtml(booking: BookingPayload): string {
       ${addressRow}
       ${specialBlock}
     </table>
+    ${btwBlock}
   `
   return emailWrapper('Nieuwe boeking ontvangen', 'Nieuwe boeking - T&R Car Detail', content)
 }
