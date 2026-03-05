@@ -417,7 +417,6 @@ export default function BookingForm() {
               )}
             </>
           )}
-          <p className="text-sm text-light opacity-70 mt-2">* Prijzen zijn excl. BTW, indicatief en kunnen variëren</p>
         </motion.div>
       )}
 
