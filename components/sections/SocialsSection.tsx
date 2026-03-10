@@ -1,24 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FiInstagram } from 'react-icons/fi'
 import Button from '../ui/Button'
 import { instagram } from '@/lib/socials'
 
 export default function SocialsSection() {
-  const [shortcodes, setShortcodes] = useState<string[]>(instagram.postShortcodes)
-
-  useEffect(() => {
-    fetch('/api/instagram-posts')
-      .then((res) => res.json())
-      .then((data: { shortcodes?: string[] }) => {
-        if (Array.isArray(data.shortcodes) && data.shortcodes.length > 0) {
-          setShortcodes(data.shortcodes)
-        }
-      })
-      .catch(() => {})
-  }, [])
+  const shortcodes = instagram.postShortcodes
 
   return (
     <section className="py-20 bg-light">
