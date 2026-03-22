@@ -1,12 +1,10 @@
 'use client'
 
-import { useState, useEffect, useCallback, ReactNode } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ScrollToTop from '@/components/ScrollToTop'
-import { AnimatePresence } from 'framer-motion'
 import Countdown from '@/components/Countdown'
-import LaunchReveal from '@/components/LaunchReveal'
 
 // Thursday 5 March 2026 @ 17:00 Brussels (UTC+1) = 16:00 UTC
 const TARGET = new Date('2026-03-05T16:00:00.000Z')
@@ -33,8 +31,6 @@ const FullSite = ({ children }: { children: ReactNode }) => (
 export default function CountdownGate({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false)
   const [reached, setReached] = useState(FORCE_REACHED)
-  const [revealComplete, setRevealComplete] = useState(false)
-  const onRevealComplete = useCallback(() => setRevealComplete(true), [])
 
   useEffect(() => {
     setMounted(true)
@@ -45,7 +41,7 @@ export default function CountdownGate({ children }: { children: ReactNode }) {
     return () => clearInterval(t)
   }, [])
 
-  // Timer verborgen: altijd volledige site (zonder laadanimatie)
+  // Timer verborgen: altijd volledige site
   if (COUNTDOWN_HIDDEN) {
     return <FullSite>{children}</FullSite>
   }
@@ -55,13 +51,5 @@ export default function CountdownGate({ children }: { children: ReactNode }) {
     return <Countdown />
   }
 
-  // Timer op 0: eerst laadanimatie (logo + balk), daarna volledige site
-  return (
-    <>
-      <AnimatePresence mode="wait">
-        {!revealComplete && <LaunchReveal key="reveal" onComplete={onRevealComplete} />}
-      </AnimatePresence>
-      <FullSite>{children}</FullSite>
-    </>
-  )
+  return <FullSite>{children}</FullSite>
 }
