@@ -1,5 +1,34 @@
 import { NextResponse } from 'next/server'
+import { drivingRouteKmOneWay } from '@/lib/driving-distance'
 import { haversineKm, travelFeeEuro, TRAVEL_CONFIG } from '@/lib/distance'
+
+async function distanceKmForFee(
+  customerLat: number,
+  customerLon: number
+): Promise<{ distanceKm: number; mode: 'driving' | 'straight_line' }> {
+  const driving = await drivingRouteKmOneWay(
+    TRAVEL_CONFIG.businessLat,
+    TRAVEL_CONFIG.businessLon,
+    customerLat,
+    customerLon
+  )
+  if (driving != null) {
+    return {
+      distanceKm: Math.round(driving * 10) / 10,
+      mode: 'driving',
+    }
+  }
+  const straight = haversineKm(
+    TRAVEL_CONFIG.businessLat,
+    TRAVEL_CONFIG.businessLon,
+    customerLat,
+    customerLon
+  )
+  return {
+    distanceKm: Math.round(straight * 10) / 10,
+    mode: 'straight_line',
+  }
+}
 
 /** Geocode adres via Nominatim (OpenStreetMap). Rate limit: 1 req/sec, User-Agent verplicht. */
 async function geocodeAddress(address: string): Promise<{ lat: number; lon: number } | null> {
@@ -29,17 +58,13 @@ export async function GET(request: Request) {
   const lon = lonParam != null ? parseFloat(lonParam) : NaN
   if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
     try {
-      const distanceKm = Math.round(haversineKm(
-        TRAVEL_CONFIG.businessLat,
-        TRAVEL_CONFIG.businessLon,
-        lat,
-        lon
-      ) * 10) / 10
+      const { distanceKm, mode } = await distanceKmForFee(lat, lon)
       const fee = travelFeeEuro(distanceKm)
       return NextResponse.json({
         distanceKm,
         travelFeeEuro: fee,
         freeRadiusKm: TRAVEL_CONFIG.freeRadiusKm,
+        distanceMode: mode,
       })
     } catch (e) {
       console.error('Travel fee API error (coords):', e)
@@ -67,18 +92,14 @@ export async function GET(request: Request) {
       )
     }
 
-    const distanceKm = Math.round(haversineKm(
-      TRAVEL_CONFIG.businessLat,
-      TRAVEL_CONFIG.businessLon,
-      coords.lat,
-      coords.lon
-    ) * 10) / 10
+    const { distanceKm, mode } = await distanceKmForFee(coords.lat, coords.lon)
     const fee = travelFeeEuro(distanceKm)
 
     return NextResponse.json({
       distanceKm,
       travelFeeEuro: fee,
       freeRadiusKm: TRAVEL_CONFIG.freeRadiusKm,
+      distanceMode: mode,
     })
   } catch (e) {
     console.error('Travel fee API error:', e)

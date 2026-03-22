@@ -1,6 +1,8 @@
 /**
  * Kilometervergoeding: gratis binnen 15 km, daarna €0,40 per extra km.
  * Referentie: Heidebloemstraat 66 Bus 11, 9100 Sint-Niklaas
+ *
+ * De API `/api/travel-fee` gebruikt waar mogelijk rijafstand (OSRM); anders Haversine hieronder.
  */
 
 export const TRAVEL_CONFIG = {
