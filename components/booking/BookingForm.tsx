@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo, FormEvent } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Input from '../ui/Input'
@@ -8,14 +8,34 @@ import Autocomplete from '../ui/Autocomplete'
 import AddressAutocomplete from '../ui/AddressAutocomplete'
 import Button from '../ui/Button'
 import BookingCalendar from './BookingCalendar'
+import CustomPackageBuilder from './CustomPackageBuilder'
 import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
+import {
+  type CustomExterieurTier,
+  type CustomFeatureKey,
+  type CustomInterieurTier,
+  computeCustomEstimateExclBtw,
+  humanLabelForFeatureKey,
+  labelForExterieurTier,
+  labelForInterieurTier,
+} from '@/lib/custom-package-estimate'
 
 const services: Service[] = [
   { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€60 · Glanzend en in topvorm', basePrice: 60, largeCarSurcharge: 0, features: [] },
   { id: 'exterieur-deluxe', name: 'Exterieur Deluxe', description: '€90 · Decontaminatie was', basePrice: 90, largeCarSurcharge: 0, features: [] },
-  { id: 'full-basis', name: 'Exterieur Basis + Interieur Basis', description: '€100 · Binnen en buiten', basePrice: 100, largeCarSurcharge: 0, features: [] },
+  { id: 'full-basis', name: 'Basis Pakket', description: '€100 · Basis Pakket', basePrice: 100, largeCarSurcharge: 0, features: [] },
+  { id: 'full-deluxe', name: 'Deluxe Pakket', description: '€170 · Deluxe Pakket', basePrice: 170, largeCarSurcharge: 0, features: [] },
+  { id: 'full-premium', name: 'Premium Pakket', description: '€250 · Premium Pakket', basePrice: 250, largeCarSurcharge: 0, features: [] },
+  {
+    id: 'full-custom',
+    name: 'Combinatie op maat',
+    description: 'Richtprijs op basis van uw keuze (indicatie)',
+    basePrice: 0,
+    largeCarSurcharge: 0,
+    features: [],
+  },
   { id: 'interieur-basis', name: 'Interieur Basis', description: '€50 · Opfrissen', basePrice: 50, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: '€130 · Uitgebreide dieptereiniging', basePrice: 130, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
@@ -24,10 +44,22 @@ const services: Service[] = [
 ]
 
 const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
-const validServiceIds = ['exterieur-basis', 'exterieur-deluxe', 'full-basis', 'interieur-basis', 'interieur-deluxe', 'interieur-premium', 'polijsten-light', 'polijsten-full']
+const validServiceIds = [
+  'exterieur-basis',
+  'exterieur-deluxe',
+  'full-basis',
+  'full-deluxe',
+  'full-premium',
+  'full-custom',
+  'interieur-basis',
+  'interieur-deluxe',
+  'interieur-premium',
+  'polijsten-light',
+  'polijsten-full',
+]
 
 const SERVICE_GROUPS: { label: string; ids: string[] }[] = [
-  { label: 'Volledig pakket', ids: ['full-basis'] },
+  { label: 'Volledig pakket', ids: ['full-basis', 'full-deluxe', 'full-premium', 'full-custom'] },
   { label: 'Exterieur', ids: ['exterieur-basis', 'exterieur-deluxe'] },
   { label: 'Interieur', ids: ['interieur-basis', 'interieur-deluxe', 'interieur-premium'] },
   { label: 'Polieren', ids: ['polijsten-light', 'polijsten-full'] },
@@ -53,6 +85,9 @@ export default function BookingForm() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [travelFeeLoading, setTravelFeeLoading] = useState(false)
   const [travelFeeUnavailable, setTravelFeeUnavailable] = useState<string | null>(null)
+  const [customExt, setCustomExt] = useState<CustomExterieurTier>('basis')
+  const [customInt, setCustomInt] = useState<CustomInterieurTier>('basis')
+  const [excludedKeys, setExcludedKeys] = useState<Set<CustomFeatureKey>>(() => new Set())
   const calendarRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
   const successRef = useRef<HTMLDivElement>(null)
@@ -154,6 +189,23 @@ export default function BookingForm() {
     }
   }, [submitStatus])
 
+  const customEstimate = useMemo(
+    () =>
+      formData.serviceType === 'full-custom'
+        ? computeCustomEstimateExclBtw(customExt, customInt, excludedKeys)
+        : 0,
+    [formData.serviceType, customExt, customInt, excludedKeys]
+  )
+
+  const toggleExcluded = useCallback((key: CustomFeatureKey) => {
+    setExcludedKeys((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }, [])
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setSubmitError(null)
@@ -162,14 +214,49 @@ export default function BookingForm() {
       setSubmitError('Vul alle verplichte velden in, inclusief het adres (kies een suggestie of vul handmatig in).')
       return
     }
+    if (formData.serviceType === 'full-custom') {
+      if (customExt === 'none' && customInt === 'none') {
+        setSubmitStatus('error')
+        setSubmitError('Kies minstens een exterieur- of interieurniveau voor uw combinatie op maat.')
+        return
+      }
+      if (customEstimate <= 0) {
+        setSubmitStatus('error')
+        setSubmitError('Uw richtprijs is €0. Pas uw selectie aan (bijvoorbeeld minder uitsluitingen) of neem contact op.')
+        return
+      }
+    }
     setIsSubmitting(true)
     setSubmitStatus('idle')
     try {
+      const excludedLines = [...excludedKeys].map((k) => humanLabelForFeatureKey(k))
+      const customBlock =
+        formData.serviceType === 'full-custom'
+          ? [
+              '--- Combinatie op maat ---',
+              `Exterieur: ${labelForExterieurTier(customExt)}`,
+              `Interieur: ${labelForInterieurTier(customInt)}`,
+              excludedLines.length
+                ? `Uitgesloten onderdelen:\n${excludedLines.map((l) => `  - ${l}`).join('\n')}`
+                : 'Geen onderdelen uitgesloten.',
+              `Richtprijs (excl. BTW, indicatie): €${customEstimate.toFixed(2)}`,
+              'Toelichting: deze richtprijs is een indicatie op basis van uw selectie en kan afwijken van de definitieve prijs na inspectie van de werken die moeten gebeuren.',
+            ].join('\n')
+          : ''
+      const mergedSpecial =
+        formData.serviceType === 'full-custom' && customBlock
+          ? (formData.specialRequests || '').trim()
+            ? `${customBlock}\n\n${formData.specialRequests}`
+            : customBlock
+          : formData.specialRequests
+
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          serviceType: formData.serviceType === 'full-custom' ? 'Combinatie op maat' : formData.serviceType,
+          specialRequests: mergedSpecial,
           totalExclBtw: totalPrice > 0 ? totalPrice : undefined,
         }),
       })
@@ -188,6 +275,9 @@ export default function BookingForm() {
           travelFeeEuro: undefined,
           specialRequests: ''
         })
+        setCustomExt('basis')
+        setCustomInt('basis')
+        setExcludedKeys(new Set())
       } else {
         const data = await response.json().catch(() => ({}))
         setSubmitStatus('error')
@@ -202,11 +292,14 @@ export default function BookingForm() {
 
   const BTW_RATE = 0.21
   const selectedService = services.find(s => s.id === formData.serviceType)
-  const servicePrice = selectedService
-    ? formData.vehicleInfo?.size === 'large'
-      ? selectedService.basePrice + selectedService.largeCarSurcharge
-      : selectedService.basePrice
-    : 0
+  const servicePrice =
+    formData.serviceType === 'full-custom'
+      ? customEstimate
+      : selectedService
+        ? formData.vehicleInfo?.size === 'large'
+          ? selectedService.basePrice + selectedService.largeCarSurcharge
+          : selectedService.basePrice
+        : 0
   const travelFee = formData.travelFeeEuro ?? 0
   const totalPrice = servicePrice + travelFee
   const totalExclBtw = totalPrice
@@ -232,6 +325,11 @@ export default function BookingForm() {
                       key={service.id}
                       type="button"
                       onClick={() => {
+                        if (service.id === 'full-custom') {
+                          setCustomExt('basis')
+                          setCustomInt('basis')
+                          setExcludedKeys(new Set())
+                        }
                         setFormData({ ...formData, serviceType: service.id })
                         setTimeout(() => calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
                       }}
@@ -241,7 +339,13 @@ export default function BookingForm() {
                     >
                       <h4 className="font-semibold text-primary-dark mb-1 text-sm md:text-base">{service.name}</h4>
                       <p className="text-xs text-primary-dark opacity-70 mb-2 line-clamp-2">{service.description}</p>
-                      <p className="text-accent-red font-bold text-sm">{service.basePrice > 0 ? `€${service.basePrice}` : 'Prijs op aanvraag'}</p>
+                      <p className="text-accent-red font-bold text-sm">
+                        {service.id === 'full-custom'
+                          ? 'Richtprijs (indicatie)'
+                          : service.basePrice > 0
+                            ? `€${service.basePrice}`
+                            : 'Prijs op aanvraag'}
+                      </p>
                     </motion.button>
                   ))}
                 </div>
@@ -250,6 +354,23 @@ export default function BookingForm() {
           })}
         </div>
       </div>
+
+      {formData.serviceType === 'full-custom' && (
+        <CustomPackageBuilder
+          ext={customExt}
+          int={customInt}
+          onExtChange={(t) => {
+            setCustomExt(t)
+            setExcludedKeys(new Set())
+          }}
+          onIntChange={(t) => {
+            setCustomInt(t)
+            setExcludedKeys(new Set())
+          }}
+          excludedKeys={excludedKeys}
+          onToggleExcluded={toggleExcluded}
+        />
+      )}
 
       <div ref={calendarRef} className="flex flex-col justify-center min-h-[50vh] md:min-h-0 md:py-4">
         <label className="block text-sm font-medium text-primary-dark mb-3 text-center">Selecteer Datum *</label>
@@ -375,7 +496,43 @@ export default function BookingForm() {
       {selectedService && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-primary-dark rounded-lg p-6">
           <h3 className="text-xl font-bold text-light mb-4">Prijs Overzicht</h3>
-          {selectedService.basePrice > 0 ? (
+          {formData.serviceType === 'full-custom' ? (
+            customEstimate > 0 ? (
+              <>
+                <p className="text-sm text-light/85 mb-3">
+                  Richtprijs op basis van uw geselecteerde niveaus en onderdelen. Dit is <strong className="text-light">geen definitieve offerte</strong>: de uiteindelijke prijs kan afwijken na zicht op de werken.
+                </p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-light">
+                    <span>Richtprijs dienst (excl. BTW)</span>
+                    <span>€{customEstimate.toFixed(2)}</span>
+                  </div>
+                  {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
+                    <div className="flex justify-between text-light">
+                      <span>Kilometervergoeding{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</span>
+                      <span>{formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="border-t border-light border-opacity-20 pt-4 space-y-2">
+                  <div className="flex justify-between text-light">
+                    <span>Subtotaal excl. BTW</span>
+                    <span>€{totalExclBtw.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-light">
+                    <span>BTW (21%)</span>
+                    <span>€{btwAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-light pt-2 border-t border-light border-opacity-20">
+                    <span className="text-xl font-bold text-light">Totaal incl. BTW</span>
+                    <span className="text-2xl font-bold text-accent-red">€{totalInclBtw.toFixed(2)}</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className="text-light">Pas uw combinatie aan om een richtprijs te zien (minstens één niveau kiezen en niet alle onderdelen uitsluiten).</p>
+            )
+          ) : selectedService.basePrice > 0 ? (
             <>
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice}</span></div>

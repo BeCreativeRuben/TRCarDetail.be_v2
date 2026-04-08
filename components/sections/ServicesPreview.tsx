@@ -7,7 +7,7 @@ import Button from '../ui/Button'
 const services: Service[] = [
   { id: 'interieur-basis', name: 'Interieur', description: 'Basis, Deluxe en Premium interieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'exterieur-basis', name: 'Exterieur', description: 'Basis en Deluxe exterieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: [] },
-  { id: 'full-basis', name: 'Volledig Pakket', description: 'Exterieur + interieur basis in één', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'full-basis', name: 'Volledig Pakket', description: 'Basis-, Deluxe- en Premium-pakket, plus combinaties op maat (richtprijs in boeking)', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-light', name: 'Polieren', description: 'Light Polish en Full Polish – lakcorrectie en glansherstel', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'moto-detailing', name: 'Moto', description: 'Binnenkort: professionele moto- en motordetailing', basePrice: 0, largeCarSurcharge: 0, features: [], comingSoon: true },
 ]

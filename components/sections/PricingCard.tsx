@@ -45,6 +45,11 @@ export default function PricingCard({ service, index }: PricingCardProps) {
               </div>
               <p className="text-xs text-primary-dark opacity-50 mt-1">excl. BTW</p>
             </div>
+          ) : service.id === 'full-custom' ? (
+            <div>
+              <span className="text-lg font-semibold text-primary-dark">Richtprijs via boeking</span>
+              <p className="text-xs text-primary-dark opacity-50 mt-1">excl. BTW · indicatie</p>
+            </div>
           ) : (
             <span className="text-lg text-primary-dark opacity-70">Prijzen op aanvraag</span>
           )}
