@@ -62,15 +62,13 @@ export const exterieurCatalog: Service[] = [
     largeCarSurcharge: 0,
     popular: true,
     features: [
-      'Dieptereiniging velgen',
-      'Dieptereiniging wielkasten',
+      'Dieptereiniging wielkasten, banden en velgen',
       'Pre-wash',
       'Gepaste shampoo voor de wagen',
       '2-emmer methode (krasvrij wassen)',
       'Deurlijsten + instaplijsten',
       'Ramen + spiegels',
       'Bandendressing',
-      'Wax (2-3 maanden)',
     ],
   },
   {
@@ -81,7 +79,7 @@ export const exterieurCatalog: Service[] = [
     basePrice: 90,
     largeCarSurcharge: 0,
     features: [
-      'Dieptereiniging velgen + wielkasten',
+      'Dieptereiniging wielkasten, banden en velgen',
       'Pre-wash + gepaste shampoo voor de wagen',
       '2-emmer methode (krasvrij wassen)',
       'Deurlijsten + instaplijsten',

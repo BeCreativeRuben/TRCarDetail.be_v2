@@ -55,13 +55,14 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
       </div>
       <div className="grid grid-cols-7 gap-1">
         {days.map((day, index) => {
-          if (day === null) return <div key={index} />
+          const padKey = `pad-${currentMonth.getFullYear()}-${currentMonth.getMonth()}-${index}`
+          if (day === null) return <div key={padKey} />
           const dateStr = formatDate(day)
           const past = isPastDate(day)
           const selected = isSelected(day)
           return (
             <motion.button
-              key={day}
+              key={dateStr}
               onClick={() => !past && onDateSelect(dateStr)}
               disabled={past}
               className={`aspect-square max-w-[36px] max-h-[36px] w-full rounded text-xs font-medium transition-all ${past ? 'text-primary-dark opacity-30 cursor-not-allowed' : selected ? 'bg-accent-red text-white' : 'text-primary-dark hover:bg-secondary-dark hover:text-accent-red'}`}

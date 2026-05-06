@@ -72,7 +72,10 @@ export default function PricingCard({ service, index }: PricingCardProps) {
             </div>
           ) : (
             <>
-              <Link href={`/booking?service=${service.id}`} className="block">
+              <Link
+                href={service.id.startsWith('extra-') ? '/booking#booking-extras' : `/booking?service=${service.id}`}
+                className="block"
+              >
                 <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
                   <FiCalendar className="w-4 h-4" />
                   Boek dit pakket

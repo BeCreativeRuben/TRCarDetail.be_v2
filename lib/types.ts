@@ -31,6 +31,8 @@ export interface Booking {
   travelFeeEuro?: number
   /** Totaal excl. BTW (voor eindberekening in mails) */
   totalExclBtw?: number
+  /** Optionele extra’s (catalogus); elk bedrag is excl. BTW. */
+  selectedExtras?: { id: string; name: string; priceExclBtwEuro: number; priceNote?: string }[]
   specialRequests?: string
   status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'
   createdAt?: string

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { sendBookingConfirmation } from '@/lib/email'
 import { saveBooking } from '@/lib/bookings-store'
+import { normalizeSelectedExtras } from '@/lib/normalize-booking-extras'
 
 export async function POST(request: Request) {
   try {
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
       travelDistanceKm,
       travelFeeEuro,
       totalExclBtw,
+      selectedExtras: rawSelectedExtras,
       specialRequests,
     } = body
 
@@ -38,6 +40,8 @@ export async function POST(request: Request) {
       )
     }
 
+    const selectedExtras = normalizeSelectedExtras(rawSelectedExtras)
+
     const payload = {
       customerName,
       email,
@@ -50,6 +54,7 @@ export async function POST(request: Request) {
       travelDistanceKm: travelDistanceKm != null ? Number(travelDistanceKm) : undefined,
       travelFeeEuro: travelFeeEuro != null ? Number(travelFeeEuro) : undefined,
       totalExclBtw: totalExclBtw != null ? Number(totalExclBtw) : undefined,
+      selectedExtras,
       specialRequests,
     }
 

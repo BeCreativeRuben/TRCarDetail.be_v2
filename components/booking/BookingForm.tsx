@@ -12,6 +12,7 @@ import CustomPackageBuilder from './CustomPackageBuilder'
 import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
+import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
 import {
   type CustomExterieurTier,
   type CustomFeatureKey,
@@ -88,7 +89,9 @@ export default function BookingForm() {
   const [customExt, setCustomExt] = useState<CustomExterieurTier>('basis')
   const [customInt, setCustomInt] = useState<CustomInterieurTier>('basis')
   const [excludedKeys, setExcludedKeys] = useState<Set<CustomFeatureKey>>(() => new Set())
+  const [selectedExtraIds, setSelectedExtraIds] = useState<Set<string>>(() => new Set())
   const calendarRef = useRef<HTMLDivElement>(null)
+  const extrasRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
   const successRef = useRef<HTMLDivElement>(null)
   const travelFeeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -100,6 +103,15 @@ export default function BookingForm() {
       return () => clearTimeout(t)
     }
   }, [serviceFromUrl])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (window.location.hash !== '#booking-extras') return
+    const t = setTimeout(() => {
+      extrasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 350)
+    return () => clearTimeout(t)
+  }, [])
 
   const fetchTravelFee = useCallback(async (address: string) => {
     if (!address || address.trim().length < 5) {
@@ -197,11 +209,22 @@ export default function BookingForm() {
     [formData.serviceType, customExt, customInt, excludedKeys]
   )
 
+  const extrasTotal = useMemo(() => sumExtrasPriceExclBtw(selectedExtraIds), [selectedExtraIds])
+
   const toggleExcluded = useCallback((key: CustomFeatureKey) => {
     setExcludedKeys((prev) => {
       const next = new Set(prev)
       if (next.has(key)) next.delete(key)
       else next.add(key)
+      return next
+    })
+  }, [])
+
+  const toggleExtra = useCallback((id: string) => {
+    setSelectedExtraIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
       return next
     })
   }, [])
@@ -250,6 +273,16 @@ export default function BookingForm() {
             : customBlock
           : formData.specialRequests
 
+      const selectedExtrasPayload = [...selectedExtraIds]
+        .map((id) => getExtraById(id))
+        .filter((x): x is NonNullable<typeof x> => Boolean(x))
+        .map((e) => ({
+          id: e.id,
+          name: e.name,
+          priceExclBtwEuro: e.priceExclBtwEuro,
+          ...(e.priceNote ? { priceNote: e.priceNote } : {}),
+        }))
+
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -257,6 +290,7 @@ export default function BookingForm() {
           ...formData,
           serviceType: formData.serviceType === 'full-custom' ? 'Combinatie op maat' : formData.serviceType,
           specialRequests: mergedSpecial,
+          selectedExtras: selectedExtrasPayload.length ? selectedExtrasPayload : undefined,
           totalExclBtw: totalPrice > 0 ? totalPrice : undefined,
         }),
       })
@@ -278,6 +312,7 @@ export default function BookingForm() {
         setCustomExt('basis')
         setCustomInt('basis')
         setExcludedKeys(new Set())
+        setSelectedExtraIds(new Set())
       } else {
         const data = await response.json().catch(() => ({}))
         setSubmitStatus('error')
@@ -292,7 +327,7 @@ export default function BookingForm() {
 
   const BTW_RATE = 0.21
   const selectedService = services.find(s => s.id === formData.serviceType)
-  const servicePrice =
+  const baseServicePrice =
     formData.serviceType === 'full-custom'
       ? customEstimate
       : selectedService
@@ -300,6 +335,7 @@ export default function BookingForm() {
           ? selectedService.basePrice + selectedService.largeCarSurcharge
           : selectedService.basePrice
         : 0
+  const servicePrice = baseServicePrice + extrasTotal
   const travelFee = formData.travelFeeEuro ?? 0
   const totalPrice = servicePrice + travelFee
   const totalExclBtw = totalPrice
@@ -371,6 +407,45 @@ export default function BookingForm() {
           onToggleExcluded={toggleExcluded}
         />
       )}
+
+      <div
+        id="booking-extras"
+        ref={extrasRef}
+        className="rounded-xl border-2 border-primary-dark/10 bg-white p-4 md:p-5"
+      >
+        <h3 className="text-base font-bold text-primary-dark mb-2 pb-2 border-b border-primary-dark/10">
+          Extra&apos;s (optioneel)
+        </h3>
+        <p className="text-sm text-primary-dark opacity-75 mb-4">
+          Vink aan wat u wenst bovenop uw gekozen service. Alle bedragen zijn excl. BTW.
+        </p>
+        <div className="space-y-3">
+          {EXTRAS_CATALOG.map((extra) => {
+            const checked = selectedExtraIds.has(extra.id)
+            return (
+              <label
+                key={extra.id}
+                className="flex cursor-pointer items-start gap-3 rounded-lg border border-primary-dark/15 bg-light/80 p-3 text-sm text-primary-dark"
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleExtra(extra.id)}
+                  className="mt-0.5 h-4 w-4 rounded border-secondary-dark/40 text-accent-red focus:ring-accent-red"
+                />
+                <span className="flex-1">
+                  <span className="font-semibold block">{extra.name}</span>
+                  <span className="text-primary-dark/75 block mt-0.5">{extra.description}</span>
+                  <span className="text-accent-red font-bold mt-1 inline-block">
+                    {extra.priceNote ? `${extra.priceNote} €${extra.priceExclBtwEuro}` : `+€${extra.priceExclBtwEuro}`}{' '}
+                    <span className="text-xs font-normal text-primary-dark/60">excl. BTW</span>
+                  </span>
+                </span>
+              </label>
+            )
+          })}
+        </div>
+      </div>
 
       <div ref={calendarRef} className="flex flex-col justify-center min-h-[50vh] md:min-h-0 md:py-4">
         <label className="block text-sm font-medium text-primary-dark mb-3 text-center">Selecteer Datum *</label>
@@ -507,6 +582,27 @@ export default function BookingForm() {
                     <span>Richtprijs dienst (excl. BTW)</span>
                     <span>€{customEstimate.toFixed(2)}</span>
                   </div>
+                  {extrasTotal > 0 && (
+                    <>
+                      {[...selectedExtraIds].map((id) => {
+                        const e = getExtraById(id)
+                        if (!e) return null
+                        return (
+                          <div key={id} className="flex justify-between text-light text-sm">
+                            <span>
+                              Extra: {e.name}
+                              {e.priceNote ? ` (${e.priceNote})` : ''}
+                            </span>
+                            <span>€{e.priceExclBtwEuro.toFixed(2)}</span>
+                          </div>
+                        )
+                      })}
+                      <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
+                        <span>Extra&apos;s (subtotaal)</span>
+                        <span>€{extrasTotal.toFixed(2)}</span>
+                      </div>
+                    </>
+                  )}
                   {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
                     <div className="flex justify-between text-light">
                       <span>Kilometervergoeding{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</span>
@@ -537,6 +633,27 @@ export default function BookingForm() {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice}</span></div>
                 {formData.vehicleInfo?.size === 'large' && selectedService.largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge}</span></div>}
+                {extrasTotal > 0 && (
+                  <>
+                    {[...selectedExtraIds].map((id) => {
+                      const e = getExtraById(id)
+                      if (!e) return null
+                      return (
+                        <div key={id} className="flex justify-between text-light text-sm">
+                          <span>
+                            Extra: {e.name}
+                            {e.priceNote ? ` (${e.priceNote})` : ''}
+                          </span>
+                          <span>€{e.priceExclBtwEuro.toFixed(2)}</span>
+                        </div>
+                      )
+                    })}
+                    <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
+                      <span>Extra&apos;s (subtotaal)</span>
+                      <span>€{extrasTotal.toFixed(2)}</span>
+                    </div>
+                  </>
+                )}
                 {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
                   <div className="flex justify-between text-light">
                     <span>Kilometervergoeding{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</span>
@@ -562,6 +679,27 @@ export default function BookingForm() {
           ) : (
             <>
               <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
+              {extrasTotal > 0 && (
+                <div className="space-y-2 mt-3 mb-2">
+                  {[...selectedExtraIds].map((id) => {
+                    const e = getExtraById(id)
+                    if (!e) return null
+                    return (
+                      <div key={id} className="flex justify-between text-light text-sm">
+                        <span>
+                          Extra: {e.name}
+                          {e.priceNote ? ` (${e.priceNote})` : ''}
+                        </span>
+                        <span>€{e.priceExclBtwEuro.toFixed(2)}</span>
+                      </div>
+                    )
+                  })}
+                  <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
+                    <span>Extra&apos;s (subtotaal)</span>
+                    <span>€{extrasTotal.toFixed(2)}</span>
+                  </div>
+                </div>
+              )}
               {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
                 <p className="text-light mt-2">Kilometervergoeding: {formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</p>
               )}

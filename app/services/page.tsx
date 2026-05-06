@@ -6,12 +6,13 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
 import { exterieurCatalog, interieurCatalog } from '@/lib/services-catalog'
+import { extrasAsServices } from '@/lib/extras-catalog'
 import PricingCard from '@/components/sections/PricingCard'
 import Button from '@/components/ui/Button'
 import CTASection from '@/components/sections/CTASection'
-import { FiCalendar, FiShield, FiCheck } from 'react-icons/fi'
+import { FiCalendar, FiShield, FiCheck, FiPlusCircle } from 'react-icons/fi'
 
-type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto'
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto' | 'extras'
 
 const interieurServices: Service[] = interieurCatalog
 const exterieurServices: Service[] = exterieurCatalog
@@ -117,7 +118,9 @@ const motoServices: Service[] = [
   { id: 'moto-detailing', name: 'Moto Detailing', description: 'Professionele reiniging en detailing voor moto\'s en motorfietsen. Binnenkort beschikbaar – wij breiden onze diensten uit zodat ook uw motor dezelfde zorg en glans krijgt als uw auto.', basePrice: 0, largeCarSurcharge: 0, features: ['Exterieur reiniging', 'Velgen en banden', 'Lak- en onderhoudsbehandeling', 'Details en optiek'], comingSoon: true },
 ]
 
-const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren', 'moto']
+const extrasServices: Service[] = extrasAsServices()
+
+const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren', 'moto', 'extras']
 
 function categoryFromParam(param: string | null): ServiceCategory {
   return param && VALID_CATEGORIES.includes(param as ServiceCategory) ? param as ServiceCategory : 'exterieur'
@@ -139,6 +142,7 @@ function ServicesPageContent() {
       case 'full': return fullServices
       case 'polieren': return polierenServices
       case 'moto': return motoServices
+      case 'extras': return extrasServices
       default: return exterieurServices
     }
   }
@@ -166,6 +170,9 @@ function ServicesPageContent() {
           </button>
           <button onClick={() => setActiveCategory('moto')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'moto' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Moto
+          </button>
+          <button onClick={() => setActiveCategory('extras')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'extras' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+            <FiPlusCircle /> Extra&apos;s
           </button>
         </div>
 

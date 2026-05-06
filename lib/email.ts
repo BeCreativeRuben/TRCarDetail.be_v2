@@ -30,6 +30,7 @@ export type BookingPayload = {
   travelFeeEuro?: number
   /** Totaal excl. BTW (voor eindberekening in mails) */
   totalExclBtw?: number
+  selectedExtras?: { id: string; name: string; priceExclBtwEuro: number; priceNote?: string }[]
   specialRequests?: string
 }
 
@@ -54,6 +55,31 @@ const BRAND = {
   bg: '#F2F4F3',
   text: '#0A0908',
   textMuted: '#22333B',
+}
+
+function extrasRowsHtml(booking: BookingPayload): string {
+  const xs = booking.selectedExtras
+  if (!xs?.length) return ''
+  const rows = xs.map((e) => {
+    const pricePart = e.priceNote ? `${e.priceNote} €${e.priceExclBtwEuro.toFixed(2)}` : `€${e.priceExclBtwEuro.toFixed(2)}`
+    return `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Extra</td><td style="padding:4px 0;"><strong>${e.name}</strong> – ${pricePart} excl. BTW</td></tr>`
+  })
+  const sub = xs.reduce((a, b) => a + b.priceExclBtwEuro, 0)
+  return (
+    rows.join('') +
+    `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Extra's (subtotaal)</td><td style="padding:4px 0;">€${sub.toFixed(2)} excl. BTW</td></tr>`
+  )
+}
+
+function extrasLinesText(booking: BookingPayload): string[] {
+  const xs = booking.selectedExtras
+  if (!xs?.length) return []
+  const lines = xs.map((e) => {
+    const pricePart = e.priceNote ? `${e.priceNote} €${e.priceExclBtwEuro.toFixed(2)}` : `€${e.priceExclBtwEuro.toFixed(2)}`
+    return `- Extra: ${e.name} – ${pricePart} excl. BTW`
+  })
+  const sub = xs.reduce((a, b) => a + b.priceExclBtwEuro, 0)
+  return ['', "Extra's:", ...lines, `- Extra's (subtotaal): €${sub.toFixed(2)} excl. BTW`]
 }
 
 function emailWrapper(previewText: string, title: string, content: string): string {
@@ -110,6 +136,7 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Voertuig</td><td style="padding:4px 0;">${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})</td></tr>
         ${booking.address ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Adres</td><td style="padding:4px 0;">${booking.address}</td></tr>` : ''}
         ${booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">€${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}</td></tr>` : booking.address && booking.travelDistanceKm != null ? `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Kilometervergoeding</td><td style="padding:4px 0;">Gratis (binnen 15 km)</td></tr>` : ''}
+        ${extrasRowsHtml(booking)}
       </table>
     </div>
     ${booking.totalExclBtw != null && booking.totalExclBtw > 0 ? (() => { const excl = booking.totalExclBtw!; const btw = Math.round(excl * 0.21 * 100) / 100; const incl = Math.round(excl * 1.21 * 100) / 100; return `<div style="background:${BRAND.bg}; border-left:4px solid ${BRAND.accentRed}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;"><p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Eindberekening</p><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px; color:${BRAND.text};"><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Subtotaal excl. BTW</td><td style="padding:4px 0;">€${excl.toFixed(2)}</td></tr><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">BTW (21%)</td><td style="padding:4px 0;">€${btw.toFixed(2)}</td></tr><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted}; font-weight:700;">Totaal incl. BTW</td><td style="padding:4px 0; font-weight:700; color:${BRAND.accentRed};">€${incl.toFixed(2)}</td></tr></table></div>`; })() : ''}
@@ -139,6 +166,7 @@ function bookingConfirmationText(booking: BookingPayload): string {
     `- Voertuig: ${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year})`,
     ...(booking.address ? [`- Adres: ${booking.address}`] : []),
     ...(booking.travelFeeEuro != null && booking.travelFeeEuro > 0 ? [`- Kilometervergoeding: €${booking.travelFeeEuro.toFixed(2)}${booking.travelDistanceKm != null ? ` (${booking.travelDistanceKm} km)` : ''}`] : booking.address && booking.travelDistanceKm != null ? ['- Kilometervergoeding: Gratis (binnen 15 km)'] : []),
+    ...extrasLinesText(booking),
     ...(booking.totalExclBtw != null && booking.totalExclBtw > 0 ? ['', 'Eindberekening:', `- Subtotaal excl. BTW: €${booking.totalExclBtw.toFixed(2)}`, `- BTW (21%): €${(Math.round(booking.totalExclBtw * 0.21 * 100) / 100).toFixed(2)}`, `- Totaal incl. BTW: €${(Math.round(booking.totalExclBtw * 1.21 * 100) / 100).toFixed(2)}`] : []),
     '',
     'Vragen? Contacteer ons via WhatsApp op +32 499 12 85 00 of antwoord op deze mail.',
@@ -173,6 +201,16 @@ function bookingNotificationHtml(booking: BookingPayload): string {
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${booking.email}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${booking.email}</a></td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${booking.phone}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${booking.phone}</a></td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Service</td><td style="padding:12px 16px;">${booking.serviceType}</td></tr>
+      ${
+        booking.selectedExtras?.length
+          ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; vertical-align:top;">Extra's</td><td style="padding:12px 16px;">${booking.selectedExtras
+              .map((e) => {
+                const p = e.priceNote ? `${e.priceNote} €${e.priceExclBtwEuro.toFixed(2)}` : `€${e.priceExclBtwEuro.toFixed(2)}`
+                return `• <strong>${e.name}</strong> – ${p} excl. BTW`
+              })
+              .join('<br/>')}<br/><span style="color:${BRAND.textMuted}; font-size:14px;">Subtotaal extra's: €${booking.selectedExtras.reduce((a, b) => a + b.priceExclBtwEuro, 0).toFixed(2)} excl. BTW</span></td></tr>`
+          : ''
+      }
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Datum</td><td style="padding:12px 16px;">${booking.preferredDate}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Tijd</td><td style="padding:12px 16px;">${booking.preferredTime}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Voertuig</td><td style="padding:12px 16px;">${booking.vehicleInfo.make} ${booking.vehicleInfo.model} (${booking.vehicleInfo.year}) · ${booking.vehicleInfo.size}</td></tr>
