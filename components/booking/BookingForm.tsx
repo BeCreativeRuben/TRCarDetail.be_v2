@@ -425,7 +425,7 @@ export default function BookingForm() {
             return (
               <label
                 key={extra.id}
-                className="flex cursor-pointer items-start gap-3 rounded-lg border border-primary-dark/15 bg-light/80 p-3 text-sm text-primary-dark"
+                className="flex min-h-[120px] cursor-pointer items-start gap-3 rounded-lg border border-primary-dark/15 bg-light/80 p-3 text-sm text-primary-dark"
               >
                 <input
                   type="checkbox"
@@ -433,10 +433,10 @@ export default function BookingForm() {
                   onChange={() => toggleExtra(extra.id)}
                   className="mt-0.5 h-4 w-4 rounded border-secondary-dark/40 text-accent-red focus:ring-accent-red"
                 />
-                <span className="flex-1">
+                <span className="flex h-full flex-1 flex-col">
                   <span className="font-semibold block">{extra.name}</span>
-                  <span className="text-primary-dark/75 block mt-0.5">{extra.description}</span>
-                  <span className="text-accent-red font-bold mt-1 inline-block">
+                  <span className="text-primary-dark/75 block mt-0.5 line-clamp-2">{extra.description}</span>
+                  <span className="text-accent-red font-bold mt-auto pt-1 inline-block">
                     {extra.priceNote ? `${extra.priceNote} €${extra.priceExclBtwEuro}` : `+€${extra.priceExclBtwEuro}`}{' '}
                     <span className="text-xs font-normal text-primary-dark/60">excl. BTW</span>
                   </span>
