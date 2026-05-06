@@ -14,32 +14,33 @@ export const EXTRAS_CATALOG: ExtraCatalogItem[] = [
   {
     id: 'extra-wax-traditioneel-12m',
     name: 'Traditionele wax 12 maanden',
-    description: 'Langdurige waxbescherming. Prijs: vanaf €35 excl. BTW.',
+    description:
+      'Beschermende waxlaag die water en vuil minder laat hechten, de glans versterkt en de lak helpt beschermen tegen weersinvloeden.',
     priceExclBtwEuro: 35,
     priceNote: 'vanaf',
   },
   {
     id: 'extra-bodemreiniging',
     name: 'Bodemreiniging',
-    description: 'Reiniging van de onderzijde van het voertuig. +€25 excl. BTW.',
+    description: 'Reiniging van de onderzijde van het voertuig.',
     priceExclBtwEuro: 25,
   },
   {
     id: 'extra-glas-coating',
     name: 'Coating glas',
-    description: 'Glacoating voor ruiten en spiegels. +€60 excl. BTW.',
+    description: 'Glascoating voor ruiten en spiegels.',
     priceExclBtwEuro: 60,
   },
   {
     id: 'extra-hondenharen',
     name: 'Hondenharen',
-    description: 'Verwijdering van hondenharen uit het interieur. +€15 excl. BTW.',
+    description: 'Verwijdering van hondenharen uit het interieur.',
     priceExclBtwEuro: 15,
   },
   {
     id: 'extra-motoruimte',
     name: 'Motoruimte',
-    description: 'Reiniging van de motorruimte. +€25 excl. BTW.',
+    description: 'Reiniging van de motorruimte.',
     priceExclBtwEuro: 25,
   },
 ]
@@ -55,7 +56,7 @@ export function extrasAsServices(): Service[] {
     description: e.description,
     basePrice: e.priceExclBtwEuro,
     largeCarSurcharge: 0,
-    features: e.priceNote ? [`Prijs: ${e.priceNote} €${e.priceExclBtwEuro} excl. BTW`] : [`+€${e.priceExclBtwEuro} excl. BTW`],
+    features: [],
   }))
 }
 
