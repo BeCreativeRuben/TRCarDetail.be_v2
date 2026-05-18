@@ -37,7 +37,7 @@ export default function AboutPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
               <Card hover className="text-center overflow-hidden">
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-secondary-dark">
-                  <img src="https://ui-avatars.com/api/?name=Thibo&size=96&background=FF2E00&color=fff&bold=true" alt="Thibo" className="w-full h-full object-cover" />
+                  <img src={images.teamThibo} alt="Thibo" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark mb-1">Thibo</h3>
                 <p className="text-accent-red font-semibold text-sm">Exterieur Expert</p>
@@ -47,7 +47,7 @@ export default function AboutPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
               <Card hover className="text-center overflow-hidden">
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-secondary-dark">
-                  <img src="https://ui-avatars.com/api/?name=Renzo&size=96&background=FF2E00&color=fff&bold=true" alt="Renzo" className="w-full h-full object-cover" />
+                  <img src={images.teamRenzo} alt="Renzo" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark mb-1">Renzo</h3>
                 <p className="text-accent-red font-semibold text-sm">Interieur Expert</p>
