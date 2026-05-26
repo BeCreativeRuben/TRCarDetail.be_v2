@@ -12,6 +12,7 @@ import CustomPackageBuilder from './CustomPackageBuilder'
 import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
+import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
 import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
 import {
   type CustomExterieurTier,
@@ -262,7 +263,7 @@ export default function BookingForm() {
               excludedLines.length
                 ? `Uitgesloten onderdelen:\n${excludedLines.map((l) => `  - ${l}`).join('\n')}`
                 : 'Geen onderdelen uitgesloten.',
-              `Richtprijs (excl. BTW, indicatie): €${customEstimate.toFixed(2)}`,
+              `Richtprijs (indicatie): €${customEstimate.toFixed(2)} (${VAT_EXEMPT_SHORT})`,
               'Toelichting: deze richtprijs is een indicatie op basis van uw selectie en kan afwijken van de definitieve prijs na inspectie van de werken die moeten gebeuren.',
             ].join('\n')
           : ''
@@ -325,7 +326,6 @@ export default function BookingForm() {
     }
   }
 
-  const BTW_RATE = 0.21
   const selectedService = services.find(s => s.id === formData.serviceType)
   const baseServicePrice =
     formData.serviceType === 'full-custom'
@@ -338,9 +338,17 @@ export default function BookingForm() {
   const servicePrice = baseServicePrice + extrasTotal
   const travelFee = formData.travelFeeEuro ?? 0
   const totalPrice = servicePrice + travelFee
-  const totalExclBtw = totalPrice
-  const btwAmount = Math.round(totalExclBtw * BTW_RATE * 100) / 100
-  const totalInclBtw = Math.round(totalExclBtw * (1 + BTW_RATE) * 100) / 100
+
+  const priceTotalFooter = (total: number) => (
+    <div className="border-t border-light border-opacity-20 pt-4">
+      <div className="flex justify-between text-light pt-2">
+        <span className="text-xl font-bold text-light">Totaal (indicatie)</span>
+        <span className="text-2xl font-bold text-accent-red">€{total.toFixed(2)}</span>
+      </div>
+      <p className="text-xs text-light/75 mt-3">{VAT_EXEMPT_SHORT}</p>
+      <p className="text-xs text-light/65 mt-1">{VAT_EXEMPT_LEGAL}</p>
+    </div>
+  )
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -417,7 +425,7 @@ export default function BookingForm() {
           Extra&apos;s (optioneel)
         </h3>
         <p className="text-sm text-primary-dark opacity-75 mb-4">
-          Vink aan wat u wenst bovenop uw gekozen service. Alle bedragen zijn excl. BTW.
+          Vink aan wat u wenst bovenop uw gekozen service.
         </p>
         <div className="space-y-3">
           {EXTRAS_CATALOG.map((extra) => {
@@ -437,8 +445,7 @@ export default function BookingForm() {
                   <span className="font-semibold block">{extra.name}</span>
                   <span className="text-primary-dark/75 block mt-0.5 line-clamp-2">{extra.description}</span>
                   <span className="text-accent-red font-bold mt-auto pt-1 inline-block">
-                    {extra.priceNote ? `${extra.priceNote} €${extra.priceExclBtwEuro}` : `+€${extra.priceExclBtwEuro}`}{' '}
-                    <span className="text-xs font-normal text-primary-dark/60">excl. BTW</span>
+                    {extra.priceNote ? `${extra.priceNote} €${extra.priceExclBtwEuro}` : `+€${extra.priceExclBtwEuro}`}
                   </span>
                 </span>
               </label>
@@ -579,7 +586,7 @@ export default function BookingForm() {
                 </p>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-light">
-                    <span>Richtprijs dienst (excl. BTW)</span>
+                    <span>Richtprijs dienst</span>
                     <span>€{customEstimate.toFixed(2)}</span>
                   </div>
                   {extrasTotal > 0 && (
@@ -610,20 +617,7 @@ export default function BookingForm() {
                     </div>
                   )}
                 </div>
-                <div className="border-t border-light border-opacity-20 pt-4 space-y-2">
-                  <div className="flex justify-between text-light">
-                    <span>Subtotaal excl. BTW</span>
-                    <span>€{totalExclBtw.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-light">
-                    <span>BTW (21%)</span>
-                    <span>€{btwAmount.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-light pt-2 border-t border-light border-opacity-20">
-                    <span className="text-xl font-bold text-light">Totaal incl. BTW</span>
-                    <span className="text-2xl font-bold text-accent-red">€{totalInclBtw.toFixed(2)}</span>
-                  </div>
-                </div>
+                {priceTotalFooter(totalPrice)}
               </>
             ) : (
               <p className="text-light">Pas uw combinatie aan om een richtprijs te zien (minstens één niveau kiezen en niet alle onderdelen uitsluiten).</p>
@@ -661,20 +655,7 @@ export default function BookingForm() {
                   </div>
                 )}
               </div>
-              <div className="border-t border-light border-opacity-20 pt-4 space-y-2">
-                <div className="flex justify-between text-light">
-                  <span>Subtotaal excl. BTW</span>
-                  <span>€{totalExclBtw.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-light">
-                  <span>BTW (21%)</span>
-                  <span>€{btwAmount.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-light pt-2 border-t border-light border-opacity-20">
-                  <span className="text-xl font-bold text-light">Totaal incl. BTW</span>
-                  <span className="text-2xl font-bold text-accent-red">€{totalInclBtw.toFixed(2)}</span>
-                </div>
-              </div>
+              {priceTotalFooter(totalPrice)}
             </>
           ) : (
             <>
@@ -703,13 +684,7 @@ export default function BookingForm() {
               {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
                 <p className="text-light mt-2">Kilometervergoeding: {formData.travelFeeEuro === 0 ? 'Gratis' : `€${formData.travelFeeEuro?.toFixed(2)}`}{formData.travelDistanceKm != null ? ` (${formData.travelDistanceKm} km)` : ''}</p>
               )}
-              {totalPrice > 0 && (
-                <div className="mt-4 pt-4 border-t border-light border-opacity-20 space-y-1">
-                  <div className="flex justify-between text-light"><span>Subtotaal excl. BTW</span><span>€{totalExclBtw.toFixed(2)}</span></div>
-                  <div className="flex justify-between text-light"><span>BTW (21%)</span><span>€{btwAmount.toFixed(2)}</span></div>
-                  <div className="flex justify-between text-light pt-2"><span className="font-bold">Totaal incl. BTW</span><span className="font-bold text-accent-red">€{totalInclBtw.toFixed(2)}</span></div>
-                </div>
-              )}
+              {totalPrice > 0 && <div className="mt-4">{priceTotalFooter(totalPrice)}</div>}
             </>
           )}
         </motion.div>

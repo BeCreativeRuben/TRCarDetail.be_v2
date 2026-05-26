@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Card from '@/components/ui/Card'
+import { ENTERPRISE_NUMBER_LABEL, VAT_EXEMPT_LEGAL } from '@/lib/business'
 
 export default function PrivacyPage() {
   return (
@@ -27,6 +28,28 @@ export default function PrivacyPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="max-w-3xl mx-auto"
         >
+          <Card className="mb-6">
+            <h2 className="text-xl font-bold text-primary-dark mb-4">Bedrijfsgegevens</h2>
+            <p className="text-primary-dark opacity-80 leading-relaxed">
+              <strong>T&amp;R Car Detail</strong>
+              <br />
+              Heidebloemstraat 66 Bus 11, 9100 Sint-Niklaas
+              <br />
+              <a href="mailto:info@trcardetail.be" className="text-accent-red font-semibold hover:underline">
+                info@trcardetail.be
+              </a>
+              {' · '}
+              <a href="tel:+32499128500" className="text-accent-red font-semibold hover:underline">
+                +32 499 12 85 00
+              </a>
+            </p>
+            <p className="text-primary-dark opacity-80 leading-relaxed mt-4">
+              {ENTERPRISE_NUMBER_LABEL}
+              <br />
+              {VAT_EXEMPT_LEGAL}
+            </p>
+          </Card>
+
           <Card>
             <h2 className="text-xl font-bold text-primary-dark mb-4">Cookies en Google Analytics</h2>
             <p className="text-primary-dark opacity-80 leading-relaxed">

@@ -29,9 +29,9 @@ export interface Booking {
   travelDistanceKm?: number
   /** Kilometervergoeding in EUR (gratis ≤15 km, daarna €0,40/km extra) */
   travelFeeEuro?: number
-  /** Totaal excl. BTW (voor eindberekening in mails) */
+  /** Totaal richtprijs (indicatie) voor e-mails */
   totalExclBtw?: number
-  /** Optionele extra’s (catalogus); elk bedrag is excl. BTW. */
+  /** Optionele extra’s (catalogus) */
   selectedExtras?: { id: string; name: string; priceExclBtwEuro: number; priceNote?: string }[]
   specialRequests?: string
   status?: 'pending' | 'confirmed' | 'completed' | 'cancelled'

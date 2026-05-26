@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import BookingForm from '@/components/booking/BookingForm'
+import PriceVatNote from '@/components/PriceVatNote'
 import ProcessSection from '@/components/sections/ProcessSection'
 import { Suspense } from 'react'
 
@@ -14,6 +15,7 @@ function BookingContent() {
           <p className="text-xl text-primary-dark opacity-80 max-w-2xl mx-auto">
             Vul het formulier in om een afspraak te maken. We nemen zo spoedig mogelijk contact met u op om te bevestigen.
           </p>
+          <PriceVatNote variant="both" className="mt-4 max-w-2xl mx-auto text-center" />
         </motion.div>
         <div className="max-w-4xl mx-auto">
           <ProcessSection variant="compact" />

@@ -4,7 +4,7 @@ export type ExtraCatalogItem = {
   id: string
   name: string
   description: string
-  /** Bedrag voor subtotaal in boeking/mail (excl. BTW). Bij “vanaf” = ondergrens. */
+  /** Bedrag voor subtotaal in boeking/mail. Bij “vanaf” = ondergrens. */
   priceExclBtwEuro: number
   /** Optioneel: bv. "vanaf" voor weergave in mail en formulier. */
   priceNote?: string
