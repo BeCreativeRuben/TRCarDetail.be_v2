@@ -1,10 +1,16 @@
 'use client'
 
+import { useEffect } from 'react'
 import Script from 'next/script'
+import { registerGtagReportConversion } from '@/lib/google-ads'
 
 const GOOGLE_ADS_ID = 'AW-18036326015'
 
 export default function GoogleAds() {
+  useEffect(() => {
+    registerGtagReportConversion()
+  }, [])
+
   return (
     <>
       <Script

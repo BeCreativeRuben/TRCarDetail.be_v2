@@ -7,6 +7,7 @@ import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import { FiMail, FiPhone, FiMapPin, FiCalendar } from 'react-icons/fi'
+import { trackContactConversion } from '@/lib/google-ads'
 
 /** Vanaf 1 april: weekdagen 18–21u, weekend 08–22u. Voor april: bel of mail. */
 function OpeningHours() {
@@ -70,6 +71,7 @@ export default function ContactPage() {
       })
       if (response.ok) {
         setSubmitStatus('success')
+        trackContactConversion()
         setFormData({ name: '', email: '', phone: '', message: '' })
       } else setSubmitStatus('error')
     } catch {
