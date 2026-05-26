@@ -18,5 +18,5 @@ export const images = {
   qualityProducts: '/images/quality-products.webp',
   aandachtDetail: '/images/DSC_1082.webp',
   teamRenzo: '/images/DSC_0735.webp',
-  teamThibo: '/images/DSC_1710.webp',
+  teamThibo: '/images/DSC_1080.webp',
 }
