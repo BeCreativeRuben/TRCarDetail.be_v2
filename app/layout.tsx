@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Bebas_Neue, Inter } from 'next/font/google'
-import GoogleAnalytics from '@/components/GoogleAnalytics'
-import GoogleAds from '@/components/GoogleAds'
+import GoogleTag from '@/components/GoogleTag'
 import ScrollToTop from '@/components/ScrollToTop'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -47,8 +46,7 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${bebas.variable} ${inter.variable}`}>
       <body className="bg-primary-dark text-light min-h-screen">
-        <GoogleAnalytics />
-        <GoogleAds />
+        <GoogleTag />
         <div className="min-h-screen flex flex-col">
           <ScrollToTop />
           <Header />

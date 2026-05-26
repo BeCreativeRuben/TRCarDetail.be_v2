@@ -138,7 +138,16 @@ export default function ContactPage() {
                 </div>
                 {submitStatus === 'success' && <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg p-4 text-green-400">Bedankt! Uw bericht is verzonden. We nemen zo spoedig mogelijk contact met u op.</div>}
                 {submitStatus === 'error' && <div className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-red">Er is een fout opgetreden. Probeer het later opnieuw.</div>}
-                <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">{isSubmitting ? 'Verzenden...' : 'Verstuur Bericht'}</Button>
+                <Button
+                  type="submit"
+                  id="contact-form-submit"
+                  variant="primary"
+                  size="lg"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? 'Verzenden...' : 'Verstuur Bericht'}
+                </Button>
               </form>
             </Card>
           </div>
