@@ -13,6 +13,7 @@ import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
 import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
+import { isPreferredDateBookable } from '@/lib/booking-dates'
 import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
 import {
   type CustomExterieurTier,
@@ -236,6 +237,12 @@ export default function BookingForm() {
     if (!formData.preferredDate || !formData.preferredTime || !formData.serviceType || !formData.address?.trim()) {
       setSubmitStatus('error')
       setSubmitError('Vul alle verplichte velden in, inclusief het adres (kies een suggestie of vul handmatig in).')
+      return
+    }
+    if (!isPreferredDateBookable(formData.preferredDate)) {
+      setSubmitStatus('error')
+      setSubmitError('U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.')
+      setFormData((prev) => ({ ...prev, preferredDate: undefined, preferredTime: undefined }))
       return
     }
     if (formData.serviceType === 'full-custom') {

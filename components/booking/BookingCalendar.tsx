@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { formatLocalDateString, isDateBookable } from '@/lib/booking-dates'
 
 interface BookingCalendarProps {
   selectedDate: string | null | undefined
@@ -27,17 +28,11 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
   const days = getDaysInMonth(currentMonth)
   const monthNames = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
 
-  const isPastDate = (day: number) => {
-    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    return date < today
-  }
+  const isUnavailableDate = (day: number) =>
+    !isDateBookable(currentMonth.getFullYear(), currentMonth.getMonth(), day)
 
-  const formatDate = (day: number) => {
-    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
-    return date.toISOString().split('T')[0]
-  }
+  const formatDate = (day: number) =>
+    formatLocalDateString(currentMonth.getFullYear(), currentMonth.getMonth(), day)
 
   const isSelected = (day: number) => selectedDate && day && formatDate(day) === selectedDate
 
@@ -58,16 +53,16 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
           const padKey = `pad-${currentMonth.getFullYear()}-${currentMonth.getMonth()}-${index}`
           if (day === null) return <div key={padKey} />
           const dateStr = formatDate(day)
-          const past = isPastDate(day)
+          const unavailable = isUnavailableDate(day)
           const selected = isSelected(day)
           return (
             <motion.button
               key={dateStr}
-              onClick={() => !past && onDateSelect(dateStr)}
-              disabled={past}
-              className={`aspect-square max-w-[36px] max-h-[36px] w-full rounded text-xs font-medium transition-all ${past ? 'text-primary-dark opacity-30 cursor-not-allowed' : selected ? 'bg-accent-red text-white' : 'text-primary-dark hover:bg-secondary-dark hover:text-accent-red'}`}
-              whileHover={!past ? { scale: 1.05 } : {}}
-              whileTap={!past ? { scale: 0.95 } : {}}
+              onClick={() => !unavailable && onDateSelect(dateStr)}
+              disabled={unavailable}
+              className={`aspect-square max-w-[36px] max-h-[36px] w-full rounded text-xs font-medium transition-all ${unavailable ? 'text-primary-dark opacity-30 cursor-not-allowed' : selected ? 'bg-accent-red text-white' : 'text-primary-dark hover:bg-secondary-dark hover:text-accent-red'}`}
+              whileHover={!unavailable ? { scale: 1.05 } : {}}
+              whileTap={!unavailable ? { scale: 0.95 } : {}}
             >
               {day}
             </motion.button>

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { sendBookingConfirmation } from '@/lib/email'
 import { saveBooking } from '@/lib/bookings-store'
 import { normalizeSelectedExtras } from '@/lib/normalize-booking-extras'
+import { isPreferredDateBookable } from '@/lib/booking-dates'
 
 export async function POST(request: Request) {
   try {
@@ -36,6 +37,13 @@ export async function POST(request: Request) {
     ) {
       return NextResponse.json(
         { error: 'Niet alle verplichte velden zijn ingevuld. Controleer vooral het adres.', field: !address ? 'address' : undefined },
+        { status: 400 }
+      )
+    }
+
+    if (!isPreferredDateBookable(String(preferredDate))) {
+      return NextResponse.json(
+        { error: 'U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.', field: 'preferredDate' },
         { status: 400 }
       )
     }
