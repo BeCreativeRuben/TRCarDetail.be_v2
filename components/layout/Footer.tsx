@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import { FiFacebook, FiInstagram, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import { instagram } from '@/lib/socials'
-import { ENTERPRISE_NUMBER_LABEL, VAT_EXEMPT_LEGAL } from '@/lib/business'
-
 export default function Footer() {
   return (
     <footer className="bg-secondary-dark border-t border-primary-dark">
@@ -62,12 +60,6 @@ export default function Footer() {
         <div className="container-custom space-y-2">
           <p className="text-center text-xs text-light opacity-80 max-w-2xl mx-auto">
             Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.
-          </p>
-          <p className="text-center text-xs text-light opacity-80 max-w-2xl mx-auto">
-            {ENTERPRISE_NUMBER_LABEL}
-          </p>
-          <p className="text-center text-xs text-light opacity-75 max-w-2xl mx-auto">
-            {VAT_EXEMPT_LEGAL}
           </p>
           <p className="text-center text-sm text-light opacity-90">
             &copy; {new Date().getFullYear()} T&R Car Detail. Alle rechten voorbehouden.

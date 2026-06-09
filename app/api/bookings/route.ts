@@ -3,6 +3,7 @@ import { sendBookingConfirmation } from '@/lib/email'
 import { saveBooking } from '@/lib/bookings-store'
 import { normalizeSelectedExtras } from '@/lib/normalize-booking-extras'
 import { isPreferredDateBookable } from '@/lib/booking-dates'
+import { isPreferredTimeValid } from '@/lib/booking-slots'
 
 export async function POST(request: Request) {
   try {
@@ -44,6 +45,13 @@ export async function POST(request: Request) {
     if (!isPreferredDateBookable(String(preferredDate))) {
       return NextResponse.json(
         { error: 'U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.', field: 'preferredDate' },
+        { status: 400 }
+      )
+    }
+
+    if (!isPreferredTimeValid(String(preferredDate), String(preferredTime))) {
+      return NextResponse.json(
+        { error: 'Het gekozen tijdslot is niet beschikbaar op deze datum. Kies een ander tijdstip.', field: 'preferredTime' },
         { status: 400 }
       )
     }

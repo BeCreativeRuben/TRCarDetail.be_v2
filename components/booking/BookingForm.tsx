@@ -14,6 +14,7 @@ import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
 import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
 import { isPreferredDateBookable } from '@/lib/booking-dates'
+import { getTimeSlotsForDate } from '@/lib/booking-slots'
 import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
 import {
   type CustomExterieurTier,
@@ -46,7 +47,6 @@ const services: Service[] = [
   { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
 ]
 
-const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
 const validServiceIds = [
   'exterieur-basis',
   'exterieur-deluxe',
@@ -92,7 +92,6 @@ export default function BookingForm() {
   const [customInt, setCustomInt] = useState<CustomInterieurTier>('basis')
   const [excludedKeys, setExcludedKeys] = useState<Set<CustomFeatureKey>>(() => new Set())
   const [selectedExtraIds, setSelectedExtraIds] = useState<Set<string>>(() => new Set())
-  const calendarRef = useRef<HTMLDivElement>(null)
   const extrasRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
   const successRef = useRef<HTMLDivElement>(null)
@@ -101,7 +100,7 @@ export default function BookingForm() {
 
   useEffect(() => {
     if (serviceFromUrl && validServiceIds.includes(serviceFromUrl)) {
-      const t = setTimeout(() => calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300)
+      const t = setTimeout(() => extrasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300)
       return () => clearTimeout(t)
     }
   }, [serviceFromUrl])
@@ -212,6 +211,11 @@ export default function BookingForm() {
   )
 
   const extrasTotal = useMemo(() => sumExtrasPriceExclBtw(selectedExtraIds), [selectedExtraIds])
+
+  const availableTimeSlots = useMemo(
+    () => (formData.preferredDate ? getTimeSlotsForDate(formData.preferredDate) : []),
+    [formData.preferredDate]
+  )
 
   const toggleExcluded = useCallback((key: CustomFeatureKey) => {
     setExcludedKeys((prev) => {
@@ -382,7 +386,7 @@ export default function BookingForm() {
                           setExcludedKeys(new Set())
                         }
                         setFormData({ ...formData, serviceType: service.id })
-                        setTimeout(() => calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
+                        setTimeout(() => extrasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
                       }}
                       className={`p-4 rounded-lg border-2 text-left transition-all ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10 ring-2 ring-accent-red ring-offset-2' : 'border-primary-dark/20 bg-light hover:border-accent-red hover:bg-accent-red/5'}`}
                       whileHover={{ scale: 1.01 }}
@@ -461,12 +465,17 @@ export default function BookingForm() {
         </div>
       </div>
 
-      <div ref={calendarRef} className="flex flex-col justify-center min-h-[50vh] md:min-h-0 md:py-4">
+      <div className="flex flex-col justify-center min-h-[50vh] md:min-h-0 md:py-4">
         <label className="block text-sm font-medium text-primary-dark mb-3 text-center">Selecteer Datum *</label>
         <BookingCalendar
           selectedDate={formData.preferredDate || null}
           onDateSelect={(date) => {
-            setFormData({ ...formData, preferredDate: date })
+            const slots = getTimeSlotsForDate(date)
+            setFormData((prev) => ({
+              ...prev,
+              preferredDate: date,
+              preferredTime: slots.includes(prev.preferredTime || '') ? prev.preferredTime : '',
+            }))
             setTimeout(() => timeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150)
           }}
         />
@@ -476,7 +485,7 @@ export default function BookingForm() {
         <motion.div ref={timeRef} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <label className="block text-sm font-medium text-primary-dark mb-3">Selecteer Tijd *</label>
           <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-            {timeSlots.map((time) => (
+            {availableTimeSlots.map((time) => (
               <button
                 key={time}
                 type="button"

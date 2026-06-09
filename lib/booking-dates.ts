@@ -19,12 +19,31 @@ export function isDateBookable(year: number, month: number, day: number): boolea
   return date > getTodayLocal()
 }
 
+export function parsePreferredDateParts(preferredDate: string): { year: number; month: number; day: number } | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(preferredDate)
+  if (!match) return null
+  return {
+    year: Number(match[1]),
+    month: Number(match[2]) - 1,
+    day: Number(match[3]),
+  }
+}
+
+/** 0 = zondag, 6 = zaterdag (lokale tijdzone). */
+export function getLocalDayOfWeek(year: number, month: number, day: number): number {
+  return new Date(year, month, day).getDay()
+}
+
+export function isWeekendDateString(preferredDate: string): boolean {
+  const parts = parsePreferredDateParts(preferredDate)
+  if (!parts) return false
+  const dow = getLocalDayOfWeek(parts.year, parts.month, parts.day)
+  return dow === 0 || dow === 6
+}
+
 /** Valideert preferredDate uit formulier/API (YYYY-MM-DD). */
 export function isPreferredDateBookable(preferredDate: string): boolean {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(preferredDate)
-  if (!match) return false
-  const year = Number(match[1])
-  const month = Number(match[2]) - 1
-  const day = Number(match[3])
-  return isDateBookable(year, month, day)
+  const parts = parsePreferredDateParts(preferredDate)
+  if (!parts) return false
+  return isDateBookable(parts.year, parts.month, parts.day)
 }
