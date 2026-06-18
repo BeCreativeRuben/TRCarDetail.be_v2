@@ -152,7 +152,7 @@ function ServicesPageContent() {
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Onze Diensten</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Professionele auto detailing diensten op maat.</p>
+          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Car detailing aan huis in Vlaanderen – interieur, exterieur, polieren en volledige pakketten.</p>
         </motion.div>
 
         <div className="flex flex-wrap justify-center gap-3 mb-12">

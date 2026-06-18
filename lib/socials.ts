@@ -18,3 +18,7 @@ export const instagram = {
   url: `https://www.instagram.com/${INSTAGRAM_HANDLE}/`,
   postShortcodes: getInstagramPostShortcodes(),
 }
+
+/** Google Maps review link (Review achterlaten in e-mails) */
+export const GOOGLE_MAPS_REVIEW_URL =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_REVIEW_URL || 'https://g.page/r/CbHnN81-Yi1_EBM/review'

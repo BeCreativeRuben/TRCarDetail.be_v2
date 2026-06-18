@@ -50,6 +50,44 @@ export async function saveBooking(payload: BookingPayload): Promise<string | nul
   }
 }
 
+export async function getAllBookings(): Promise<StoredBooking[]> {
+  const store = await getKv()
+  if (!store) return []
+  try {
+    const ids = await store.lrange(BOOKING_IDS_KEY, 0, -1)
+    if (!ids?.length) return []
+    const result: StoredBooking[] = []
+    for (const id of ids) {
+      const raw = await store.get(`trcardetail:booking:${id}`)
+      if (raw == null) continue
+      const booking = typeof raw === 'string' ? JSON.parse(raw) : (raw as StoredBooking)
+      result.push(booking)
+    }
+    result.sort((a, b) => {
+      const dateCmp = b.preferredDate.localeCompare(a.preferredDate)
+      if (dateCmp !== 0) return dateCmp
+      return b.createdAt - a.createdAt
+    })
+    return result
+  } catch (e) {
+    console.error('Failed to list bookings from KV:', e)
+    return []
+  }
+}
+
+export async function getBookingById(id: string): Promise<StoredBooking | null> {
+  const store = await getKv()
+  if (!store) return null
+  try {
+    const raw = await store.get(`trcardetail:booking:${id}`)
+    if (raw == null) return null
+    return typeof raw === 'string' ? JSON.parse(raw) : (raw as StoredBooking)
+  } catch (e) {
+    console.error('Failed to get booking from KV:', e)
+    return null
+  }
+}
+
 export async function getBookingsForReviewRequest(): Promise<StoredBooking[]> {
   const store = await getKv()
   if (!store) return []

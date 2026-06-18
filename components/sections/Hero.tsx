@@ -57,8 +57,11 @@ export default function Hero() {
           CAR CLEANING & DETAILING
           <span className="block text-accent-red">VLAANDEREN</span>
         </h1>
-        <p className="text-xl md:text-2xl text-light mb-8 max-w-2xl mx-auto">
-          Professionele autoreiniging aan huis
+        <p className="text-xl md:text-2xl text-light mb-4 max-w-2xl mx-auto">
+          Professionele autoreiniging aan huis in Vlaanderen
+        </p>
+        <p className="text-sm md:text-base text-light/80 mb-8 max-w-xl mx-auto">
+          Mobiele car detailing vanuit Sint-Niklaas · Oost-Vlaanderen &amp; heel Vlaanderen
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/booking">

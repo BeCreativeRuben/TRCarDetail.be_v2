@@ -289,44 +289,15 @@ export async function sendBookingConfirmation(booking: BookingPayload): Promise<
   console.log('Booking confirmation email sent to:', booking.email)
 }
 
-function reviewRequestHtml(customerName: string, serviceType: string, preferredDate: string): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trcardetail.be'
-  const content = `
-    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.primaryDark};">Hoe was uw ervaring?</h1>
-    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Uw afspraak is geweest – we horen graag wat u ervan vond.</p>
-    <p style="margin:0 0 20px;">Beste ${customerName},</p>
-    <p style="margin:0 0 24px;">Onlangs heeft u bij ons een <strong>${serviceType}</strong> laten uitvoeren (${preferredDate}). We hopen dat u tevreden bent!</p>
-    <p style="margin:0 0 24px;">Zou u een korte review willen achterlaten? Dat helpt andere klanten en ons om de service verder te verbeteren. U kunt uw ervaring met ons delen door te antwoorden op deze e-mail of via onze website.</p>
-    <p style="margin:24px 0 0;">
-      <a href="${siteUrl}/contact" style="display:inline-block; background:${BRAND.accentRed}; color:${BRAND.white}; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600;">Review achterlaten</a>
-    </p>
-    <p style="margin:24px 0 0;">Alvast bedankt,<br><strong>${BRAND.name}</strong></p>
-  `
-  return emailWrapper(
-    'Laat een review achter na uw bezoek bij T&R Car Detail',
-    'Review aanvraag - T&R Car Detail',
-    content
-  )
-}
+import { buildReviewRequestHtml, buildReviewRequestText, REVIEW_MAIL_SUBJECT } from '@/lib/review-email'
 
-function reviewRequestText(customerName: string, serviceType: string, preferredDate: string): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trcardetail.be'
-  return [
-    'Hoe was uw ervaring?',
-    '',
-    `Beste ${customerName},`,
-    '',
-    `Onlangs heeft u bij ons een ${serviceType} laten uitvoeren (${preferredDate}). We hopen dat u tevreden bent!`,
-    '',
-    'Zou u een korte review willen achterlaten? Antwoord op deze e-mail of ga naar onze website:',
-    siteUrl + '/contact',
-    '',
-    'Alvast bedankt,',
-    BRAND.name,
-  ].join('\n')
-}
-
-export async function sendReviewRequest(booking: { customerName: string; email: string; serviceType: string; preferredDate: string }): Promise<void> {
+export async function sendReviewRequest(booking: {
+  customerName: string
+  email: string
+  serviceType: string
+  preferredDate: string
+  personalMessage?: string
+}): Promise<void> {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.log('Email not configured. Review request skipped for:', booking.email)
     return
@@ -334,9 +305,19 @@ export async function sendReviewRequest(booking: { customerName: string; email: 
   await transporter.sendMail({
     from: process.env.SMTP_USER,
     to: booking.email,
-    subject: 'Hoe was uw ervaring? – T&R Car Detail',
-    text: reviewRequestText(booking.customerName, booking.serviceType, booking.preferredDate),
-    html: reviewRequestHtml(booking.customerName, booking.serviceType, booking.preferredDate),
+    subject: REVIEW_MAIL_SUBJECT,
+    text: buildReviewRequestText({
+      customerName: booking.customerName,
+      serviceType: booking.serviceType,
+      appointmentDate: booking.preferredDate,
+      personalMessage: booking.personalMessage,
+    }),
+    html: buildReviewRequestHtml({
+      customerName: booking.customerName,
+      serviceType: booking.serviceType,
+      appointmentDate: booking.preferredDate,
+      personalMessage: booking.personalMessage,
+    }),
   })
   console.log('Review request email sent to:', booking.email)
 }

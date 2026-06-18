@@ -12,7 +12,7 @@ export default function AboutPage() {
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Over T&R Car Detail</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Professionele autoreiniging en detailing diensten met passie voor perfectie</p>
+          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Professionele car detailing in Vlaanderen – met passie voor perfectie, vanuit Sint-Niklaas.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">

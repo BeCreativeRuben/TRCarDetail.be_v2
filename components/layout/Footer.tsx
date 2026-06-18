@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold text-accent-red mb-4">T&R Car Detail</h3>
             <p className="text-light text-sm">
-              Professionele autoreiniging en detailing diensten. Wij brengen uw auto terug in absolute showroomstaat!
+              Professionele car detailing en autoreiniging aan huis in Vlaanderen. Vanuit Sint-Niklaas (Oost-Vlaanderen) brengen wij uw auto terug in absolute showroomstaat.
             </p>
           </div>
 
