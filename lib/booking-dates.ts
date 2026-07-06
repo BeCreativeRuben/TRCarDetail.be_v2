@@ -12,8 +12,41 @@ export function formatLocalDateString(year: number, month: number, day: number):
   return `${year}-${m}-${d}`
 }
 
+/** Gesloten periodes (inclusief start- en einddatum). */
+const BLOCKED_DATE_RANGES: { start: string; end: string; reason: string }[] = [
+  {
+    start: '2026-07-06',
+    end: '2026-07-12',
+    reason: 'Deze week (6–12 juli) zijn we volzet. Kies een datum vanaf 13 juli.',
+  },
+]
+
+export function isDateInBlockedRange(year: number, month: number, day: number): boolean {
+  const dateStr = formatLocalDateString(year, month, day)
+  return BLOCKED_DATE_RANGES.some((range) => dateStr >= range.start && dateStr <= range.end)
+}
+
+export function getBlockedRangeReason(preferredDate: string): string | null {
+  const match = BLOCKED_DATE_RANGES.find(
+    (range) => preferredDate >= range.start && preferredDate <= range.end
+  )
+  return match?.reason ?? null
+}
+
+/** Korte melding voor de kalender wanneer een gesloten periode in de getoonde maand valt. */
+export function getBlockedRangeNoticeForMonth(year: number, month: number): string | null {
+  const monthStart = formatLocalDateString(year, month, 1)
+  const lastDay = new Date(year, month + 1, 0).getDate()
+  const monthEnd = formatLocalDateString(year, month, lastDay)
+  const match = BLOCKED_DATE_RANGES.find(
+    (range) => range.start <= monthEnd && range.end >= monthStart
+  )
+  return match?.reason ?? null
+}
+
 /** Alleen datums ná vandaag zijn boekbaar (vandaag zelf uitgesloten). */
 export function isDateBookable(year: number, month: number, day: number): boolean {
+  if (isDateInBlockedRange(year, month, day)) return false
   const date = new Date(year, month, day)
   date.setHours(0, 0, 0, 0)
   return date > getTodayLocal()

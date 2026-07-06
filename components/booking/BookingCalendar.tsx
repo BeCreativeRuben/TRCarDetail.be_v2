@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { formatLocalDateString, isDateBookable } from '@/lib/booking-dates'
+import { formatLocalDateString, getBlockedRangeNoticeForMonth, isDateBookable } from '@/lib/booking-dates'
 
 interface BookingCalendarProps {
   selectedDate: string | null | undefined
@@ -37,6 +37,11 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
 
   const isSelected = (day: number) => selectedDate && day && formatDate(day) === selectedDate
 
+  const blockedNotice = getBlockedRangeNoticeForMonth(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth()
+  )
+
   return (
     <div className="bg-light rounded-lg p-4 shadow-lg max-w-sm w-full mx-auto">
       <div className="flex items-center justify-between mb-3">
@@ -70,6 +75,9 @@ export default function BookingCalendar({ selectedDate, onDateSelect }: BookingC
           )
         })}
       </div>
+      {blockedNotice && (
+        <p className="text-center text-xs text-primary-dark/60 mt-3 max-w-sm mx-auto">{blockedNotice}</p>
+      )}
     </div>
   )
 }

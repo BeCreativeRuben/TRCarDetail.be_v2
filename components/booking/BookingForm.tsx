@@ -13,7 +13,7 @@ import { Service, Booking } from '@/lib/types'
 import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
 import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
-import { isPreferredDateBookable } from '@/lib/booking-dates'
+import { isPreferredDateBookable, getBlockedRangeReason } from '@/lib/booking-dates'
 import { getTimeSlotsForDate } from '@/lib/booking-slots'
 import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
 import {
@@ -245,7 +245,10 @@ export default function BookingForm() {
     }
     if (!isPreferredDateBookable(formData.preferredDate)) {
       setSubmitStatus('error')
-      setSubmitError('U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.')
+      setSubmitError(
+        getBlockedRangeReason(formData.preferredDate) ??
+          'U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.'
+      )
       setFormData((prev) => ({ ...prev, preferredDate: undefined, preferredTime: undefined }))
       return
     }

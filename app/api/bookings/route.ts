@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { sendBookingConfirmation } from '@/lib/email'
 import { saveBooking } from '@/lib/bookings-store'
 import { normalizeSelectedExtras } from '@/lib/normalize-booking-extras'
-import { isPreferredDateBookable } from '@/lib/booking-dates'
+import { isPreferredDateBookable, getBlockedRangeReason } from '@/lib/booking-dates'
 import { isPreferredTimeValid } from '@/lib/booking-slots'
 
 export async function POST(request: Request) {
@@ -43,8 +43,14 @@ export async function POST(request: Request) {
     }
 
     if (!isPreferredDateBookable(String(preferredDate))) {
+      const blockedReason = getBlockedRangeReason(String(preferredDate))
       return NextResponse.json(
-        { error: 'U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.', field: 'preferredDate' },
+        {
+          error:
+            blockedReason ??
+            'U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.',
+          field: 'preferredDate',
+        },
         { status: 400 }
       )
     }
