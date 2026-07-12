@@ -13,17 +13,9 @@ export function formatLocalDateString(year: number, month: number, day: number):
 }
 
 /** Gesloten periodes (inclusief start- en einddatum). */
-const BLOCKED_DATE_RANGES: { start: string; end: string; reason: string }[] = [
-  {
-    start: '2026-07-06',
-    end: '2026-07-12',
-    reason: 'Deze week (6–12 juli) zijn we volzet. Kies een datum vanaf 13 juli.',
-  },
-  {
-    start: '2026-07-13',
-    end: '2026-07-19',
-    reason: 'Deze week (13–19 juli) zijn we volzet. Kies een datum vanaf 20 juli.',
-  },
+const BLOCKED_DATE_RANGES: { start: string; end: string }[] = [
+  { start: '2026-07-06', end: '2026-07-12' },
+  { start: '2026-07-13', end: '2026-07-19' },
 ]
 
 export function isDateInBlockedRange(year: number, month: number, day: number): boolean {
@@ -32,25 +24,13 @@ export function isDateInBlockedRange(year: number, month: number, day: number): 
 }
 
 export function getBlockedRangeReason(preferredDate: string): string | null {
-  const match = BLOCKED_DATE_RANGES.find(
-    (range) => preferredDate >= range.start && preferredDate <= range.end
-  )
-  return match?.reason ?? null
-}
-
-/** Korte melding voor de kalender wanneer een gesloten periode in de getoonde maand valt. */
-export function getBlockedRangeNoticeForMonth(year: number, month: number): string | null {
-  const monthStart = formatLocalDateString(year, month, 1)
-  const lastDay = new Date(year, month + 1, 0).getDate()
-  const monthEnd = formatLocalDateString(year, month, lastDay)
-  const today = getTodayLocal()
-  const todayStr = formatLocalDateString(today.getFullYear(), today.getMonth(), today.getDate())
-
-  const reasons = BLOCKED_DATE_RANGES.filter(
-    (range) => range.start <= monthEnd && range.end >= monthStart && range.end >= todayStr
-  ).map((range) => range.reason)
-
-  return reasons.length ? reasons.join(' ') : null
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(preferredDate)
+  if (!match) return null
+  const year = Number(match[1])
+  const month = Number(match[2]) - 1
+  const day = Number(match[3])
+  if (!isDateInBlockedRange(year, month, day)) return null
+  return 'Deze datum is volzet. Kies een andere dag.'
 }
 
 /** Alleen datums ná vandaag zijn boekbaar (vandaag zelf uitgesloten). */
