@@ -19,6 +19,11 @@ const BLOCKED_DATE_RANGES: { start: string; end: string; reason: string }[] = [
     end: '2026-07-12',
     reason: 'Deze week (6–12 juli) zijn we volzet. Kies een datum vanaf 13 juli.',
   },
+  {
+    start: '2026-07-13',
+    end: '2026-07-19',
+    reason: 'Deze week (13–19 juli) zijn we volzet. Kies een datum vanaf 20 juli.',
+  },
 ]
 
 export function isDateInBlockedRange(year: number, month: number, day: number): boolean {
@@ -38,10 +43,14 @@ export function getBlockedRangeNoticeForMonth(year: number, month: number): stri
   const monthStart = formatLocalDateString(year, month, 1)
   const lastDay = new Date(year, month + 1, 0).getDate()
   const monthEnd = formatLocalDateString(year, month, lastDay)
-  const match = BLOCKED_DATE_RANGES.find(
-    (range) => range.start <= monthEnd && range.end >= monthStart
-  )
-  return match?.reason ?? null
+  const today = getTodayLocal()
+  const todayStr = formatLocalDateString(today.getFullYear(), today.getMonth(), today.getDate())
+
+  const reasons = BLOCKED_DATE_RANGES.filter(
+    (range) => range.start <= monthEnd && range.end >= monthStart && range.end >= todayStr
+  ).map((range) => range.reason)
+
+  return reasons.length ? reasons.join(' ') : null
 }
 
 /** Alleen datums ná vandaag zijn boekbaar (vandaag zelf uitgesloten). */
