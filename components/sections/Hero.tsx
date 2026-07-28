@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FiCalendar, FiList } from 'react-icons/fi'
 import Button from '../ui/Button'
+import TrackedBookLink from '../analytics/TrackedBookLink'
 
 const HERO_VIDEO_SOURCES = [
   '/videos/hero-video.mp4',
@@ -64,16 +65,16 @@ export default function Hero() {
           Mobiele car detailing vanuit Sint-Niklaas · Oost-Vlaanderen &amp; heel Vlaanderen
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/booking">
+          <TrackedBookLink href="/booking?from=hero" location="hero">
             <Button variant="primary" size="lg" className="flex items-center gap-2">
               <FiCalendar className="w-5 h-5" />
               Boek Nu
             </Button>
-          </Link>
+          </TrackedBookLink>
           <Link href="/services">
             <Button variant="outline" size="lg" className="flex items-center gap-2">
               <FiList className="w-5 h-5" />
-              Onze Diensten
+              Bekijk pakketten
             </Button>
           </Link>
         </div>

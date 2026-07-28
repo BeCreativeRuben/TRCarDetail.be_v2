@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { FiCalendar } from 'react-icons/fi'
 import Navigation from './Navigation'
 import Button from '../ui/Button'
+import TrackedBookLink from '../analytics/TrackedBookLink'
 
 export default function Header() {
   return (
@@ -15,12 +18,12 @@ export default function Header() {
           <Navigation />
 
           <div className="hidden md:block">
-            <Link href="/booking">
+            <TrackedBookLink href="/booking?from=header" location="header">
               <Button variant="primary" size="sm" className="flex items-center gap-2">
                 <FiCalendar className="w-4 h-4" />
                 Boek Nu
               </Button>
-            </Link>
+            </TrackedBookLink>
           </div>
         </div>
       </div>

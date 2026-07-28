@@ -1,8 +1,11 @@
+'use client'
+
 import Link from 'next/link'
-import { FiArrowRight } from 'react-icons/fi'
+import { FiArrowRight, FiCalendar } from 'react-icons/fi'
 import { Service } from '@/lib/types'
 import ServiceCard from './ServiceCard'
 import Button from '../ui/Button'
+import TrackedBookLink from '../analytics/TrackedBookLink'
 
 const services: Service[] = [
   { id: 'interieur-basis', name: 'Interieur', description: 'Basis, Deluxe en Premium interieurreiniging', basePrice: 0, largeCarSurcharge: 0, features: [] },
@@ -19,16 +22,24 @@ export default function ServicesPreview() {
       <div className="container-custom">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-dark mb-4">Onze Diensten</h2>
-          <p className="text-xl text-primary-dark opacity-80 max-w-2xl mx-auto">Professionele autoreiniging met de beste producten en technieken</p>
+          <p className="text-xl text-primary-dark opacity-80 max-w-2xl mx-auto">
+            Kies een pakket en boek direct online — car detailing aan huis in Vlaanderen.
+          </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {services.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}
         </div>
-        <div className="text-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <TrackedBookLink href="/booking?from=home_services" location="home_services">
+            <Button variant="primary" size="lg" className="flex items-center gap-2">
+              <FiCalendar className="w-5 h-5" />
+              Direct boeken
+            </Button>
+          </TrackedBookLink>
           <Link href="/services">
-            <Button variant="primary" size="lg" className="flex items-center gap-2 mx-auto">
+            <Button variant="outline" size="lg" className="flex items-center gap-2">
               Bekijk Alle Diensten
               <FiArrowRight className="w-5 h-5" />
             </Button>

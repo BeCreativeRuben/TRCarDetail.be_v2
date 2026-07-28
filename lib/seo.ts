@@ -103,9 +103,9 @@ export const pageMetadata = {
   home: createPageMetadata({
     title: 'Car Detailing Vlaanderen – Autoreiniging aan Huis',
     description:
-      'T&R Car Detail: professionele car detailing en autoreiniging aan huis in Vlaanderen. Gevestigd in Sint-Niklaas (Oost-Vlaanderen), actief in Gent, Antwerpen en heel Vlaanderen. Boek online.',
+      'Boek car detailing aan huis in Vlaanderen. T&R Car Detail vanuit Sint-Niklaas: interieur, exterieur en volledige pakketten. Online afspraak in een paar stappen.',
     path: '/',
-    keywords: ['car cleaning Vlaanderen', 'detailing aan huis België'],
+    keywords: ['car cleaning Vlaanderen', 'detailing aan huis België', 'car detailing boeken'],
   }),
   about: createPageMetadata({
     title: 'Over Ons – Car Detailing Team in Vlaanderen',
@@ -116,16 +116,16 @@ export const pageMetadata = {
   services: createPageMetadata({
     title: 'Diensten – Auto Detailing & Car Cleaning Vlaanderen',
     description:
-      'Interieur- en exterieurreiniging, volledige pakketten, polieren en extra\'s. Car detailing aan huis in Vlaanderen met transparante prijzen.',
+      'Bekijk pakketten en boek direct online. Interieur, exterieur, polieren en extra\'s — car detailing aan huis in Vlaanderen.',
     path: '/services',
-    keywords: ['auto detailing pakketten', 'interieur detailing', 'exterieur detailing'],
+    keywords: ['auto detailing pakketten', 'interieur detailing', 'exterieur detailing', 'car detailing boeken'],
   }),
   booking: createPageMetadata({
-    title: 'Boek Uw Afspraak – Car Detailing aan Huis',
+    title: 'Boek Uw Afspraak – Car Detailing aan Huis Vlaanderen',
     description:
-      'Boek online uw car detailing in Vlaanderen. Kies pakket, datum en tijd – wij komen aan huis in Oost-Vlaanderen en heel Vlaanderen.',
+      'Boek hier uw car detailing aan huis in Vlaanderen. Kies pakket, datum en tijd — wij komen naar u toe vanuit Sint-Niklaas (Oost-Vlaanderen).',
     path: '/booking',
-    keywords: ['car detailing boeken', 'afspraak autoreiniging'],
+    keywords: ['car detailing boeken', 'afspraak autoreiniging', 'car detailing Vlaanderen boeken'],
   }),
   contact: createPageMetadata({
     title: 'Contact – Car Detailing Sint-Niklaas & Vlaanderen',
@@ -247,9 +247,9 @@ export function buildFaqPageJsonLd(faqs: { question: string; answer: string }[])
 }
 
 export const SITEMAP_PATHS = [
+  { path: '/booking', priority: 1, changeFrequency: 'weekly' as const },
   { path: '', priority: 1, changeFrequency: 'weekly' as const },
-  { path: '/services', priority: 0.9, changeFrequency: 'weekly' as const },
-  { path: '/booking', priority: 0.9, changeFrequency: 'weekly' as const },
+  { path: '/services', priority: 0.95, changeFrequency: 'weekly' as const },
   { path: '/about', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/contact', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/faq', priority: 0.7, changeFrequency: 'monthly' as const },

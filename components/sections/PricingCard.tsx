@@ -6,6 +6,7 @@ import { Service } from '@/lib/types'
 import Card from '../ui/Card'
 import Button from '../ui/Button'
 import { FiCalendar } from 'react-icons/fi'
+import TrackedBookLink from '../analytics/TrackedBookLink'
 
 interface PricingCardProps {
   service: Service
@@ -68,15 +69,20 @@ export default function PricingCard({ service, index }: PricingCardProps) {
             </div>
           ) : (
             <>
-              <Link
-                href={service.id.startsWith('extra-') ? '/booking#booking-extras' : `/booking?service=${service.id}`}
+              <TrackedBookLink
+                href={
+                  service.id.startsWith('extra-')
+                    ? '/booking?from=services_card#booking-extras'
+                    : `/booking?service=${service.id}&from=services_card`
+                }
+                location="services_card"
                 className="block"
               >
                 <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
                   <FiCalendar className="w-4 h-4" />
                   Boek dit pakket
                 </Button>
-              </Link>
+              </TrackedBookLink>
               {(service.id === 'interieur-basis' || service.id === 'exterieur-basis') && (
                 <p className="text-center text-xs text-primary-dark opacity-60">
                   <Link href="/services?category=full" className="text-accent-red hover:underline">

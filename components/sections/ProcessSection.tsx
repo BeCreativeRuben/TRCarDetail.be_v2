@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { FiCalendar, FiMessageCircle, FiMapPin, FiCheck } from 'react-icons/fi'
 import Link from 'next/link'
 import Button from '../ui/Button'
+import TrackedBookLink from '../analytics/TrackedBookLink'
 
 const STEPS = [
   { icon: FiCalendar, title: 'Boek online', description: 'Kies je pakket en vul het formulier in met je voorkeursdatum.' },
@@ -89,11 +90,11 @@ export default function ProcessSection({ variant = 'full' }: ProcessSectionProps
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-center mt-10"
         >
-          <Link href="/booking">
+          <TrackedBookLink href="/booking?from=process" location="process">
             <Button variant="primary" size="lg">
               Boek nu je afspraak
             </Button>
-          </Link>
+          </TrackedBookLink>
         </motion.div>
       </div>
     </section>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
 import { exterieurCatalog, interieurCatalog } from '@/lib/services-catalog'
@@ -11,6 +10,7 @@ import PricingCard from '@/components/sections/PricingCard'
 import Button from '@/components/ui/Button'
 import CTASection from '@/components/sections/CTASection'
 import { FiCalendar, FiShield, FiCheck, FiPlusCircle } from 'react-icons/fi'
+import TrackedBookLink from '@/components/analytics/TrackedBookLink'
 
 type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto' | 'extras'
 
@@ -152,7 +152,13 @@ function ServicesPageContent() {
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Onze Diensten</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Car detailing aan huis in Vlaanderen – interieur, exterieur, polieren en volledige pakketten.</p>
+          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto mb-6">Car detailing aan huis in Vlaanderen – interieur, exterieur, polieren en volledige pakketten.</p>
+          <TrackedBookLink href="/booking?from=services_top" location="services_top" className="inline-flex">
+            <Button variant="primary" size="md" className="flex items-center gap-2 mx-auto">
+              <FiCalendar className="w-5 h-5" />
+              Direct boeken
+            </Button>
+          </TrackedBookLink>
         </motion.div>
 
         <div className="flex flex-wrap justify-center gap-3 mb-12">
@@ -200,17 +206,35 @@ function ServicesPageContent() {
                 </li>
               ))}
             </ul>
-            <Link href="/booking">
+            <TrackedBookLink href="/booking?from=services_mid" location="services_mid">
               <Button variant="primary" size="md" className="flex items-center gap-2 w-fit">
                 <FiCalendar className="w-5 h-5" />
                 Boek Nu
               </Button>
-            </Link>
+            </TrackedBookLink>
           </motion.div>
         </div>
       </section>
 
-      <CTASection title="Klaar om te Boeken?" description="Kies uw pakket en reserveer direct online." secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }} noTopMargin />
+      <CTASection
+        title="Klaar om te Boeken?"
+        description="Kies hierboven een pakket of start meteen het boekingsformulier."
+        primaryAction={{ label: 'Boek Nu', to: '/booking?from=services_cta', icon: 'calendar' }}
+        secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }}
+        trackLocation="services_cta"
+        noTopMargin
+      />
+
+      {/* Sticky book CTA on mobile */}
+      <div className="fixed bottom-0 inset-x-0 z-40 md:hidden p-3 bg-primary-dark/95 border-t border-secondary-dark safe-area-pb">
+        <TrackedBookLink href="/booking?from=services_sticky" location="services_sticky" className="block">
+          <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
+            <FiCalendar className="w-5 h-5" />
+            Boek Nu
+          </Button>
+        </TrackedBookLink>
+      </div>
+      <div className="h-20 md:hidden" aria-hidden />
     </div>
   )
 }

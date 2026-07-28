@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiMenu, FiX, FiHome, FiGrid, FiUser, FiCalendar, FiHelpCircle, FiMail } from 'react-icons/fi'
 import Button from '../ui/Button'
+import TrackedBookLink from '../analytics/TrackedBookLink'
 
 const navLinks = [
   { path: '/', label: 'Home', icon: FiHome },
@@ -100,12 +101,12 @@ export default function Navigation() {
                 </div>
 
                 <div className="p-6 pt-4 border-t border-secondary-dark/50">
-                  <Link href="/booking" onClick={() => setIsOpen(false)}>
+                  <TrackedBookLink href="/booking?from=nav_mobile" location="nav_mobile" onClick={() => setIsOpen(false)}>
                     <Button variant="primary" size="lg" className="w-full flex items-center justify-center gap-2">
                       <FiCalendar size={20} />
                       Boek Nu
                     </Button>
-                  </Link>
+                  </TrackedBookLink>
                 </div>
               </div>
             </motion.nav>

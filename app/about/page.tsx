@@ -87,7 +87,13 @@ export default function AboutPage() {
         </motion.div>
       </div>
 
-      <CTASection title="Klaar om te Starten?" description="Boek direct een afspraak of ontdek onze diensten." secondaryAction={{ label: 'Bekijk Diensten', to: '/services', icon: 'services' }} />
+      <CTASection
+        title="Klaar om te Starten?"
+        description="Boek direct een afspraak of ontdek onze diensten."
+        primaryAction={{ label: 'Boek Nu', to: '/booking?from=about_cta', icon: 'calendar' }}
+        secondaryAction={{ label: 'Bekijk Diensten', to: '/services', icon: 'services' }}
+        trackLocation="about_cta"
+      />
     </div>
   )
 }

@@ -15,6 +15,14 @@ import { TRAVEL_CONFIG } from '@/lib/distance'
 import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
 import { isPreferredDateBookable, getBlockedRangeReason } from '@/lib/booking-dates'
 import { getTimeSlotsForDate } from '@/lib/booking-slots'
+import {
+  trackBeginBooking,
+  trackBookingSubmitError,
+  trackBookingSubmitSuccess,
+  trackSelectDate,
+  trackSelectService,
+  trackSelectTime,
+} from '@/lib/analytics'
 import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
 import {
   type CustomExterieurTier,
@@ -97,6 +105,17 @@ export default function BookingForm() {
   const successRef = useRef<HTMLDivElement>(null)
   const travelFeeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastFetchedAddressRef = useRef<string | null>(null)
+  const beginTrackedRef = useRef(false)
+
+  useEffect(() => {
+    if (beginTrackedRef.current) return
+    beginTrackedRef.current = true
+    const source = searchParams.get('from') || (serviceFromUrl ? 'service_link' : 'direct')
+    trackBeginBooking(source, serviceFromUrl)
+    if (serviceFromUrl && validServiceIds.includes(serviceFromUrl)) {
+      trackSelectService(serviceFromUrl, 'url')
+    }
+  }, [searchParams, serviceFromUrl])
 
   useEffect(() => {
     if (serviceFromUrl && validServiceIds.includes(serviceFromUrl)) {
@@ -240,7 +259,9 @@ export default function BookingForm() {
     setSubmitError(null)
     if (!formData.preferredDate || !formData.preferredTime || !formData.serviceType || !formData.address?.trim()) {
       setSubmitStatus('error')
-      setSubmitError('Vul alle verplichte velden in, inclusief het adres (kies een suggestie of vul handmatig in).')
+      const msg = 'Vul alle verplichte velden in, inclusief het adres (kies een suggestie of vul handmatig in).'
+      setSubmitError(msg)
+      trackBookingSubmitError('missing_required_fields')
       return
     }
     if (!isPreferredDateBookable(formData.preferredDate)) {
@@ -249,6 +270,7 @@ export default function BookingForm() {
         getBlockedRangeReason(formData.preferredDate) ??
           'U kunt niet boeken voor vandaag of een datum in het verleden. Kies een latere datum.'
       )
+      trackBookingSubmitError('date_not_bookable')
       setFormData((prev) => ({ ...prev, preferredDate: undefined, preferredTime: undefined }))
       return
     }
@@ -256,11 +278,13 @@ export default function BookingForm() {
       if (customExt === 'none' && customInt === 'none') {
         setSubmitStatus('error')
         setSubmitError('Kies minstens een exterieur- of interieurniveau voor uw combinatie op maat.')
+        trackBookingSubmitError('custom_package_incomplete')
         return
       }
       if (customEstimate <= 0) {
         setSubmitStatus('error')
         setSubmitError('Uw richtprijs is €0. Pas uw selectie aan (bijvoorbeeld minder uitsluitingen) of neem contact op.')
+        trackBookingSubmitError('custom_estimate_zero')
         return
       }
     }
@@ -310,6 +334,7 @@ export default function BookingForm() {
         }),
       })
       if (response.ok) {
+        trackBookingSubmitSuccess(formData.serviceType || 'unknown')
         setSubmitStatus('success')
         setFormData({
           serviceType: '',
@@ -332,9 +357,11 @@ export default function BookingForm() {
         const data = await response.json().catch(() => ({}))
         setSubmitStatus('error')
         setSubmitError(data?.error || 'Er is iets misgegaan. Controleer of alle velden zijn ingevuld.')
+        trackBookingSubmitError(typeof data?.error === 'string' ? data.error : 'api_error')
       }
     } catch {
       setSubmitStatus('error')
+      trackBookingSubmitError('network_error')
     } finally {
       setIsSubmitting(false)
     }
@@ -389,6 +416,7 @@ export default function BookingForm() {
                           setExcludedKeys(new Set())
                         }
                         setFormData({ ...formData, serviceType: service.id })
+                        trackSelectService(service.id, 'form')
                         setTimeout(() => extrasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
                       }}
                       className={`p-4 rounded-lg border-2 text-left transition-all ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10 ring-2 ring-accent-red ring-offset-2' : 'border-primary-dark/20 bg-light hover:border-accent-red hover:bg-accent-red/5'}`}
@@ -474,6 +502,7 @@ export default function BookingForm() {
           selectedDate={formData.preferredDate || null}
           onDateSelect={(date) => {
             const slots = getTimeSlotsForDate(date)
+            trackSelectDate(date)
             setFormData((prev) => ({
               ...prev,
               preferredDate: date,
@@ -492,7 +521,10 @@ export default function BookingForm() {
               <button
                 key={time}
                 type="button"
-                onClick={() => setFormData({ ...formData, preferredTime: time })}
+                onClick={() => {
+                  setFormData({ ...formData, preferredTime: time })
+                  trackSelectTime(time)
+                }}
                 className={`py-2 px-4 rounded-lg font-medium transition-all ${formData.preferredTime === time ? 'bg-accent-red text-white' : 'bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark hover:border-accent-red hover:text-accent-red'}`}
               >
                 {time}

@@ -10,6 +10,9 @@ import CTASection from '@/components/sections/CTASection'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { images } from '@/lib/images'
+import Button from '@/components/ui/Button'
+import TrackedBookLink from '@/components/analytics/TrackedBookLink'
+import { FiCalendar } from 'react-icons/fi'
 
 export default function HomePage() {
   return (
@@ -20,9 +23,20 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center lg:text-left">
               <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">T&R Car Detailing in Vlaanderen</h2>
-              <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
+              <p className="text-lg text-primary-dark opacity-80 leading-relaxed mb-6">
                 Bij T&R Car Detailing brengen we elke auto terug naar showroomkwaliteit — met car detailing aan huis in Vlaanderen, vanuit Sint-Niklaas. Met jarenlange ervaring en passie voor perfectie geven we uw voertuig de aandacht die het verdient.
               </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <TrackedBookLink href="/booking?from=home_intro" location="home_intro">
+                  <Button variant="primary" size="md" className="flex items-center gap-2 justify-center">
+                    <FiCalendar className="w-4 h-4" />
+                    Boek een afspraak
+                  </Button>
+                </TrackedBookLink>
+                <Link href="/services">
+                  <Button variant="outline" size="md">Bekijk pakketten</Button>
+                </Link>
+              </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative h-80 lg:h-96 bg-secondary-dark rounded-lg overflow-hidden">
               <img src={images.homeAbout} alt="Professionele car detailing aan huis in Vlaanderen" className="w-full h-full object-cover" />
@@ -56,7 +70,14 @@ export default function HomePage() {
       <QualitySection />
       <SocialsSection />
       <Testimonials />
-      <CTASection title="Klaar om uw Auto te Laten Detailen?" description="Car detailing aan huis in Vlaanderen – boek online of neem contact op" secondaryAction={{ label: 'Contact', to: '/contact', icon: 'contact' }} noTopMargin />
+      <CTASection
+        title="Klaar om uw Auto te Laten Detailen?"
+        description="Boek online in een paar stappen — wij komen aan huis in Vlaanderen."
+        primaryAction={{ label: 'Boek Nu', to: '/booking?from=home_cta', icon: 'calendar' }}
+        secondaryAction={{ label: 'Bekijk Diensten', to: '/services', icon: 'services' }}
+        trackLocation="home_cta"
+        noTopMargin
+      />
     </>
   )
 }
