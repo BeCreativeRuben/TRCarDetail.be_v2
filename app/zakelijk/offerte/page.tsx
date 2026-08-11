@@ -13,7 +13,8 @@ export default function ZakelijkOffertePage() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Offerte vlootdetailing</h1>
           <p className="text-light/80">
             Vertel ons over uw bedrijf en vloot. We nemen binnen 1–2 werkdagen contact op — geen vaste
-            online prijzen, wel een voorstel op maat.
+            online prijzen, wel een voorstel op maat. Op locatie werken we met water en elektriciteit ter
+            beschikking van de klant.
           </p>
         </div>
       </section>

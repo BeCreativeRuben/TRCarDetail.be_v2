@@ -109,9 +109,13 @@ export default function ZakelijkHomePage() {
             <span className="text-sm font-semibold uppercase tracking-wider">Werkgebied</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Vlaanderen, op uw parking</h2>
-          <p className="text-center text-light/80 mb-10">
+          <p className="text-center text-light/80 mb-6">
             Wij komen naar u toe — of dat nu een kantoorparking, depot of werflocatie is. Ideaal voor leasevloten,
             saleswagens, bestelwagens en gemengde fleets.
+          </p>
+          <p className="text-center text-light/70 text-sm mb-10 max-w-2xl mx-auto">
+            Op locatie werken we met water en elektriciteit ter beschikking van de klant. Zo kunnen we efficiënt
+            detailen zonder aparte watervoorziening mee te slepen.
           </p>
           <ol className="space-y-4">
             {steps.map((step, i) => (

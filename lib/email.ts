@@ -47,6 +47,7 @@ export type B2bQuotePayload = {
   contactName: string
   email: string
   phone: string
+  vatNumber: string
   location: string
   fleetSize: string
   vehicleType?: string
@@ -385,6 +386,7 @@ function b2bQuoteNotificationHtml(quote: B2bQuotePayload): string {
     <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Via /zakelijk/offerte</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px; border:1px solid ${BRAND.border}; border-radius:8px; color:${BRAND.text};">
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; width:160px;">Bedrijf</td><td style="padding:12px 16px;"><strong>${escapeEmailHtml(quote.companyName)}</strong></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">BTW-nummer</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.vatNumber)}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Contactpersoon</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.contactName)}</td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${escapeEmailHtml(quote.email)}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${escapeEmailHtml(quote.email)}</a></td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${escapeEmailHtml(quote.phone)}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${escapeEmailHtml(quote.phone)}</a></td></tr>

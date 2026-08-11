@@ -11,13 +11,14 @@ export async function POST(request: Request) {
     const contactName = typeof body.contactName === 'string' ? body.contactName.trim() : ''
     const email = typeof body.email === 'string' ? body.email.trim() : ''
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
+    const vatNumber = typeof body.vatNumber === 'string' ? body.vatNumber.trim() : ''
     const location = typeof body.location === 'string' ? body.location.trim() : ''
     const fleetSize = typeof body.fleetSize === 'string' ? body.fleetSize.trim() : ''
     const vehicleType = typeof body.vehicleType === 'string' ? body.vehicleType.trim() : ''
     const frequency = typeof body.frequency === 'string' ? body.frequency.trim() : ''
     const message = typeof body.message === 'string' ? body.message.trim() : ''
 
-    if (!companyName || !contactName || !email || !phone || !location || !fleetSize) {
+    if (!companyName || !contactName || !email || !phone || !vatNumber || !location || !fleetSize) {
       return NextResponse.json({ error: 'Niet alle verplichte velden zijn ingevuld.' }, { status: 400 })
     }
 
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
       contactName,
       email,
       phone,
+      vatNumber,
       location,
       fleetSize,
       vehicleType: vehicleType || undefined,

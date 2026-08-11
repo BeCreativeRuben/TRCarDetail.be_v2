@@ -59,6 +59,14 @@ export default function ZakelijkAanbodPage() {
             ))}
           </div>
 
+          <div className="max-w-2xl mx-auto mb-10 rounded-xl border border-primary-dark/10 bg-white p-6 text-sm text-primary-dark/80">
+            <p className="font-semibold text-primary-dark mb-1">Praktisch op uw locatie</p>
+            <p>
+              Voor detailing op site hebben we toegang tot water en elektriciteit nodig bij u. Dat houdt de
+              werkwijze eenvoudig en beperkt stilstand van uw vloot.
+            </p>
+          </div>
+
           <div className="max-w-2xl mx-auto bg-primary-dark text-light rounded-xl p-8 text-center">
             <h2 className="text-2xl font-bold mb-3">Prijs op maat</h2>
             <p className="text-light/80 mb-6 text-sm md:text-base">

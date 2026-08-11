@@ -37,6 +37,7 @@ export default function ZakelijkQuoteForm() {
     contactName: '',
     email: '',
     phone: '',
+    vatNumber: '',
     location: '',
     fleetSize: '',
     vehicleType: '',
@@ -67,6 +68,7 @@ export default function ZakelijkQuoteForm() {
       !form.contactName.trim() ||
       !form.email.trim() ||
       !form.phone.trim() ||
+      !form.vatNumber.trim() ||
       !form.location.trim() ||
       !form.fleetSize
     ) {
@@ -97,6 +99,7 @@ export default function ZakelijkQuoteForm() {
         contactName: '',
         email: '',
         phone: '',
+        vatNumber: '',
         location: '',
         fleetSize: '',
         vehicleType: '',
@@ -156,6 +159,13 @@ export default function ZakelijkQuoteForm() {
           required
           placeholder="+32 …"
         />
+        <Input
+          label="BTW-nummer *"
+          value={form.vatNumber}
+          onChange={update('vatNumber')}
+          required
+          placeholder="bv. BE0123.456.789"
+        />
       </div>
 
       <Input
@@ -165,6 +175,9 @@ export default function ZakelijkQuoteForm() {
         required
         placeholder="bv. parking Gent, depot Antwerpen…"
       />
+      <p className="text-sm text-primary-dark/65 -mt-2">
+        Op uw locatie werken we met water en elektriciteit ter beschikking van de klant.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div>
