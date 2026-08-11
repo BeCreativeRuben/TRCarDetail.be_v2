@@ -147,6 +147,33 @@ export const pageMetadata = {
     path: '/privacy',
     noIndex: true,
   }),
+  zakelijk: createPageMetadata({
+    title: 'Zakelijk – Vlootdetailing Vlaanderen',
+    description:
+      'Car detailing voor bedrijven en fleets in Vlaanderen. Op uw parking of werflocatie: minder stilstand, herhaalbare kwaliteit, één aanspreekpunt. Vraag een offerte.',
+    path: '/zakelijk',
+    keywords: [
+      'vloot detailing',
+      'fleet car detailing Vlaanderen',
+      'bedrijfswagens reinigen',
+      'zakelijk car detailing',
+      'fleet detailing Sint-Niklaas',
+    ],
+  }),
+  zakelijkAanbod: createPageMetadata({
+    title: 'Aanbod Zakelijk – Fleet Detailing',
+    description:
+      'Wat T&R Car Detail biedt voor bedrijfswagens: interieur, exterieur en periodiek onderhoud van uw vloot — op locatie in Vlaanderen. Offerte op maat.',
+    path: '/zakelijk/aanbod',
+    keywords: ['fleet detailing aanbod', 'bedrijfswagen detailing', 'periodieke autoreiniging vloot'],
+  }),
+  zakelijkOfferte: createPageMetadata({
+    title: 'Offerte Vlootdetailing – Zakelijk',
+    description:
+      'Vraag een offerte voor car detailing van uw bedrijfswagenvloot. Vermeld vlootomvang en locatie — wij nemen contact op vanuit Sint-Niklaas.',
+    path: '/zakelijk/offerte',
+    keywords: ['offerte fleet detailing', 'vloot reinigen offerte'],
+  }),
 }
 
 export function buildLocalBusinessJsonLd() {
@@ -246,10 +273,30 @@ export function buildFaqPageJsonLd(faqs: { question: string; answer: string }[])
   }
 }
 
+export function buildB2bServiceJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Vlootdetailing voor bedrijven',
+    description:
+      'Professionele car detailing voor bedrijfswagens en fleets op locatie in Vlaanderen. Batch-planning, facturatie en vaste kwaliteit.',
+    provider: { '@id': `${SITE_URL}/#business` },
+    areaServed: BUSINESS.areaServed.map((name) => ({
+      '@type': 'AdministrativeArea',
+      name,
+    })),
+    url: `${SITE_URL}/zakelijk`,
+    serviceType: ['Fleet car detailing', 'Vlootdetailing', 'Bedrijfswagen reiniging'],
+  }
+}
+
 export const SITEMAP_PATHS = [
   { path: '/booking', priority: 1, changeFrequency: 'weekly' as const },
   { path: '', priority: 1, changeFrequency: 'weekly' as const },
   { path: '/services', priority: 0.95, changeFrequency: 'weekly' as const },
+  { path: '/zakelijk', priority: 0.95, changeFrequency: 'weekly' as const },
+  { path: '/zakelijk/aanbod', priority: 0.9, changeFrequency: 'monthly' as const },
+  { path: '/zakelijk/offerte', priority: 0.9, changeFrequency: 'monthly' as const },
   { path: '/about', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/contact', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/faq', priority: 0.7, changeFrequency: 'monthly' as const },

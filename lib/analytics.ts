@@ -76,3 +76,16 @@ export function trackBookingSubmitSuccess(serviceId: string): void {
 export function trackBookingSubmitError(reason: string): void {
   trackEvent('booking_submit_error', { error_reason: reason.slice(0, 100) })
 }
+
+export function trackB2bQuoteStart(): void {
+  trackEvent('b2b_quote_start')
+}
+
+export function trackB2bQuoteSuccess(fleetSize: string): void {
+  trackEvent('b2b_quote_submit_success', { fleet_size: fleetSize })
+  trackEvent('generate_lead', { lead_type: 'b2b_quote', fleet_size: fleetSize })
+}
+
+export function trackB2bQuoteError(reason: string): void {
+  trackEvent('b2b_quote_submit_error', { error_reason: reason.slice(0, 100) })
+}

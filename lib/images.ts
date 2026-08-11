@@ -7,6 +7,7 @@ const unsplash = (id: string, w = 800) =>
 
 export const images = {
   homeAbout: '/images/home-about.webp',
+  zakelijkHero: '/images/DSC_1082.webp',
   aboutStory: '/images/DSC_0839.webp',
   serviceInterieur: '/images/service-interieur.webp',
   serviceExterieur: '/images/service-exterieur.webp',

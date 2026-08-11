@@ -4,13 +4,14 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiMenu, FiX, FiHome, FiGrid, FiUser, FiCalendar, FiHelpCircle, FiMail } from 'react-icons/fi'
+import { FiMenu, FiX, FiHome, FiGrid, FiUser, FiCalendar, FiHelpCircle, FiMail, FiBriefcase } from 'react-icons/fi'
 import Button from '../ui/Button'
 import TrackedBookLink from '../analytics/TrackedBookLink'
 
 const navLinks = [
   { path: '/', label: 'Home', icon: FiHome },
   { path: '/services', label: 'Diensten', icon: FiGrid },
+  { path: '/zakelijk', label: 'Zakelijk', icon: FiBriefcase },
   { path: '/about', label: 'Over ons', icon: FiUser },
   { path: '/booking', label: 'Boeken', icon: FiCalendar },
   { path: '/faq', label: 'FAQ', icon: FiHelpCircle },

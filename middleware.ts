@@ -5,8 +5,6 @@ import { verifyAdminSessionToken, ADMIN_SESSION_COOKIE } from '@/lib/admin-auth'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-pathname', pathname)
 
   const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value
   const isAdminAuthed = await verifyAdminSessionToken(sessionToken)
@@ -30,15 +28,19 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!isMaintenanceMode()) {
-    return NextResponse.next({ request: { headers: requestHeaders } })
+    return NextResponse.next()
   }
 
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-    return NextResponse.next({ request: { headers: requestHeaders } })
+    return NextResponse.next()
+  }
+
+  if (pathname.startsWith('/zakelijk')) {
+    return NextResponse.next()
   }
 
   if (pathname === '/maintenance') {
-    return NextResponse.next({ request: { headers: requestHeaders } })
+    return NextResponse.next()
   }
 
   if (
@@ -47,11 +49,11 @@ export async function middleware(request: NextRequest) {
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml'
   ) {
-    return NextResponse.next({ request: { headers: requestHeaders } })
+    return NextResponse.next()
   }
 
   if (/\.[a-zA-Z0-9]+$/.test(pathname)) {
-    return NextResponse.next({ request: { headers: requestHeaders } })
+    return NextResponse.next()
   }
 
   return NextResponse.redirect(new URL('/maintenance', request.url))

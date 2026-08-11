@@ -18,6 +18,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><Link href="/about" className="text-light hover:text-accent-red transition-colors text-sm">Over ons</Link></li>
               <li><Link href="/services" className="text-light hover:text-accent-red transition-colors text-sm">Diensten</Link></li>
+              <li><Link href="/zakelijk" className="text-light hover:text-accent-red transition-colors text-sm">Zakelijk</Link></li>
               <li><Link href="/faq" className="text-light hover:text-accent-red transition-colors text-sm">FAQ</Link></li>
               <li><Link href="/contact" className="text-light hover:text-accent-red transition-colors text-sm">Contact</Link></li>
               <li><Link href="/privacy" className="text-light hover:text-accent-red transition-colors text-sm">Privacy</Link></li>

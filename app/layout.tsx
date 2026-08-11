@@ -1,10 +1,7 @@
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { Bebas_Neue, Inter } from 'next/font/google'
 import GoogleTag from '@/components/GoogleTag'
-import ScrollToTop from '@/components/ScrollToTop'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
+import SiteChrome from '@/components/layout/SiteChrome'
 import JsonLd from '@/components/seo/JsonLd'
 import { buildLocalBusinessJsonLd, buildWebSiteJsonLd, pageMetadata, SITE_URL } from '@/lib/seo'
 import './globals.css'
@@ -34,30 +31,17 @@ export const metadata: Metadata = {
   twitter: pageMetadata.home.twitter,
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const headersList = await headers()
-  const pathname = headersList.get('x-pathname') || ''
-  const isAdminRoute = pathname.startsWith('/admin')
-
   return (
     <html lang="nl" className={`${bebas.variable} ${inter.variable}`}>
       <body className="bg-primary-dark text-light min-h-screen">
         <JsonLd data={[buildLocalBusinessJsonLd(), buildWebSiteJsonLd()]} />
         <GoogleTag />
-        {isAdminRoute ? (
-          children
-        ) : (
-          <div className="min-h-screen flex flex-col">
-            <ScrollToTop />
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-        )}
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   )

@@ -42,6 +42,18 @@ export type ContactPayload = {
   message: string
 }
 
+export type B2bQuotePayload = {
+  companyName: string
+  contactName: string
+  email: string
+  phone: string
+  location: string
+  fleetSize: string
+  vehicleType?: string
+  frequency?: string
+  message?: string
+}
+
 // —— T&R Car Detail branding (BRAND-BOOK.md): primary-dark, secondary-dark, light, accent-red ——
 const BRAND = {
   name: 'T&R Car Detail',
@@ -345,4 +357,81 @@ export async function sendContactNotification(contact: ContactPayload): Promise<
     html: contactAutoReplyHtml(contact),
   })
   console.log('Auto-reply email sent to:', contact.email)
+}
+
+function escapeEmailHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function b2bQuoteNotificationHtml(quote: B2bQuotePayload): string {
+  const optionalRows = [
+    quote.vehicleType
+      ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Type voertuigen</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.vehicleType)}</td></tr>`
+      : '',
+    quote.frequency
+      ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Frequentie</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.frequency)}</td></tr>`
+      : '',
+    quote.message
+      ? `<tr><td colspan="2" style="padding:16px; border-top:1px solid ${BRAND.border};"><strong>Bericht</strong><br><span style="white-space:pre-wrap;">${escapeEmailHtml(quote.message)}</span></td></tr>`
+      : '',
+  ].join('')
+
+  const content = `
+    <h1 style="margin:0 0 8px; font-size:22px; color:${BRAND.primaryDark};">Nieuwe B2B-offerteaanvraag</h1>
+    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Via /zakelijk/offerte</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px; border:1px solid ${BRAND.border}; border-radius:8px; color:${BRAND.text};">
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted}; width:160px;">Bedrijf</td><td style="padding:12px 16px;"><strong>${escapeEmailHtml(quote.companyName)}</strong></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Contactpersoon</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.contactName)}</td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${escapeEmailHtml(quote.email)}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${escapeEmailHtml(quote.email)}</a></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${escapeEmailHtml(quote.phone)}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${escapeEmailHtml(quote.phone)}</a></td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Locatie</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.location)}</td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Vlootomvang</td><td style="padding:12px 16px;">${escapeEmailHtml(quote.fleetSize)}</td></tr>
+      ${optionalRows}
+    </table>
+  `
+  return emailWrapper('Nieuwe B2B-offerteaanvraag', 'B2B offerte - T&R Car Detail', content)
+}
+
+function b2bQuoteAutoReplyHtml(quote: B2bQuotePayload): string {
+  const content = `
+    <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.primaryDark};">Offerteaanvraag ontvangen</h1>
+    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">Bedankt voor uw interesse in vlootdetailing.</p>
+    <p style="margin:0 0 20px;">Beste ${escapeEmailHtml(quote.contactName)},</p>
+    <p style="margin:0 0 24px;">We hebben de aanvraag voor <strong>${escapeEmailHtml(quote.companyName)}</strong> goed ontvangen. We nemen binnen 1–2 werkdagen contact met u op om uw vloot, locatie en planning te bespreken.</p>
+    <p style="margin:24px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong><br>Zakelijk · Vlootdetailing</p>
+  `
+  return emailWrapper(
+    'We hebben uw B2B-offerteaanvraag ontvangen.',
+    'Offerteaanvraag ontvangen - T&R Car Detail',
+    content
+  )
+}
+
+export async function sendB2bQuoteNotification(quote: B2bQuotePayload): Promise<void> {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('Email not configured. B2B quote:', quote)
+    return
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER
+
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to: adminEmail,
+    subject: `B2B offerte: ${quote.companyName} (${quote.fleetSize})`,
+    html: b2bQuoteNotificationHtml(quote),
+  })
+  console.log('B2B quote notification sent to admin')
+
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to: quote.email,
+    subject: 'Offerteaanvraag ontvangen – T&R Car Detail Zakelijk',
+    html: b2bQuoteAutoReplyHtml(quote),
+  })
+  console.log('B2B quote auto-reply sent to:', quote.email)
 }
