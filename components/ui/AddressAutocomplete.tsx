@@ -100,7 +100,7 @@ export default function AddressAutocomplete({
     <div ref={containerRef} className="w-full relative">
       {label && (
         <label htmlFor={generatedId} className="block text-sm font-medium text-primary-dark mb-2">
-          {label} {required && '*'}
+          {label}{required && !label.trim().endsWith('*') ? ' *' : ''}
         </label>
       )}
       <input
@@ -129,7 +129,7 @@ export default function AddressAutocomplete({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
-            className="absolute z-50 w-full mt-1.5 py-1.5 bg-light rounded-xl shadow-lg border-2 border-secondary-dark border-opacity-20 max-h-56 overflow-y-auto"
+            className="absolute z-50 w-full mt-1.5 py-1.5 bg-white rounded-xl shadow-xl border-2 border-secondary-dark border-opacity-20 max-h-56 overflow-y-auto ring-1 ring-black/5"
           >
             {suggestions.map((suggestion, idx) => (
               <li

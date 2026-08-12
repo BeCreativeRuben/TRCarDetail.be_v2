@@ -655,10 +655,12 @@ export default function BookingForm() {
                           </div>
                         )
                       })}
-                      <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
-                        <span>Extra&apos;s (subtotaal)</span>
-                        <span>€{extrasTotal.toFixed(2)}</span>
-                      </div>
+                      {selectedExtraIds.size > 1 && (
+                        <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
+                          <span>Extra&apos;s (subtotaal)</span>
+                          <span>€{extrasTotal.toFixed(2)}</span>
+                        </div>
+                      )}
                     </>
                   )}
                   {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
@@ -676,8 +678,8 @@ export default function BookingForm() {
           ) : selectedService.basePrice > 0 ? (
             <>
               <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice}</span></div>
-                {formData.vehicleInfo?.size === 'large' && selectedService.largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge}</span></div>}
+                <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice.toFixed(2)}</span></div>
+                {formData.vehicleInfo?.size === 'large' && selectedService.largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge.toFixed(2)}</span></div>}
                 {extrasTotal > 0 && (
                   <>
                     {[...selectedExtraIds].map((id) => {
@@ -693,10 +695,12 @@ export default function BookingForm() {
                         </div>
                       )
                     })}
-                    <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
-                      <span>Extra&apos;s (subtotaal)</span>
-                      <span>€{extrasTotal.toFixed(2)}</span>
-                    </div>
+                    {selectedExtraIds.size > 1 && (
+                      <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
+                        <span>Extra&apos;s (subtotaal)</span>
+                        <span>€{extrasTotal.toFixed(2)}</span>
+                      </div>
+                    )}
                   </>
                 )}
                 {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
@@ -726,10 +730,12 @@ export default function BookingForm() {
                       </div>
                     )
                   })}
-                  <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
-                    <span>Extra&apos;s (subtotaal)</span>
-                    <span>€{extrasTotal.toFixed(2)}</span>
-                  </div>
+                  {selectedExtraIds.size > 1 && (
+                    <div className="flex justify-between text-light text-sm border-b border-light/20 pb-2">
+                      <span>Extra&apos;s (subtotaal)</span>
+                      <span>€{extrasTotal.toFixed(2)}</span>
+                    </div>
+                  )}
                 </div>
               )}
               {(formData.travelDistanceKm != null || formData.travelFeeEuro != null) && (
