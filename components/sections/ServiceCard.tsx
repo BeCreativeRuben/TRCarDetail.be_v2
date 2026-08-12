@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
@@ -49,10 +50,12 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
               Coming soon
             </div>
           )}
-          <img
+          <Image
             src={img}
             alt={service.name}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute bottom-0 left-0 right-0">
             <div className="bg-gradient-to-t from-primary-dark via-primary-dark/80 to-transparent pt-12 pb-4 px-4">

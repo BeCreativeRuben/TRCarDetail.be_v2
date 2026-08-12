@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FiFacebook, FiInstagram, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
+import { FiInstagram, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import { instagram } from '@/lib/socials'
 export default function Footer() {
   return (
@@ -46,9 +46,6 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-light mb-4">Volg ons</h4>
             <div className="flex space-x-4">
-              <a href="#" className="text-light hover:text-accent-red transition-colors" aria-label="Facebook">
-                <FiFacebook size={24} />
-              </a>
               <a href={instagram.url} target="_blank" rel="noopener noreferrer" className="text-light hover:text-accent-red transition-colors" aria-label="Instagram">
                 <FiInstagram size={24} />
               </a>

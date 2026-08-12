@@ -9,6 +9,7 @@ import Testimonials from '@/components/sections/Testimonials'
 import CTASection from '@/components/sections/CTASection'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { images } from '@/lib/images'
 import Button from '@/components/ui/Button'
 import TrackedBookLink from '@/components/analytics/TrackedBookLink'
@@ -39,7 +40,7 @@ export default function HomePage() {
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative h-80 lg:h-96 bg-secondary-dark rounded-lg overflow-hidden">
-              <img src={images.homeAbout} alt="Professionele car detailing aan huis in Vlaanderen" className="w-full h-full object-cover" />
+              <Image src={images.homeAbout} alt="Professionele car detailing aan huis in Vlaanderen" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
             </motion.div>
           </div>
         </div>

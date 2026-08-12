@@ -1,7 +1,13 @@
 import type { Metadata } from 'next'
 import { GOOGLE_MAPS_REVIEW_URL } from '@/lib/socials'
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://trcardetail.be').replace(/\/$/, '')
+function canonicalSiteUrl(): string {
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.trcardetail.be').replace(/\/$/, '')
+  // Enforce www as the canonical host (non-www 307-redirects to www in production)
+  return raw.replace('https://trcardetail.be', 'https://www.trcardetail.be')
+}
+
+export const SITE_URL = canonicalSiteUrl()
 
 export const SITE_NAME = 'T&R Car Detail'
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { FiPackage, FiUsers, FiAward } from 'react-icons/fi'
 import { images } from '@/lib/images'
 import Card from '@/components/ui/Card'
@@ -17,7 +18,7 @@ export default function AboutPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative h-96 bg-secondary-dark rounded-lg overflow-hidden">
-            <img src={images.aboutStory} alt="Car detailing workshop" className="w-full h-full object-cover" />
+            <Image src={images.aboutStory} alt="T&R Car Detail aan het werk" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <h2 className="text-3xl font-bold text-primary-dark mb-6">Ons Verhaal</h2>
@@ -36,8 +37,8 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
               <Card hover className="text-center overflow-hidden">
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-secondary-dark">
-                  <img src={images.teamThibo} alt="Thibo" className="w-full h-full object-cover" />
+                <div className="relative w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-secondary-dark">
+                  <Image src={images.teamThibo} alt="Thibo – Exterieur Expert bij T&R Car Detail" fill sizes="96px" className="object-cover" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark mb-1">Thibo</h3>
                 <p className="text-accent-red font-semibold text-sm">Exterieur Expert</p>
@@ -46,8 +47,8 @@ export default function AboutPage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
               <Card hover className="text-center overflow-hidden">
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-secondary-dark">
-                  <img src={images.teamRenzo} alt="Renzo" className="w-full h-full object-cover" />
+                <div className="relative w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-secondary-dark">
+                  <Image src={images.teamRenzo} alt="Renzo – Interieur Expert bij T&R Car Detail" fill sizes="96px" className="object-cover" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark mb-1">Renzo</h3>
                 <p className="text-accent-red font-semibold text-sm">Interieur Expert</p>
@@ -68,7 +69,7 @@ export default function AboutPage() {
               <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
                 <Card hover className="h-full overflow-hidden p-0">
                   <div className="relative h-40 overflow-hidden">
-                    <img src={item.image} alt="" className="w-full h-full object-cover" />
+                    <Image src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-accent-red flex items-center justify-center flex-shrink-0">
