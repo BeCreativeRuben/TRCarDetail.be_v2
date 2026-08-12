@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface AutocompleteProps {
@@ -20,6 +20,7 @@ export default function Autocomplete({
   placeholder,
   required = false
 }: AutocompleteProps) {
+  const inputId = useId()
   const [isOpen, setIsOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -71,11 +72,12 @@ export default function Autocomplete({
   return (
     <div ref={containerRef} className="w-full relative">
       {label && (
-        <label className="block text-sm font-medium text-primary-dark mb-2">
+        <label htmlFor={inputId} className="block text-sm font-medium text-primary-dark mb-2">
           {label} {required && '*'}
         </label>
       )}
       <input
+        id={inputId}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -84,6 +86,9 @@ export default function Autocomplete({
         placeholder={placeholder}
         required={required}
         className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200"
+        role="combobox"
+        aria-expanded={isOpen && filteredOptions.length > 0}
+        aria-autocomplete="list"
       />
       <AnimatePresence>
         {isOpen && filteredOptions.length > 0 && (

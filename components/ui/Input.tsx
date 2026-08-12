@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, forwardRef, useId } from 'react'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -8,16 +8,20 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className = '', datalistId, datalistOptions, ...props }, ref) => {
+  ({ label, error, className = '', datalistId, datalistOptions, id: externalId, ...props }, ref) => {
+    const generatedId = useId()
+    const inputId = externalId || generatedId
+
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-primary-dark mb-2">
+          <label htmlFor={inputId} className="block text-sm font-medium text-primary-dark mb-2">
             {label}
           </label>
         )}
         <input
           ref={ref}
+          id={inputId}
           list={datalistId}
           className={`
             w-full px-4 py-3 rounded-lg

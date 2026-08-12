@@ -38,6 +38,7 @@ export default function Hero() {
             muted
             playsInline
             preload="auto"
+            poster="/images/home-about.webp"
             className="absolute inset-0 w-full h-full object-cover"
             onError={handleVideoError}
           >

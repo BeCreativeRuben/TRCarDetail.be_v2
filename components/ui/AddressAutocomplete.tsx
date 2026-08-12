@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export type AddressSuggestion = { display_name: string; lat: number; lon: number }
@@ -22,6 +22,7 @@ export default function AddressAutocomplete({
   placeholder,
   required = false,
 }: AddressAutocompleteProps) {
+  const generatedId = useId()
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -98,12 +99,13 @@ export default function AddressAutocomplete({
   return (
     <div ref={containerRef} className="w-full relative">
       {label && (
-        <label className="block text-sm font-medium text-primary-dark mb-2">
+        <label htmlFor={generatedId} className="block text-sm font-medium text-primary-dark mb-2">
           {label} {required && '*'}
         </label>
       )}
       <input
         ref={inputRef}
+        id={generatedId}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -112,6 +114,9 @@ export default function AddressAutocomplete({
         placeholder={placeholder}
         required={required}
         autoComplete="off"
+        role="combobox"
+        aria-expanded={isOpen && suggestions.length > 0}
+        aria-autocomplete="list"
         className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200"
       />
       {isLoading && value.trim().length >= 3 && (
