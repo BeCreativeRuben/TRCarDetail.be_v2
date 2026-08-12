@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { GOOGLE_MAPS_REVIEW_URL } from '@/lib/socials'
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://trcardetail.be').replace(/\/$/, '')
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.trcardetail.be').replace(/\/$/, '')
 
 export const SITE_NAME = 'T&R Car Detail'
 

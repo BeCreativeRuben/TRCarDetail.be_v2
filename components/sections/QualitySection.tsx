@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import Link from 'next/link'
 import Button from '../ui/Button'
 import { images } from '@/lib/images'
@@ -18,7 +19,7 @@ export default function QualitySection() {
             transition={{ duration: 0.6 }}
             className="relative h-96 bg-secondary-dark rounded-lg overflow-hidden"
           >
-            <img src={images.qualityProducts} alt="Professionele auto detailing producten" className="w-full h-full object-cover" />
+            <Image src={images.qualityProducts} alt="Professionele auto detailing producten" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
