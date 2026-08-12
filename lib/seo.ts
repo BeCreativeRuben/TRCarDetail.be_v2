@@ -89,10 +89,10 @@ export function createPageMetadata({
       type: 'website',
       images: [
         {
-          url: `${SITE_URL}/logo.jpg`,
+          url: `${SITE_URL}/og.jpg`,
           width: 1200,
-          height: 1200,
-          alt: `${SITE_NAME} logo`,
+          height: 630,
+          alt: `${SITE_NAME} – Professionele autoreiniging aan huis`,
         },
       ],
     },
@@ -100,7 +100,7 @@ export function createPageMetadata({
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [`${SITE_URL}/logo.jpg`],
+      images: [`${SITE_URL}/og.jpg`],
     },
   }
 }
