@@ -24,6 +24,7 @@ import {
   trackSelectTime,
 } from '@/lib/analytics'
 import { EXTRAS_CATALOG, getExtraById, sumExtrasPriceExclBtw } from '@/lib/extras-catalog'
+import BookingConfirmModal, { type ConfirmModalData } from './BookingConfirmModal'
 import {
   type CustomExterieurTier,
   type CustomFeatureKey,
@@ -100,6 +101,7 @@ export default function BookingForm() {
   const [customInt, setCustomInt] = useState<CustomInterieurTier>('basis')
   const [excludedKeys, setExcludedKeys] = useState<Set<CustomFeatureKey>>(() => new Set())
   const [selectedExtraIds, setSelectedExtraIds] = useState<Set<string>>(() => new Set())
+  const [showConfirm, setShowConfirm] = useState(false)
   const extrasRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
   const successRef = useRef<HTMLDivElement>(null)
@@ -254,7 +256,7 @@ export default function BookingForm() {
     })
   }, [])
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setSubmitError(null)
     if (!formData.preferredDate || !formData.preferredTime || !formData.serviceType || !formData.address?.trim()) {
@@ -288,6 +290,11 @@ export default function BookingForm() {
         return
       }
     }
+    setSubmitStatus('idle')
+    setShowConfirm(true)
+  }
+
+  const handleConfirmSubmit = async () => {
     setIsSubmitting(true)
     setSubmitStatus('idle')
     try {
@@ -335,6 +342,7 @@ export default function BookingForm() {
       })
       if (response.ok) {
         trackBookingSubmitSuccess(formData.serviceType || 'unknown')
+        setShowConfirm(false)
         setSubmitStatus('success')
         setFormData({
           serviceType: '',
@@ -354,12 +362,14 @@ export default function BookingForm() {
         setExcludedKeys(new Set())
         setSelectedExtraIds(new Set())
       } else {
-        const data = await response.json().catch(() => ({}))
+        const respData = await response.json().catch(() => ({}))
+        setShowConfirm(false)
         setSubmitStatus('error')
-        setSubmitError(data?.error || 'Er is iets misgegaan. Controleer of alle velden zijn ingevuld.')
-        trackBookingSubmitError(typeof data?.error === 'string' ? data.error : 'api_error')
+        setSubmitError(respData?.error || 'Er is iets misgegaan. Controleer of alle velden zijn ingevuld.')
+        trackBookingSubmitError(typeof respData?.error === 'string' ? respData.error : 'api_error')
       }
     } catch {
+      setShowConfirm(false)
       setSubmitStatus('error')
       trackBookingSubmitError('network_error')
     } finally {
@@ -379,6 +389,41 @@ export default function BookingForm() {
   const servicePrice = baseServicePrice + extrasTotal
   const travelFee = formData.travelFeeEuro ?? 0
   const totalPrice = servicePrice + travelFee
+
+  const isPolish = formData.serviceType === 'polijsten-light' || formData.serviceType === 'polijsten-full'
+  const customLabel =
+    formData.serviceType === 'full-custom'
+      ? [
+          `Exterieur: ${labelForExterieurTier(customExt)}`,
+          `Interieur: ${labelForInterieurTier(customInt)}`,
+        ].join('\n')
+      : undefined
+
+  const confirmModalData: ConfirmModalData = {
+    serviceName: formData.serviceType === 'full-custom'
+      ? 'Combinatie op maat'
+      : selectedService?.name ?? formData.serviceType ?? '',
+    servicePrice: baseServicePrice,
+    isCustomPackage: formData.serviceType === 'full-custom',
+    isPrijsOpAanvraag: isPolish,
+    customLabel,
+    selectedExtraIds,
+    extrasTotal,
+    preferredDate: formData.preferredDate ?? '',
+    preferredTime: formData.preferredTime ?? '',
+    vehicleMake: formData.vehicleInfo?.make ?? '',
+    vehicleModel: formData.vehicleInfo?.model ?? '',
+    vehicleYear: formData.vehicleInfo?.year ?? '',
+    vehicleSize: formData.vehicleInfo?.size ?? 'standard',
+    customerName: formData.customerName ?? '',
+    email: formData.email ?? '',
+    phone: formData.phone ?? '',
+    address: formData.address ?? '',
+    travelDistanceKm: formData.travelDistanceKm,
+    travelFeeEuro: formData.travelFeeEuro,
+    specialRequests: formData.specialRequests,
+    totalPrice,
+  }
 
   const priceTotalFooter = (total: number) => (
     <div className="border-t border-light border-opacity-20 pt-4">
@@ -760,6 +805,14 @@ export default function BookingForm() {
       <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Verzenden...' : 'Boeking Versturen'}
       </Button>
+
+      <BookingConfirmModal
+        open={showConfirm}
+        isSubmitting={isSubmitting}
+        onConfirm={handleConfirmSubmit}
+        onClose={() => setShowConfirm(false)}
+        data={confirmModalData}
+      />
     </form>
   )
 }
