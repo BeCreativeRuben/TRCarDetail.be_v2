@@ -10,6 +10,7 @@ import {
 } from '@/lib/analytics'
 
 const FLEET_SIZES = [
+  { value: '1-5', label: '1 – 5 wagens' },
   { value: '5-10', label: '5 – 10 wagens' },
   { value: '11-25', label: '11 – 25 wagens' },
   { value: '26-50', label: '26 – 50 wagens' },

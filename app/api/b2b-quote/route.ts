@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { sendB2bQuoteNotification, type B2bQuotePayload } from '@/lib/email'
 
-const FLEET_SIZES = new Set(['5-10', '11-25', '26-50', '50+'])
+const FLEET_SIZES = new Set(['1-5', '5-10', '11-25', '26-50', '50+'])
 
 export async function POST(request: Request) {
   try {
