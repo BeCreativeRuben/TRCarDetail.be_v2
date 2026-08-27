@@ -46,11 +46,38 @@ function OpeningHours() {
           <span className="font-medium text-primary-dark">08:00 – 22:00</span>
         </li>
       </ul>
+      <HolidaySchedule />
       <Link href="/booking" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors">
         <FiCalendar size={18} />
         Bekijk kalender
       </Link>
     </>
+  )
+}
+
+function HolidaySchedule() {
+  const now = new Date()
+  const cutoff = new Date(2026, 8, 20, 23, 59, 59) // 20 september 2026
+  if (now > cutoff) return null
+
+  return (
+    <div className="rounded-lg border border-accent-red/30 bg-accent-red/5 p-3 mb-4">
+      <p className="text-primary-dark font-semibold text-sm mb-2">Aangepaste openingsuren</p>
+      <ul className="text-primary-dark opacity-80 text-sm space-y-1.5">
+        <li className="flex justify-between gap-4">
+          <span>31 aug – 4 sep</span>
+          <span className="font-medium text-primary-dark">09:00 – 22:00</span>
+        </li>
+        <li className="flex justify-between gap-4">
+          <span>5 sep – 13 sep</span>
+          <span className="font-medium text-accent-red">Gesloten (verlof)</span>
+        </li>
+        <li className="flex justify-between gap-4">
+          <span>14 sep – 20 sep</span>
+          <span className="font-medium text-primary-dark">09:00 – 22:00</span>
+        </li>
+      </ul>
+    </div>
   )
 }
 

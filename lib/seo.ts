@@ -235,6 +235,29 @@ export function buildLocalBusinessJsonLd() {
         closes: '20:00',
       },
     ],
+    specialOpeningHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        validFrom: '2026-08-31',
+        validThrough: '2026-09-04',
+        opens: '09:00',
+        closes: '22:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        validFrom: '2026-09-05',
+        validThrough: '2026-09-13',
+        opens: '00:00',
+        closes: '00:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        validFrom: '2026-09-14',
+        validThrough: '2026-09-20',
+        opens: '09:00',
+        closes: '22:00',
+      },
+    ],
     sameAs: [BUSINESS.googleMapsReviewUrl],
     potentialAction: {
       '@type': 'ReserveAction',

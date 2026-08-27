@@ -16,12 +16,34 @@ export function formatLocalDateString(year: number, month: number, day: number):
 const BLOCKED_DATE_RANGES: { start: string; end: string }[] = [
   { start: '2026-07-06', end: '2026-07-12' },
   { start: '2026-07-13', end: '2026-07-19' },
+  { start: '2026-09-05', end: '2026-09-13' },
 ]
+
+/**
+ * Periodes met aangepaste openingsuren (open vanaf 09:00 de hele dag).
+ * Buiten deze periodes gelden de normale uren.
+ */
+export const EXTENDED_HOURS_RANGES: { start: string; end: string; opensAt: string }[] = [
+  { start: '2026-08-31', end: '2026-09-04', opensAt: '09:00' },
+  { start: '2026-09-14', end: '2026-09-20', opensAt: '09:00' },
+]
+
+export function getExtendedHoursForDate(preferredDate: string): string | null {
+  const match = EXTENDED_HOURS_RANGES.find(
+    (range) => preferredDate >= range.start && preferredDate <= range.end
+  )
+  return match?.opensAt ?? null
+}
 
 export function isDateInBlockedRange(year: number, month: number, day: number): boolean {
   const dateStr = formatLocalDateString(year, month, day)
   return BLOCKED_DATE_RANGES.some((range) => dateStr >= range.start && dateStr <= range.end)
 }
+
+/** Gesloten periodes met reden (voor gebruikersfeedback). */
+const BLOCKED_DATE_REASONS: { start: string; end: string; reason: string }[] = [
+  { start: '2026-09-05', end: '2026-09-13', reason: 'Wij zijn gesloten wegens verlof van 5 t/m 13 september. Kies een andere datum.' },
+]
 
 export function getBlockedRangeReason(preferredDate: string): string | null {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(preferredDate)
@@ -30,7 +52,9 @@ export function getBlockedRangeReason(preferredDate: string): string | null {
   const month = Number(match[2]) - 1
   const day = Number(match[3])
   if (!isDateInBlockedRange(year, month, day)) return null
-  return 'Deze datum is volzet. Kies een andere dag.'
+  const dateStr = formatLocalDateString(year, month, day)
+  const specific = BLOCKED_DATE_REASONS.find((r) => dateStr >= r.start && dateStr <= r.end)
+  return specific?.reason ?? 'Deze datum is volzet. Kies een andere dag.'
 }
 
 /** Alleen datums ná vandaag zijn boekbaar (vandaag zelf uitgesloten). */
