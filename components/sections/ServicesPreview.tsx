@@ -13,6 +13,7 @@ const services: Service[] = [
   { id: 'full-basis', name: 'Volledig Pakket', description: 'Basis-, Deluxe- en Premium-pakket, plus combinaties op maat (richtprijs in boeking)', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'extra-overzicht', name: 'Extra\'s', description: 'Wax, bodemreiniging, glascoating, hondenharen, motorruimte', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-light', name: 'Polieren', description: 'Light Polish en Full Polish – lakcorrectie en glansherstel', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'coating-basis', name: 'Keramische Coating', description: 'Langdurige bescherming en diepe glans – professioneel aangebracht aan huis', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'moto-detailing', name: 'Moto', description: 'Binnenkort: professionele moto- en motordetailing', basePrice: 0, largeCarSurcharge: 0, features: [], comingSoon: true },
 ]
 

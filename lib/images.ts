@@ -7,6 +7,7 @@ export const images = {
   serviceFull: '/images/service-full.webp',
   servicePolieren: '/images/service-polieren.webp',
   serviceMoto: '/images/service-moto.png',
+  serviceCoating: '/images/quality-products.webp',
   qualityProducts: '/images/quality-products.webp',
   aandachtDetail: '/images/DSC_1082.webp',
   teamRenzo: '/images/DSC_0735.webp',

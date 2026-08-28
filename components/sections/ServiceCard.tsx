@@ -6,11 +6,12 @@ import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
 import { images } from '@/lib/images'
 
-type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto' | 'extras'
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'coating' | 'moto' | 'extras'
 
 function getCategoryFromServiceId(id: string): ServiceCategory {
   if (id.startsWith('interieur')) return 'interieur'
   if (id.startsWith('exterieur')) return 'exterieur'
+  if (id.startsWith('coating')) return 'coating'
   if (id.startsWith('polijsten')) return 'polieren'
   if (id.startsWith('moto')) return 'moto'
   if (id.startsWith('extra')) return 'extras'
@@ -27,13 +28,15 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
     ? images.serviceInterieur
     : service.id.startsWith('exterieur')
       ? images.serviceExterieur
-      : service.id.startsWith('polijsten')
-        ? images.servicePolieren
-        : service.id.startsWith('moto')
-          ? images.serviceMoto
-          : service.id.startsWith('extra')
-            ? images.aandachtDetail
-            : images.serviceFull
+      : service.id.startsWith('coating')
+        ? images.serviceCoating
+        : service.id.startsWith('polijsten')
+          ? images.servicePolieren
+          : service.id.startsWith('moto')
+            ? images.serviceMoto
+            : service.id.startsWith('extra')
+              ? images.aandachtDetail
+              : images.serviceFull
   const category = getCategoryFromServiceId(service.id)
   return (
     <motion.div
