@@ -10,6 +10,9 @@ const SERVICE_LABELS: Record<string, string> = {
   'interieur-premium': 'Interieur Premium',
   'polijsten-light': 'Light Polish',
   'polijsten-full': 'Full Polish',
+  'coating-basis': 'Coating Basis',
+  'coating-deluxe': 'Coating Deluxe',
+  'coating-premium': 'Coating Premium',
 }
 
 export function formatServiceType(serviceType: string): string {
