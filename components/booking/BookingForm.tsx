@@ -54,6 +54,9 @@ const services: Service[] = [
   { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'coating-basis', name: 'Coating Basis', description: '€450 · 2 jaar bescherming', basePrice: 450, largeCarSurcharge: 0, features: [] },
+  { id: 'coating-deluxe', name: 'Coating Deluxe', description: '€650 · 3 jaar, ruitencoating inbegrepen', basePrice: 650, largeCarSurcharge: 0, features: [] },
+  { id: 'coating-premium', name: 'Coating Premium', description: '€900 · 4-5 jaar, ruitencoating + jaarlijkse controle', basePrice: 900, largeCarSurcharge: 0, features: [] },
 ]
 
 const validServiceIds = [
@@ -68,6 +71,9 @@ const validServiceIds = [
   'interieur-premium',
   'polijsten-light',
   'polijsten-full',
+  'coating-basis',
+  'coating-deluxe',
+  'coating-premium',
 ]
 
 const SERVICE_GROUPS: { label: string; ids: string[] }[] = [
@@ -75,6 +81,7 @@ const SERVICE_GROUPS: { label: string; ids: string[] }[] = [
   { label: 'Exterieur', ids: ['exterieur-basis', 'exterieur-deluxe'] },
   { label: 'Interieur', ids: ['interieur-basis', 'interieur-deluxe', 'interieur-premium'] },
   { label: 'Polieren', ids: ['polijsten-light', 'polijsten-full'] },
+  { label: 'Keramische Coating', ids: ['coating-basis', 'coating-deluxe', 'coating-premium'] },
 ]
 
 export default function BookingForm() {
