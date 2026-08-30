@@ -12,7 +12,7 @@ import CTASection from '@/components/sections/CTASection'
 import { FiCalendar, FiShield, FiCheck, FiPlusCircle } from 'react-icons/fi'
 import TrackedBookLink from '@/components/analytics/TrackedBookLink'
 
-type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'coating' | 'moto' | 'extras'
+type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'moto' | 'extras'
 
 const interieurServices: Service[] = interieurCatalog
 const exterieurServices: Service[] = exterieurCatalog
@@ -114,65 +114,13 @@ const polierenServices: Service[] = [
   },
 ]
 
-const coatingServices: Service[] = [
-  {
-    id: 'coating-basis',
-    name: 'Coating Basis',
-    description:
-      'Decontaminatie + lichte lakcorrectie. 2 jaar bescherming.',
-    basePrice: 450,
-    largeCarSurcharge: 0,
-    features: [
-      'Grondige decontaminatie vooraf',
-      'Lichte lakcorrectie',
-      'Professionele aanbreng van de coating',
-      'Advies voor onderhoud nadien',
-      'Bescherming: 2 jaar',
-    ],
-  },
-  {
-    id: 'coating-deluxe',
-    name: 'Coating Deluxe',
-    description:
-      'Decontaminatie + uitgebreide lakcorrectie. 3 jaar bescherming, ruitencoating inbegrepen.',
-    basePrice: 650,
-    largeCarSurcharge: 0,
-    popular: true,
-    features: [
-      'Grondige decontaminatie vooraf',
-      'Uitgebreide lakcorrectie',
-      'Professionele aanbreng van de coating',
-      'Advies voor onderhoud nadien',
-      'Bescherming: 3 jaar',
-      'Ruitencoating inbegrepen',
-    ],
-  },
-  {
-    id: 'coating-premium',
-    name: 'Coating Premium',
-    description:
-      'Decontaminatie + volledige lakcorrectie (meerdere stappen). 4-5 jaar bescherming, ruitencoating + jaarlijkse gratis controle.',
-    basePrice: 900,
-    largeCarSurcharge: 0,
-    features: [
-      'Grondige decontaminatie vooraf',
-      'Volledige lakcorrectie (meerdere stappen)',
-      'Professionele aanbreng van de coating',
-      'Advies voor onderhoud nadien',
-      'Bescherming: 4-5 jaar',
-      'Ruitencoating inbegrepen',
-      'Jaarlijkse gratis controle',
-    ],
-  },
-]
-
 const motoServices: Service[] = [
   { id: 'moto-detailing', name: 'Moto Detailing', description: 'Professionele reiniging en detailing voor moto\'s en motorfietsen. Binnenkort beschikbaar – wij breiden onze diensten uit zodat ook uw motor dezelfde zorg en glans krijgt als uw auto.', basePrice: 0, largeCarSurcharge: 0, features: ['Exterieur reiniging', 'Velgen en banden', 'Lak- en onderhoudsbehandeling', 'Details en optiek'], comingSoon: true },
 ]
 
 const extrasServices: Service[] = extrasAsServices()
 
-const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren', 'coating', 'moto', 'extras']
+const VALID_CATEGORIES: ServiceCategory[] = ['interieur', 'exterieur', 'full', 'polieren', 'moto', 'extras']
 
 function categoryFromParam(param: string | null): ServiceCategory {
   return param && VALID_CATEGORIES.includes(param as ServiceCategory) ? param as ServiceCategory : 'exterieur'
@@ -193,7 +141,6 @@ function ServicesPageContent() {
       case 'exterieur': return exterieurServices
       case 'full': return fullServices
       case 'polieren': return polierenServices
-      case 'coating': return coatingServices
       case 'moto': return motoServices
       case 'extras': return extrasServices
       default: return exterieurServices
@@ -227,9 +174,6 @@ function ServicesPageContent() {
           <button onClick={() => setActiveCategory('polieren')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'polieren' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Polieren
           </button>
-          <button onClick={() => setActiveCategory('coating')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'coating' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
-            Keramische Coating
-          </button>
           <button onClick={() => setActiveCategory('moto')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'moto' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Moto
           </button>
@@ -238,74 +182,11 @@ function ServicesPageContent() {
           </button>
         </div>
 
-        {activeCategory === 'coating' && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="mb-10 max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-primary-dark mb-4">Keramische Coating</h2>
-            <p className="text-primary-dark opacity-80 mb-4">
-              Een keramische coating beschermt je lak tegen krassen, UV en vervuiling, en zorgt voor een diepe glans die makkelijk schoon te houden is. Wij brengen de coating professioneel aan bij jou aan huis.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 text-sm text-primary-dark opacity-75">
-              {['Grondige decontaminatie vooraf', 'Lakcorrectie waar nodig', 'Professionele aanbreng van de coating', 'Advies voor onderhoud nadien'].map((item, i) => (
-                <span key={i} className="flex items-center gap-1.5">
-                  <FiCheck className="text-accent-red flex-shrink-0" />
-                  {item}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        <div className={`grid grid-cols-1 ${activeCategory === 'coating' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-8 mb-12 items-stretch`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
           {getCurrentServices().map((service, index) => (
             <PricingCard key={service.id} service={service} index={index} />
           ))}
         </div>
-
-        {activeCategory === 'coating' && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-12 space-y-10">
-            <div className="bg-white rounded-xl border-2 border-primary-dark/10 p-6 md:p-8">
-              <h3 className="text-2xl font-bold text-primary-dark mb-4">Extra lakcorrectie mogelijk</h3>
-              <p className="text-primary-dark opacity-80 mb-4">
-                Wil je een uitgebreidere lakcorrectie (bv. 2- of 3-staps polijsten) bij een lichter pakket? Dat kan tegen meerprijs:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
-                <div className="flex justify-between items-center bg-light rounded-lg p-4">
-                  <span className="font-semibold text-primary-dark">2-staps polijsten</span>
-                  <span className="text-accent-red font-bold">+ €120</span>
-                </div>
-                <div className="flex justify-between items-center bg-light rounded-lg p-4">
-                  <span className="font-semibold text-primary-dark">3-staps polijsten</span>
-                  <span className="text-accent-red font-bold">+ €220</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-primary-dark/5 rounded-xl border border-primary-dark/10 p-6 md:p-8">
-              <p className="text-primary-dark opacity-80 text-sm flex items-start gap-2">
-                <FiShield className="text-accent-red flex-shrink-0 mt-0.5 w-5 h-5" />
-                <span>Coating gebeurt bij voorkeur op een overdekte locatie voor het beste resultaat. Contacteer ons voor de mogelijkheden.</span>
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl border-2 border-primary-dark/10 p-6 md:p-8">
-              <h3 className="text-2xl font-bold text-primary-dark mb-6">Veelgestelde vragen over coating</h3>
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-primary-dark mb-2">Hoeveel kost een coating?</h4>
-                  <p className="text-primary-dark opacity-80">Vanaf €450, afhankelijk van de staat van je lak en de gewenste bescherming.</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-primary-dark mb-2">Hoe lang duurt de behandeling?</h4>
-                  <p className="text-primary-dark opacity-80">Reken op een hele dag, inclusief voorbereiding en lakcorrectie.</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-primary-dark mb-2">Is een coating beter dan wax?</h4>
-                  <p className="text-primary-dark opacity-80">Wax ligt los op de lak en is na enkele weken tot maanden verdwenen. Een keramische coating bindt met de lak en beschermt veel langer, met een sterkere glans en betere bescherming tegen krassen en vervuiling.</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
 
         <p className="text-center text-sm text-primary-dark opacity-70 max-w-2xl mx-auto mb-12">
           Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.
