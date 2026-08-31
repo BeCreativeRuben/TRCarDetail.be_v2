@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Service } from '@/lib/types'
 import { exterieurCatalog, interieurCatalog } from '@/lib/services-catalog'
 import { extrasAsServices } from '@/lib/extras-catalog'
@@ -240,6 +241,22 @@ function ServicesPageContent() {
             <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
               Een keramische coating beschermt je lak tegen krassen, UV en vervuiling, en zorgt voor een diepe glans die makkelijk schoon te houden is.
             </p>
+          </motion.div>
+        )}
+
+        {activeCategory === 'coating' && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              <div className="col-span-2 relative aspect-[4/3] rounded-lg overflow-hidden bg-secondary-dark">
+                <Image src="/images/coating-hero.jpeg" alt="Keramische coating – Audi A3 onder professionele inspectielampen" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+              </div>
+              <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-secondary-dark">
+                <Image src="/images/coating-rear.jpeg" alt="Keramische coating resultaat – Audi A3 achterkant" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+              </div>
+              <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-secondary-dark">
+                <Image src="/images/coating-roof.jpeg" alt="Keramische coating glans – dak en zijkant" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+              </div>
+            </div>
           </motion.div>
         )}
 
