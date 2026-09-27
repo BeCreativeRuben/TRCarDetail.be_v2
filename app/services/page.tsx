@@ -360,18 +360,6 @@ function ServicesPageContent() {
         {activeCategory === 'polieren' && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="max-w-4xl mx-auto mb-12 space-y-8">
             <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
-              <h3 className="text-xl font-bold text-primary-dark mb-4">Wat is inbegrepen</h3>
-              <ul className="space-y-2">
-                {polierenIncluded.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-primary-dark">
-                    <FiCheck className="text-accent-red flex-shrink-0 mt-1" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
               <div className="md:hidden space-y-4">
                 {polierenLevels.map((level, index) => (
                   <div key={level} className="rounded-lg border border-primary-dark/10 overflow-hidden">
@@ -429,6 +417,18 @@ function ServicesPageContent() {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
+              <h3 className="text-xl font-bold text-primary-dark mb-4">Wat is inbegrepen</h3>
+              <ul className="space-y-2">
+                {polierenIncluded.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-primary-dark">
+                    <FiCheck className="text-accent-red flex-shrink-0 mt-1" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
