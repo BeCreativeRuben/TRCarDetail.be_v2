@@ -383,7 +383,24 @@ function ServicesPageContent() {
             </div>
 
             <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
-              <div className="overflow-x-auto">
+              <div className="md:hidden space-y-4">
+                {polierenLevels.map((level, index) => (
+                  <div key={level} className="rounded-lg border border-primary-dark/10 overflow-hidden">
+                    <h4 className="bg-light px-4 py-3 font-bold text-primary-dark">{level}</h4>
+                    <dl>
+                      {polierenComparison.map((row) => (
+                        <div key={row.label} className="px-4 py-3 border-t border-primary-dark/10">
+                          <dt className="text-sm font-semibold text-primary-dark">{row.label}</dt>
+                          <dd className={`mt-1 text-sm ${row.emphasize ? 'font-bold text-accent-red' : 'text-primary-dark opacity-80'}`}>
+                            {row.values[index]}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                ))}
+              </div>
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full min-w-[40rem] text-sm text-left border-collapse">
                   <thead>
                     <tr className="border-b border-primary-dark/10">
