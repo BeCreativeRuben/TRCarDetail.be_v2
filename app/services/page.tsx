@@ -126,12 +126,12 @@ const polierenFaq = [
   {
     question: 'Is polijsten schadelijk voor mijn lak?',
     answer:
-      'Neen, mits correct uitgevoerd. We werken met professionele polijstmachines en de juiste pads/polijstmiddelen per stap, zodat we enkel de beschadigde bovenlaag verwijderen — niet meer dan nodig.',
+      'Neen, mits correct uitgevoerd. We werken met professionele polijstmachines en de juiste pads/polijstmiddelen per stap, zodat we enkel de beschadigde bovenlaag verwijderen, niet meer dan nodig.',
   },
   {
     question: 'Wat is het verschil tussen polijsten en een coating?',
     answer:
-      'Polijsten verwijdert bestaande schade (krasjes, swirl marks, dofheid) en herstelt de glans. Een coating beschermt die glans nadien tegen nieuwe schade, UV en vervuiling — de twee vullen elkaar dus perfect aan.',
+      'Polijsten verwijdert bestaande schade (krasjes, swirl marks, dofheid) en herstelt de glans. Een coating beschermt die glans nadien tegen nieuwe schade, UV en vervuiling. De twee vullen elkaar dus perfect aan.',
   },
   {
     question: 'Kan ik polijsten combineren met een coating?',
@@ -272,7 +272,7 @@ function ServicesPageContent() {
         {activeCategory === 'polieren' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-3xl mx-auto mb-12 text-center">
             <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
-              Kleine krasjes, swirl marks of een doffe glans na de wasstraat? Met polijsten halen we de originele diepte en glans terug uit je lak — zonder te verven, zonder compromissen. Ideaal als voorbereiding op een keramische coating, of gewoon om je auto er weer als nieuw te laten uitzien.
+              Kleine krasjes, swirl marks of een doffe glans na de wasstraat? Met polijsten halen we de originele diepte en glans terug uit je lak: zonder te verven, zonder compromissen. Ideaal als voorbereiding op een keramische coating, of gewoon om je auto er weer als nieuw te laten uitzien.
             </p>
           </motion.div>
         )}
@@ -402,7 +402,7 @@ function ServicesPageContent() {
             </div>
 
             <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
-              Wist je dat je je resultaat kan laten duren? Na een polijstbeurt is je lak op z&apos;n mooist — en dat is het perfecte moment om ze te beschermen met een keramische coating. Zo blijft die diepe glans jarenlang behouden in plaats van na een paar maanden weer te vervagen. Vraag ernaar bij je afspraak, of bekijk onze{' '}
+              Wist je dat je je resultaat kan laten duren? Na een polijstbeurt is je lak op z&apos;n mooist, en dat is het perfecte moment om ze te beschermen met een keramische coating. Zo blijft die diepe glans jarenlang behouden in plaats van na een paar maanden weer te vervagen. Vraag ernaar bij je afspraak, of bekijk onze{' '}
               <Link href="/services?category=coating" className="text-accent-red font-semibold hover:underline">
                 Keramische Coating pagina
               </Link>
