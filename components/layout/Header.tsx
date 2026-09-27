@@ -8,7 +8,7 @@ import TrackedBookLink from '../analytics/TrackedBookLink'
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-primary-dark border-b border-secondary-dark">
+    <header className="sticky top-0 z-50 w-full shrink-0 self-start bg-primary-dark border-b border-secondary-dark">
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center">
