@@ -3,6 +3,8 @@ export interface Service {
   name: string
   description: string
   basePrice: number
+  /** Starting price shown as "Vanaf €X" when the booked total stays on request. */
+  fromPrice?: number
   largeCarSurcharge: number
   features: string[]
   popular?: boolean

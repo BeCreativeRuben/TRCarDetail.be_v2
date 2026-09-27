@@ -36,6 +36,11 @@ export default function PricingCard({ service, index }: PricingCardProps) {
           <h3 className="text-2xl font-bold text-primary-dark mb-2">{service.name}</h3>
           {service.comingSoon ? (
             <span className="text-lg text-primary-dark opacity-70">Binnenkort beschikbaar</span>
+          ) : service.fromPrice && service.fromPrice > 0 && service.basePrice === 0 ? (
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-lg font-semibold text-primary-dark opacity-70">Vanaf</span>
+              <span className="text-4xl font-bold text-accent-red">€{service.fromPrice}</span>
+            </div>
           ) : service.basePrice > 0 ? (
             <div>
               <div className="flex items-baseline gap-2 flex-wrap">

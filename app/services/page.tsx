@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
@@ -80,37 +81,92 @@ const polierenServices: Service[] = [
   {
     id: 'polijsten-light',
     name: 'Light Polish – Basis correctie',
-    description:
-      'Verwijdert lichte krassen, swirl marks en doffe plekken. Herstelt glans en kleurdiepte. Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging. 1-staps polieren.',
+    description: 'Lichte swirl marks, doffe glans, algemeen onderhoud. 1-staps polieren.',
     basePrice: 0,
+    fromPrice: 300,
     largeCarSurcharge: 0,
     features: [
-      'Verwijdert lichte krassen, swirl marks en doffe plekken',
-      'Herstelt glans en kleurdiepte',
-      'Ideaal voor goed onderhouden auto\'s met minimale lakbeschadiging',
-      '1-staps polieren',
-      'Prijs op aanvraag',
-      'Sedan/Station +€60',
-      'Jeep/SUV +€100',
+      'Resultaat: Merkbaar diepere glans',
+      'Toeslag Sedan/Station +€50',
+      'Toeslag Jeep/SUV +€90',
     ],
   },
   {
     id: 'polijsten-full',
     name: 'Full Polish – Intensive correctie',
-    description:
-      'Verwijdert hardnekkige krassen, diepe swirls en oxidatie. Herstelt maximale glans en diepte. Alle gevoelige onderdelen worden professioneel afgeschermd. Meerstaps polieren.',
+    description: 'Merkbare tot diepe kras- en swirlschade. 2-staps of 3-staps (meerstaps) polieren.',
     basePrice: 0,
+    fromPrice: 440,
     largeCarSurcharge: 0,
     features: [
-      'Verwijdert hardnekkige krassen, diepe swirls en oxidatie',
-      'Herstelt maximale glans en diepte in de lak',
-      'Gevoelige onderdelen professioneel afgeschermd',
-      'Geschikt voor duidelijke lakbeschadiging of doffe plekken',
-      'Meerstaps polieren',
-      'Prijs op aanvraag',
-      'Sedan/Station +€60',
-      'Jeep/SUV +€120',
+      '2-staps: vanaf €440 · sterk verbeterde, egale glans',
+      '3-staps (meerstaps): vanaf €600 · zo goed als perfecte lak',
+      'Toeslag Sedan/Station +€60 (2-staps) of +€70 (3-staps)',
+      'Toeslag Jeep/SUV +€105 (2-staps) of +€120 (3-staps)',
     ],
+  },
+]
+
+const polierenIncluded = [
+  'Grondige voorreiniging en decontaminatie van de lak',
+  'Lakcorrectie met professionele polijstmachine (1 of meerdere stappen, afhankelijk van pakket)',
+  'Bescherming van gevoelige onderdelen (rubbers, kunststof, randen)',
+  'Nabehandeling met glansversterker',
+  'Persoonlijk advies over onderhoud en eventuele vervolgstappen (bv. coating)',
+]
+
+const polierenLevels = ['1-staps', '2-staps', '3-staps (meerstaps)'] as const
+
+const polierenComparison: { label: string; values: readonly [string, string, string]; emphasize?: boolean }[] = [
+  {
+    label: 'Geschikt voor',
+    values: [
+      'Lichte swirl marks, doffe glans, algemeen onderhoud',
+      'Merkbare kras- en swirlschade, matte/verweerde lak',
+      'Diepe kras- en swirlschade, maximale correctie',
+    ],
+  },
+  {
+    label: 'Resultaat',
+    values: ['Merkbaar diepere glans', 'Sterk verbeterde, egale glans', 'Zo goed als perfecte lak'],
+  },
+  {
+    label: 'Vanaf-prijs',
+    values: ['€300', '€440', '€600'],
+    emphasize: true,
+  },
+  {
+    label: 'Toeslag Sedan/Station',
+    values: ['+€50', '+€60', '+€70'],
+    emphasize: true,
+  },
+  {
+    label: 'Toeslag Jeep/SUV',
+    values: ['+€90', '+€105', '+€120'],
+    emphasize: true,
+  },
+]
+
+const polierenFaq = [
+  {
+    question: 'Hoeveel tijd duurt polijsten?',
+    answer:
+      'Afhankelijk van het pakket: Light Polish (1-staps) neemt gemiddeld een halve dag, Full Polish (2-staps en 3-staps) kan een volledige dag in beslag nemen door de extra correctiestappen.',
+  },
+  {
+    question: 'Is polijsten schadelijk voor mijn lak?',
+    answer:
+      'Neen, mits correct uitgevoerd. We werken met professionele polijstmachines en de juiste pads/polijstmiddelen per stap, zodat we enkel de beschadigde bovenlaag verwijderen — niet meer dan nodig.',
+  },
+  {
+    question: 'Wat is het verschil tussen polijsten en een coating?',
+    answer:
+      'Polijsten verwijdert bestaande schade (krasjes, swirl marks, dofheid) en herstelt de glans. Een coating beschermt die glans nadien tegen nieuwe schade, UV en vervuiling — de twee vullen elkaar dus perfect aan.',
+  },
+  {
+    question: 'Kan ik polijsten combineren met een coating?',
+    answer:
+      'Zeker, en dat raden we zelfs aan: polijsten vóór een coating zorgt voor het beste eindresultaat en de langste levensduur van de coating.',
   },
 ]
 
@@ -243,6 +299,14 @@ function ServicesPageContent() {
           </motion.div>
         )}
 
+        {activeCategory === 'polieren' && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-3xl mx-auto mb-12 text-center">
+            <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
+              Kleine krasjes, swirl marks of een doffe glans na de wasstraat? Met polijsten halen we de originele diepte en glans terug uit je lak — zonder te verven, zonder compromissen. Ideaal als voorbereiding op een keramische coating, of gewoon om je auto er weer als nieuw te laten uitzien.
+            </p>
+          </motion.div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
           {getCurrentServices().map((service, index) => (
             <PricingCard key={service.id} service={service} index={index} />
@@ -299,6 +363,72 @@ function ServicesPageContent() {
                   <h4 className="font-semibold text-primary-dark mb-1">Is een coating beter dan wax?</h4>
                   <p className="text-primary-dark opacity-80">Wax ligt los op de lak en is na enkele weken tot maanden verdwenen. Een keramische coating bindt met de lak en beschermt veel langer, met een sterkere glans en betere bescherming tegen krassen en vervuiling.</p>
                 </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeCategory === 'polieren' && (
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="max-w-4xl mx-auto mb-12 space-y-8">
+            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
+              <h3 className="text-xl font-bold text-primary-dark mb-4">Wat is inbegrepen</h3>
+              <ul className="space-y-2">
+                {polierenIncluded.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-primary-dark">
+                    <FiCheck className="text-accent-red flex-shrink-0 mt-1" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[40rem] text-sm text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-primary-dark/10">
+                      <th scope="col" className="py-3 pr-4 font-semibold text-primary-dark align-bottom">Correctie</th>
+                      {polierenLevels.map((level) => (
+                        <th key={level} scope="col" className="py-3 px-3 font-semibold text-primary-dark align-bottom">{level}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {polierenComparison.map((row) => (
+                      <tr key={row.label} className="border-b border-primary-dark/10 last:border-b-0">
+                        <th scope="row" className="py-3 pr-4 font-semibold text-primary-dark align-top whitespace-nowrap">{row.label}</th>
+                        {row.values.map((value, i) => (
+                          <td
+                            key={`${row.label}-${polierenLevels[i]}`}
+                            className={`py-3 px-3 align-top ${row.emphasize ? 'font-bold text-accent-red whitespace-nowrap' : 'text-primary-dark opacity-80'}`}
+                          >
+                            {value}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
+              Wist je dat je je resultaat kan laten duren? Na een polijstbeurt is je lak op z&apos;n mooist — en dat is het perfecte moment om ze te beschermen met een keramische coating. Zo blijft die diepe glans jarenlang behouden in plaats van na een paar maanden weer te vervagen. Vraag ernaar bij je afspraak, of bekijk onze{' '}
+              <Link href="/services?category=coating" className="text-accent-red font-semibold hover:underline">
+                Keramische Coating pagina
+              </Link>
+              {' '}voor de mogelijkheden.
+            </p>
+
+            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
+              <h3 className="text-xl font-bold text-primary-dark mb-4">Veelgestelde vragen</h3>
+              <div className="space-y-4">
+                {polierenFaq.map((item) => (
+                  <div key={item.question}>
+                    <h4 className="font-semibold text-primary-dark mb-1">{item.question}</h4>
+                    <p className="text-primary-dark opacity-80">{item.answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </motion.div>
