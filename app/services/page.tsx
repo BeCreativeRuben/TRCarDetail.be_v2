@@ -267,7 +267,7 @@ function ServicesPageContent() {
           </TrackedBookLink>
         </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="max-lg:sticky max-lg:top-[81px] max-lg:z-30 max-lg:bg-light max-lg:-mx-4 max-lg:px-4 max-lg:py-2 flex flex-wrap justify-center gap-3 mb-12">
           <button onClick={() => setActiveCategory('exterieur')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'exterieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Exterieur
           </button>
