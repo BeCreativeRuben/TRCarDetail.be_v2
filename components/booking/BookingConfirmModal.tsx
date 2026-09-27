@@ -12,6 +12,7 @@ export type ConfirmModalData = {
   servicePrice: number
   isCustomPackage: boolean
   isPrijsOpAanvraag: boolean
+  fromPrice?: number
   customLabel?: string
   selectedExtraIds: ReadonlySet<string>
   extrasTotal: number
@@ -155,7 +156,9 @@ export default function BookingConfirmModal({ open, data, isSubmitting, onConfir
                   <Row label="Dienstprijs" value={`€${data.servicePrice.toFixed(2)}`} accent />
                 )}
                 {data.isPrijsOpAanvraag && (
-                  <p className="text-sm text-accent-red font-medium mt-1">Prijs op aanvraag</p>
+                  <p className="text-sm text-accent-red font-medium mt-1">
+                    {data.fromPrice ? `Vanaf €${data.fromPrice} · prijs op aanvraag` : 'Prijs op aanvraag'}
+                  </p>
                 )}
               </Section>
 

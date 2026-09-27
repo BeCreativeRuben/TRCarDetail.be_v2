@@ -52,8 +52,8 @@ const services: Service[] = [
   { id: 'interieur-basis', name: 'Interieur Basis', description: '€50 · Opfrissen', basePrice: 50, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: '€130 · Uitgebreide dieptereiniging', basePrice: 130, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
-  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
-  { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Prijs op aanvraag', basePrice: 0, largeCarSurcharge: 0, features: [] },
+  { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Vanaf €300 · 1-staps correctie', basePrice: 0, fromPrice: 300, largeCarSurcharge: 0, features: [] },
+  { id: 'polijsten-full', name: 'Full Polish – Intensive correctie', description: 'Vanaf €440 · 2-staps, of vanaf €600 · 3-staps', basePrice: 0, fromPrice: 440, largeCarSurcharge: 0, features: [] },
   { id: 'coating-basis', name: 'Coating Basis', description: '€450 · 2 jaar bescherming', basePrice: 450, largeCarSurcharge: 0, features: [] },
   { id: 'coating-deluxe', name: 'Coating Deluxe', description: '€650 · 3 jaar, ruitencoating inbegrepen', basePrice: 650, largeCarSurcharge: 0, features: [] },
   { id: 'coating-premium', name: 'Coating Premium', description: '€900 · 4-5 jaar, ruitencoating + jaarlijkse controle', basePrice: 900, largeCarSurcharge: 0, features: [] },
@@ -413,6 +413,7 @@ export default function BookingForm() {
     servicePrice: baseServicePrice,
     isCustomPackage: formData.serviceType === 'full-custom',
     isPrijsOpAanvraag: isPolish,
+    fromPrice: isPolish ? selectedService?.fromPrice : undefined,
     customLabel,
     selectedExtraIds,
     extrasTotal,
@@ -480,9 +481,11 @@ export default function BookingForm() {
                       <p className="text-accent-red font-bold text-sm">
                         {service.id === 'full-custom'
                           ? 'Richtprijs (indicatie)'
-                          : service.basePrice > 0
-                            ? `€${service.basePrice}`
-                            : 'Prijs op aanvraag'}
+                          : service.fromPrice && service.basePrice === 0
+                            ? `Vanaf €${service.fromPrice}`
+                            : service.basePrice > 0
+                              ? `€${service.basePrice}`
+                              : 'Prijs op aanvraag'}
                       </p>
                     </motion.button>
                   ))}
@@ -766,7 +769,7 @@ export default function BookingForm() {
             </>
           ) : (
             <>
-              <p className="text-light">Prijs voor <strong>{selectedService.name}</strong> wordt na uw aanvraag persoonlijk met u afgestemd.</p>
+              <p className="text-light">Prijs voor <strong>{selectedService.name}</strong>{selectedService.fromPrice ? ` (vanaf €${selectedService.fromPrice})` : ''} wordt na uw aanvraag persoonlijk met u afgestemd.</p>
               {extrasTotal > 0 && (
                 <div className="space-y-2 mt-3 mb-2">
                   {[...selectedExtraIds].map((id) => {
