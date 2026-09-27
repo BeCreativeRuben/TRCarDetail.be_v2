@@ -77,36 +77,6 @@ const fullServices: Service[] = [
   },
 ]
 
-const polierenServices: Service[] = [
-  {
-    id: 'polijsten-light',
-    name: 'Light Polish – Basis correctie',
-    description: 'Lichte swirl marks, doffe glans, algemeen onderhoud. 1-staps polieren.',
-    basePrice: 0,
-    fromPrice: 300,
-    largeCarSurcharge: 0,
-    features: [
-      'Resultaat: Merkbaar diepere glans',
-      'Toeslag Sedan/Station +€50',
-      'Toeslag Jeep/SUV +€90',
-    ],
-  },
-  {
-    id: 'polijsten-full',
-    name: 'Full Polish – Intensive correctie',
-    description: 'Merkbare tot diepe kras- en swirlschade. 2-staps of 3-staps (meerstaps) polieren.',
-    basePrice: 0,
-    fromPrice: 440,
-    largeCarSurcharge: 0,
-    features: [
-      '2-staps: vanaf €440 · sterk verbeterde, egale glans',
-      '3-staps (meerstaps): vanaf €600 · zo goed als perfecte lak',
-      'Toeslag Sedan/Station +€60 (2-staps) of +€70 (3-staps)',
-      'Toeslag Jeep/SUV +€105 (2-staps) of +€120 (3-staps)',
-    ],
-  },
-]
-
 const polierenIncluded = [
   'Grondige voorreiniging en decontaminatie van de lak',
   'Lakcorrectie met professionele polijstmachine (1 of meerdere stappen, afhankelijk van pakket)',
@@ -245,7 +215,7 @@ function ServicesPageContent() {
       case 'interieur': return interieurServices
       case 'exterieur': return exterieurServices
       case 'full': return fullServices
-      case 'polieren': return polierenServices
+      case 'polieren': return []
       case 'coating': return coatingServices
       case 'moto': return motoServices
       case 'extras': return extrasServices
@@ -307,11 +277,13 @@ function ServicesPageContent() {
           </motion.div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
-          {getCurrentServices().map((service, index) => (
-            <PricingCard key={service.id} service={service} index={index} />
-          ))}
-        </div>
+        {getCurrentServices().length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
+            {getCurrentServices().map((service, index) => (
+              <PricingCard key={service.id} service={service} index={index} />
+            ))}
+          </div>
+        )}
 
         {activeCategory === 'coating' && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="max-w-3xl mx-auto mb-12 space-y-8">
