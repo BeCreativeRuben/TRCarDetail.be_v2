@@ -77,36 +77,6 @@ const fullServices: Service[] = [
   },
 ]
 
-const polierenServices: Service[] = [
-  {
-    id: 'polijsten-light',
-    name: 'Light Polish – Basis correctie',
-    description: 'Lichte swirl marks, doffe glans, algemeen onderhoud. 1-staps polieren.',
-    basePrice: 0,
-    fromPrice: 300,
-    largeCarSurcharge: 0,
-    features: [
-      'Resultaat: Merkbaar diepere glans',
-      'Toeslag Sedan/Station +€50',
-      'Toeslag Jeep/SUV +€90',
-    ],
-  },
-  {
-    id: 'polijsten-full',
-    name: 'Full Polish – Intensive correctie',
-    description: 'Merkbare tot diepe kras- en swirlschade. 2-staps of 3-staps (meerstaps) polieren.',
-    basePrice: 0,
-    fromPrice: 440,
-    largeCarSurcharge: 0,
-    features: [
-      '2-staps: vanaf €440 · sterk verbeterde, egale glans',
-      '3-staps (meerstaps): vanaf €600 · zo goed als perfecte lak',
-      'Toeslag Sedan/Station +€60 (2-staps) of +€70 (3-staps)',
-      'Toeslag Jeep/SUV +€105 (2-staps) of +€120 (3-staps)',
-    ],
-  },
-]
-
 const polierenIncluded = [
   'Grondige voorreiniging en decontaminatie van de lak',
   'Lakcorrectie met professionele polijstmachine (1 of meerdere stappen, afhankelijk van pakket)',
@@ -116,6 +86,23 @@ const polierenIncluded = [
 ]
 
 const polierenLevels = ['1-staps', '2-staps', '3-staps (meerstaps)'] as const
+const polierenLevelServiceIds = ['polijsten-light', 'polijsten-full', 'polijsten-full'] as const
+
+function PolierenLevelBookButton({ serviceId, level }: { serviceId: string; level: string }) {
+  return (
+    <TrackedBookLink
+      href={`/booking?service=${serviceId}&from=services_card`}
+      location="services_card"
+      className="block"
+    >
+      <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
+        <FiCalendar className="w-4 h-4" />
+        Boek dit pakket
+        <span className="sr-only">, {level}</span>
+      </Button>
+    </TrackedBookLink>
+  )
+}
 
 const polierenComparison: { label: string; values: readonly [string, string, string]; emphasize?: boolean }[] = [
   {
@@ -156,12 +143,12 @@ const polierenFaq = [
   {
     question: 'Is polijsten schadelijk voor mijn lak?',
     answer:
-      'Neen, mits correct uitgevoerd. We werken met professionele polijstmachines en de juiste pads/polijstmiddelen per stap, zodat we enkel de beschadigde bovenlaag verwijderen — niet meer dan nodig.',
+      'Neen, mits correct uitgevoerd. We werken met professionele polijstmachines en de juiste pads/polijstmiddelen per stap, zodat we enkel de beschadigde bovenlaag verwijderen, niet meer dan nodig.',
   },
   {
     question: 'Wat is het verschil tussen polijsten en een coating?',
     answer:
-      'Polijsten verwijdert bestaande schade (krasjes, swirl marks, dofheid) en herstelt de glans. Een coating beschermt die glans nadien tegen nieuwe schade, UV en vervuiling — de twee vullen elkaar dus perfect aan.',
+      'Polijsten verwijdert bestaande schade (krasjes, swirl marks, dofheid) en herstelt de glans. Een coating beschermt die glans nadien tegen nieuwe schade, UV en vervuiling. De twee vullen elkaar dus perfect aan.',
   },
   {
     question: 'Kan ik polijsten combineren met een coating?',
@@ -245,7 +232,7 @@ function ServicesPageContent() {
       case 'interieur': return interieurServices
       case 'exterieur': return exterieurServices
       case 'full': return fullServices
-      case 'polieren': return polierenServices
+      case 'polieren': return []
       case 'coating': return coatingServices
       case 'moto': return motoServices
       case 'extras': return extrasServices
@@ -302,16 +289,18 @@ function ServicesPageContent() {
         {activeCategory === 'polieren' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-3xl mx-auto mb-12 text-center">
             <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
-              Kleine krasjes, swirl marks of een doffe glans na de wasstraat? Met polijsten halen we de originele diepte en glans terug uit je lak — zonder te verven, zonder compromissen. Ideaal als voorbereiding op een keramische coating, of gewoon om je auto er weer als nieuw te laten uitzien.
+              Kleine krasjes, swirl marks of een doffe glans na de wasstraat? Met polijsten halen we de originele diepte en glans terug uit je lak: zonder te verven, zonder compromissen. Ideaal als voorbereiding op een keramische coating, of gewoon om je auto er weer als nieuw te laten uitzien.
             </p>
           </motion.div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
-          {getCurrentServices().map((service, index) => (
-            <PricingCard key={service.id} service={service} index={index} />
-          ))}
-        </div>
+        {getCurrentServices().length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch">
+            {getCurrentServices().map((service, index) => (
+              <PricingCard key={service.id} service={service} index={index} />
+            ))}
+          </div>
+        )}
 
         {activeCategory === 'coating' && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="max-w-3xl mx-auto mb-12 space-y-8">
@@ -371,18 +360,6 @@ function ServicesPageContent() {
         {activeCategory === 'polieren' && (
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="max-w-4xl mx-auto mb-12 space-y-8">
             <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
-              <h3 className="text-xl font-bold text-primary-dark mb-4">Wat is inbegrepen</h3>
-              <ul className="space-y-2">
-                {polierenIncluded.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-primary-dark">
-                    <FiCheck className="text-accent-red flex-shrink-0 mt-1" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
               <div className="md:hidden space-y-4">
                 {polierenLevels.map((level, index) => (
                   <div key={level} className="rounded-lg border border-primary-dark/10 overflow-hidden">
@@ -397,6 +374,9 @@ function ServicesPageContent() {
                         </div>
                       ))}
                     </dl>
+                    <div className="px-4 py-3 border-t border-primary-dark/10">
+                      <PolierenLevelBookButton serviceId={polierenLevelServiceIds[index]} level={level} />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -424,13 +404,35 @@ function ServicesPageContent() {
                         ))}
                       </tr>
                     ))}
+                    <tr>
+                      <th scope="row" className="py-3 pr-4 align-middle">
+                        <span className="sr-only">Boeken</span>
+                      </th>
+                      {polierenLevels.map((level, index) => (
+                        <td key={level} className="py-3 px-3 align-middle">
+                          <PolierenLevelBookButton serviceId={polierenLevelServiceIds[index]} level={level} />
+                        </td>
+                      ))}
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
 
+            <div className="bg-white rounded-xl border border-primary-dark/10 p-6">
+              <h3 className="text-xl font-bold text-primary-dark mb-4">Wat is inbegrepen</h3>
+              <ul className="space-y-2">
+                {polierenIncluded.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-primary-dark">
+                    <FiCheck className="text-accent-red flex-shrink-0 mt-1" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <p className="text-lg text-primary-dark opacity-80 leading-relaxed">
-              Wist je dat je je resultaat kan laten duren? Na een polijstbeurt is je lak op z&apos;n mooist — en dat is het perfecte moment om ze te beschermen met een keramische coating. Zo blijft die diepe glans jarenlang behouden in plaats van na een paar maanden weer te vervagen. Vraag ernaar bij je afspraak, of bekijk onze{' '}
+              Wist je dat je je resultaat kan laten duren? Na een polijstbeurt is je lak op z&apos;n mooist, en dat is het perfecte moment om ze te beschermen met een keramische coating. Zo blijft die diepe glans jarenlang behouden in plaats van na een paar maanden weer te vervagen. Vraag ernaar bij je afspraak, of bekijk onze{' '}
               <Link href="/services?category=coating" className="text-accent-red font-semibold hover:underline">
                 Keramische Coating pagina
               </Link>
