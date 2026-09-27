@@ -86,6 +86,23 @@ const polierenIncluded = [
 ]
 
 const polierenLevels = ['1-staps', '2-staps', '3-staps (meerstaps)'] as const
+const polierenLevelServiceIds = ['polijsten-light', 'polijsten-full', 'polijsten-full'] as const
+
+function PolierenLevelBookButton({ serviceId, level }: { serviceId: string; level: string }) {
+  return (
+    <TrackedBookLink
+      href={`/booking?service=${serviceId}&from=services_card`}
+      location="services_card"
+      className="block"
+    >
+      <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
+        <FiCalendar className="w-4 h-4" />
+        Boek dit pakket
+        <span className="sr-only">, {level}</span>
+      </Button>
+    </TrackedBookLink>
+  )
+}
 
 const polierenComparison: { label: string; values: readonly [string, string, string]; emphasize?: boolean }[] = [
   {
@@ -369,6 +386,9 @@ function ServicesPageContent() {
                         </div>
                       ))}
                     </dl>
+                    <div className="px-4 py-3 border-t border-primary-dark/10">
+                      <PolierenLevelBookButton serviceId={polierenLevelServiceIds[index]} level={level} />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -396,6 +416,16 @@ function ServicesPageContent() {
                         ))}
                       </tr>
                     ))}
+                    <tr>
+                      <th scope="row" className="py-3 pr-4 align-middle">
+                        <span className="sr-only">Boeken</span>
+                      </th>
+                      {polierenLevels.map((level, index) => (
+                        <td key={level} className="py-3 px-3 align-middle">
+                          <PolierenLevelBookButton serviceId={polierenLevelServiceIds[index]} level={level} />
+                        </td>
+                      ))}
+                    </tr>
                   </tbody>
                 </table>
               </div>
