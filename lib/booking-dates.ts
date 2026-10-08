@@ -23,10 +23,7 @@ const BLOCKED_DATE_RANGES: { start: string; end: string }[] = [
  * Periodes met aangepaste openingsuren (open vanaf 09:00 de hele dag).
  * Buiten deze periodes gelden de normale uren.
  */
-export const EXTENDED_HOURS_RANGES: { start: string; end: string; opensAt: string }[] = [
-  { start: '2026-08-31', end: '2026-09-04', opensAt: '09:00' },
-  { start: '2026-09-14', end: '2026-09-20', opensAt: '09:00' },
-]
+export const EXTENDED_HOURS_RANGES: { start: string; end: string; opensAt: string }[] = []
 
 export function getExtendedHoursForDate(preferredDate: string): string | null {
   const match = EXTENDED_HOURS_RANGES.find(

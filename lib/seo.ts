@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { WEEKDAY_OPENING_HOURS, WEEKEND_OPENING_HOURS } from '@/lib/booking-slots'
 import { GOOGLE_MAPS_REVIEW_URL } from '@/lib/socials'
 
 function canonicalSiteUrl(): string {
@@ -225,37 +226,14 @@ export function buildLocalBusinessJsonLd() {
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '18:00',
-        closes: '22:00',
+        opens: WEEKDAY_OPENING_HOURS.opens,
+        closes: WEEKDAY_OPENING_HOURS.closes,
       },
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Saturday', 'Sunday'],
-        opens: '09:00',
-        closes: '20:00',
-      },
-    ],
-    specialOpeningHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        validFrom: '2026-08-31',
-        validThrough: '2026-09-04',
-        opens: '09:00',
-        closes: '22:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        validFrom: '2026-09-05',
-        validThrough: '2026-09-13',
-        opens: '00:00',
-        closes: '00:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        validFrom: '2026-09-14',
-        validThrough: '2026-09-20',
-        opens: '09:00',
-        closes: '22:00',
+        opens: WEEKEND_OPENING_HOURS.opens,
+        closes: WEEKEND_OPENING_HOURS.closes,
       },
     ],
     sameAs: [BUSINESS.googleMapsReviewUrl],

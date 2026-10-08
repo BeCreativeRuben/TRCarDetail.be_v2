@@ -8,8 +8,13 @@ import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import { FiMail, FiPhone, FiMapPin, FiCalendar } from 'react-icons/fi'
 import { trackContactConversion } from '@/lib/google-ads'
+import { WEEKDAY_OPENING_HOURS, WEEKEND_OPENING_HOURS } from '@/lib/booking-slots'
 
-/** Vanaf 1 april: weekdagen 18–21u, weekend 08–22u. Voor april: bel of mail. */
+function formatHoursRange(opens: string, closes: string): string {
+  return `${opens} – ${closes}`
+}
+
+/** Vanaf 1 april: dezelfde uren als de boekingsslots. Voor april: bel of mail. */
 function OpeningHours() {
   const now = new Date()
   const isFromApril = now.getMonth() >= 3 // april = index 3
@@ -39,45 +44,18 @@ function OpeningHours() {
       <ul className="text-primary-dark opacity-80 text-sm space-y-2 mb-4">
         <li className="flex justify-between gap-4">
           <span>Maandag – Vrijdag</span>
-          <span className="font-medium text-primary-dark">18:00 – 21:00</span>
+          <span className="font-medium text-primary-dark">{formatHoursRange(WEEKDAY_OPENING_HOURS.opens, WEEKDAY_OPENING_HOURS.closes)}</span>
         </li>
         <li className="flex justify-between gap-4">
           <span>Zaterdag – Zondag</span>
-          <span className="font-medium text-primary-dark">08:00 – 22:00</span>
+          <span className="font-medium text-primary-dark">{formatHoursRange(WEEKEND_OPENING_HOURS.opens, WEEKEND_OPENING_HOURS.closes)}</span>
         </li>
       </ul>
-      <HolidaySchedule />
       <Link href="/booking" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors">
         <FiCalendar size={18} />
         Bekijk kalender
       </Link>
     </>
-  )
-}
-
-function HolidaySchedule() {
-  const now = new Date()
-  const cutoff = new Date(2026, 8, 20, 23, 59, 59) // 20 september 2026
-  if (now > cutoff) return null
-
-  return (
-    <div className="rounded-lg border border-accent-red/30 bg-accent-red/5 p-3 mb-4">
-      <p className="text-primary-dark font-semibold text-sm mb-2">Aangepaste openingsuren</p>
-      <ul className="text-primary-dark opacity-80 text-sm space-y-1.5">
-        <li className="flex justify-between gap-4">
-          <span>31 aug – 4 sep</span>
-          <span className="font-medium text-primary-dark">09:00 – 22:00</span>
-        </li>
-        <li className="flex justify-between gap-4">
-          <span>5 sep – 13 sep</span>
-          <span className="font-medium text-accent-red">Gesloten (verlof)</span>
-        </li>
-        <li className="flex justify-between gap-4">
-          <span>14 sep – 20 sep</span>
-          <span className="font-medium text-primary-dark">09:00 – 22:00</span>
-        </li>
-      </ul>
-    </div>
   )
 }
 
