@@ -4,6 +4,18 @@ const WEEKDAY_TIME_SLOTS = ['18:00', '19:00', '20:00', '21:00', '22:00'] as cons
 const WEEKEND_TIME_SLOTS = [
   '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
 ] as const
+
+/** Eerste en laatste boekingsslot. De slotlijsten hierboven blijven de bron. */
+export const WEEKDAY_OPENING_HOURS = {
+  opens: WEEKDAY_TIME_SLOTS[0],
+  closes: WEEKDAY_TIME_SLOTS[WEEKDAY_TIME_SLOTS.length - 1],
+} as const
+
+export const WEEKEND_OPENING_HOURS = {
+  opens: WEEKEND_TIME_SLOTS[0],
+  closes: WEEKEND_TIME_SLOTS[WEEKEND_TIME_SLOTS.length - 1],
+} as const
+
 const EXTENDED_DAY_TIME_SLOTS = [
   '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00',
 ] as const
