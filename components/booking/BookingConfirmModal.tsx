@@ -10,6 +10,8 @@ import { FiX, FiCalendar, FiClock, FiTruck, FiUser, FiMapPin, FiPackage, FiMessa
 export type ConfirmModalData = {
   serviceName: string
   servicePrice: number
+  /** Grote-wagen-toeslag (0 = n.v.t.) */
+  largeCarSurcharge: number
   isCustomPackage: boolean
   isPrijsOpAanvraag: boolean
   fromPrice?: number
@@ -154,6 +156,9 @@ export default function BookingConfirmModal({ open, data, isSubmitting, onConfir
                 )}
                 {!data.isPrijsOpAanvraag && data.servicePrice > 0 && (
                   <Row label="Dienstprijs" value={`€${data.servicePrice.toFixed(2)}`} accent />
+                )}
+                {data.largeCarSurcharge > 0 && (
+                  <Row label="Grote wagen toeslag" value={`+€${data.largeCarSurcharge.toFixed(2)}`} />
                 )}
                 {data.isPrijsOpAanvraag && (
                   <p className="text-sm text-accent-red font-medium mt-1">
