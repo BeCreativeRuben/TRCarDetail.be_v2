@@ -124,6 +124,18 @@ export function getModelsForBrand(brand: string): string[] {
   return normalized ? carModelsByBrand[normalized] : []
 }
 
+/** Vaste toeslag (excl. btw) voor een groot voertuig (SUV, bus, bestelwagen …). */
+export const LARGE_CAR_SURCHARGE_EUR = 15
+
+/** Diensten met prijs op aanvraag (eigen toeslagtabel per wagentype): geen vaste grote-wagen-toeslag. */
+const NO_LARGE_CAR_SURCHARGE_SERVICES = new Set<string>(['polijsten-light', 'polijsten-full'])
+
+/** Grote-wagen-toeslag voor een boeking (client én server gebruiken deze bron). */
+export function largeCarSurchargeFor(serviceType: string | undefined, size: string | undefined): number {
+  if (size !== 'large' || !serviceType) return 0
+  return NO_LARGE_CAR_SURCHARGE_SERVICES.has(serviceType) ? 0 : LARGE_CAR_SURCHARGE_EUR
+}
+
 /** Bepaalt of het voertuig als "groot" telt (toeslag). Onbekend merk/model = standaard. */
 export function isLargeCar(make: string, model: string): boolean {
   const m = make.trim().toLowerCase()

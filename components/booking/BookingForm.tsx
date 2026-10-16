@@ -10,7 +10,7 @@ import Button from '../ui/Button'
 import BookingCalendar from './BookingCalendar'
 import CustomPackageBuilder from './CustomPackageBuilder'
 import { Service, Booking } from '@/lib/types'
-import { carBrands, getModelsForBrand, isLargeCar } from '@/lib/cars'
+import { carBrands, getModelsForBrand, isLargeCar, largeCarSurchargeFor } from '@/lib/cars'
 import { TRAVEL_CONFIG } from '@/lib/distance'
 import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
 import { isPreferredDateBookable, getBlockedRangeReason } from '@/lib/booking-dates'
@@ -344,6 +344,7 @@ export default function BookingForm() {
           serviceType: formData.serviceType === 'full-custom' ? 'Combinatie op maat' : formData.serviceType,
           specialRequests: mergedSpecial,
           selectedExtras: selectedExtrasPayload.length ? selectedExtrasPayload : undefined,
+          largeCarSurchargeEuro: largeCarSurcharge,
           totalExclBtw: totalPrice > 0 ? totalPrice : undefined,
         }),
       })
@@ -389,11 +390,10 @@ export default function BookingForm() {
     formData.serviceType === 'full-custom'
       ? customEstimate
       : selectedService
-        ? formData.vehicleInfo?.size === 'large'
-          ? selectedService.basePrice + selectedService.largeCarSurcharge
-          : selectedService.basePrice
+        ? selectedService.basePrice
         : 0
-  const servicePrice = baseServicePrice + extrasTotal
+  const largeCarSurcharge = baseServicePrice > 0 ? largeCarSurchargeFor(formData.serviceType, formData.vehicleInfo?.size) : 0
+  const servicePrice = baseServicePrice + largeCarSurcharge + extrasTotal
   const travelFee = formData.travelFeeEuro ?? 0
   const totalPrice = servicePrice + travelFee
 
@@ -411,6 +411,7 @@ export default function BookingForm() {
       ? 'Combinatie op maat'
       : selectedService?.name ?? formData.serviceType ?? '',
     servicePrice: baseServicePrice,
+    largeCarSurcharge,
     isCustomPackage: formData.serviceType === 'full-custom',
     isPrijsOpAanvraag: isPolish,
     fromPrice: isPolish ? selectedService?.fromPrice : undefined,
@@ -628,7 +629,7 @@ export default function BookingForm() {
               {formData.vehicleInfo?.size === 'large' ? (
                 <span className="inline-flex items-center gap-1.5 text-accent-red font-medium">
                   Groot voertuig – toeslag van toepassing
-                  {selectedService && selectedService.largeCarSurcharge > 0 && ` (+€${selectedService.largeCarSurcharge})`}
+                  {largeCarSurcharge > 0 && ` (+€${largeCarSurcharge})`}
                 </span>
               ) : (
                 <span className="text-primary-dark opacity-70">Standaard voertuig</span>
@@ -695,6 +696,7 @@ export default function BookingForm() {
                     <span>Richtprijs dienst</span>
                     <span>€{customEstimate.toFixed(2)}</span>
                   </div>
+                  {largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{largeCarSurcharge.toFixed(2)}</span></div>}
                   {extrasTotal > 0 && (
                     <>
                       {[...selectedExtraIds].map((id) => {
@@ -734,7 +736,7 @@ export default function BookingForm() {
             <>
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-light"><span>{selectedService.name}</span><span>€{selectedService.basePrice.toFixed(2)}</span></div>
-                {formData.vehicleInfo?.size === 'large' && selectedService.largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{selectedService.largeCarSurcharge.toFixed(2)}</span></div>}
+                {largeCarSurcharge > 0 && <div className="flex justify-between text-light"><span>Grote wagen toeslag</span><span>€{largeCarSurcharge.toFixed(2)}</span></div>}
                 {extrasTotal > 0 && (
                   <>
                     {[...selectedExtraIds].map((id) => {

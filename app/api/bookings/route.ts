@@ -4,6 +4,7 @@ import { saveBooking } from '@/lib/bookings-store'
 import { normalizeSelectedExtras } from '@/lib/normalize-booking-extras'
 import { isPreferredDateBookable, getBlockedRangeReason } from '@/lib/booking-dates'
 import { isPreferredTimeValid } from '@/lib/booking-slots'
+import { largeCarSurchargeFor } from '@/lib/cars'
 
 export async function POST(request: Request) {
   try {
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
       travelDistanceKm,
       travelFeeEuro,
       totalExclBtw,
+      largeCarSurchargeEuro: clientLargeCarSurcharge,
       selectedExtras: rawSelectedExtras,
       specialRequests,
     } = body
@@ -64,6 +66,14 @@ export async function POST(request: Request) {
 
     const selectedExtras = normalizeSelectedExtras(rawSelectedExtras)
 
+    // Grote-wagen-toeslag altijd server-side bepalen (zelfde regel als het formulier).
+    const largeCarSurchargeEuro = largeCarSurchargeFor(String(serviceType), vehicleInfo?.size)
+    let total = totalExclBtw != null ? Number(totalExclBtw) : undefined
+    // Oudere (gecachte) formulieren rekenden de toeslag niet mee: tel ze dan hier alsnog op.
+    if (total != null && total > 0 && largeCarSurchargeEuro > 0 && clientLargeCarSurcharge == null) {
+      total = Math.round((total + largeCarSurchargeEuro) * 100) / 100
+    }
+
     const payload = {
       customerName,
       email,
@@ -75,7 +85,8 @@ export async function POST(request: Request) {
       address,
       travelDistanceKm: travelDistanceKm != null ? Number(travelDistanceKm) : undefined,
       travelFeeEuro: travelFeeEuro != null ? Number(travelFeeEuro) : undefined,
-      totalExclBtw: totalExclBtw != null ? Number(totalExclBtw) : undefined,
+      largeCarSurchargeEuro: largeCarSurchargeEuro > 0 ? largeCarSurchargeEuro : undefined,
+      totalExclBtw: total,
       selectedExtras,
       specialRequests,
     }
