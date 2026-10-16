@@ -1,8 +1,14 @@
 import type { Metadata } from 'next'
-import { pageMetadata } from '@/lib/seo'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildBreadcrumbJsonLd, buildOfferCatalogJsonLd, pageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = pageMetadata.services
 
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      <JsonLd data={[buildOfferCatalogJsonLd(), buildBreadcrumbJsonLd([{ name: 'Diensten', path: '/services' }])]} />
+      {children}
+    </>
+  )
 }

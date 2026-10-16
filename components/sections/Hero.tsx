@@ -56,7 +56,7 @@ export default function Hero() {
         className="relative z-20 text-center px-4"
       >
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-light mb-4 tracking-wider">
-          CAR CLEANING & DETAILING
+          CAR CLEANING & DETAILING{' '}
           <span className="block text-accent-red">VLAANDEREN</span>
         </h1>
         <p className="text-xl md:text-2xl text-light mb-4 max-w-2xl mx-auto">

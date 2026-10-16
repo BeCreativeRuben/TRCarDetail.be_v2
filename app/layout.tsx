@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="nl" className={`${bebas.variable} ${inter.variable}`}>
+    <html lang="nl-BE" className={`${bebas.variable} ${inter.variable}`}>
       <body className="bg-primary-dark text-light min-h-screen">
         <JsonLd data={[buildLocalBusinessJsonLd(), buildWebSiteJsonLd()]} />
         <GoogleTag />

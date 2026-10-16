@@ -1,8 +1,14 @@
 import HomePage from '@/components/HomePage'
-import { pageMetadata } from '@/lib/seo'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildOfferCatalogJsonLd, pageMetadata } from '@/lib/seo'
 
 export const metadata = pageMetadata.home
 
 export default function Page() {
-  return <HomePage />
+  return (
+    <>
+      <JsonLd data={buildOfferCatalogJsonLd()} />
+      <HomePage />
+    </>
+  )
 }

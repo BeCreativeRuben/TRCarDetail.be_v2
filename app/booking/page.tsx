@@ -17,7 +17,10 @@ function BookingContent() {
         </motion.div>
         <div className="max-w-4xl mx-auto">
           <ProcessSection variant="compact" />
-          <BookingForm />
+          {/* Alleen het formulier leest de URL (useSearchParams); titel en uitleg blijven server-side gerenderd. */}
+          <Suspense fallback={<div className="py-16 text-center text-primary-dark opacity-70">Laden...</div>}>
+            <BookingForm />
+          </Suspense>
         </div>
       </div>
     </div>
@@ -25,9 +28,5 @@ function BookingContent() {
 }
 
 export default function BookingPage() {
-  return (
-    <Suspense fallback={<div className="pt-20 pb-16 bg-light min-h-screen flex items-center justify-center">Laden...</div>}>
-      <BookingContent />
-    </Suspense>
-  )
+  return <BookingContent />
 }

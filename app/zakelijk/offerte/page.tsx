@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import ZakelijkQuoteForm from '@/components/zakelijk/ZakelijkQuoteForm'
-import { pageMetadata } from '@/lib/seo'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildBreadcrumbJsonLd, pageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = pageMetadata.zakelijkOfferte
 
 export default function ZakelijkOffertePage() {
   return (
     <div className="bg-light min-h-screen">
+      <JsonLd data={buildBreadcrumbJsonLd([{ name: 'Zakelijk', path: '/zakelijk' }, { name: 'Offerte', path: '/zakelijk/offerte' }])} />
       <section className="bg-primary-dark text-light py-14 md:py-16">
         <div className="container-custom max-w-2xl text-center">
           <p className="text-accent-red text-sm font-semibold uppercase tracking-wider mb-3">Offerte</p>

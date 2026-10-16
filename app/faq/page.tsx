@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { FAQ_ITEMS } from '@/lib/faq-data'
 import Card from '@/components/ui/Card'
@@ -23,17 +23,26 @@ export default function FAQPage() {
           {faqs.map((faq, index) => (
             <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.05 }}>
               <Card className="overflow-hidden">
-                <button onClick={() => setOpenIndex(openIndex === index ? null : index)} className="w-full flex items-center justify-between text-left">
+                <button
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  className="w-full flex items-center justify-between text-left"
+                  aria-expanded={openIndex === index}
+                  aria-controls={`faq-antwoord-${index}`}
+                >
                   <h3 className="text-lg font-semibold text-primary-dark pr-4">{faq.question}</h3>
                   {openIndex === index ? <FiChevronUp className="text-accent-red flex-shrink-0" size={24} /> : <FiChevronDown className="text-accent-red flex-shrink-0" size={24} />}
                 </button>
-                <AnimatePresence>
-                  {openIndex === index && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-                      <p className="text-primary-dark opacity-80 mt-4 pt-4 border-t border-secondary-dark border-opacity-20">{faq.answer}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Antwoord staat altijd in de HTML (crawlbaar voor Google en AI-zoekmachines); dichtgeklapt via hoogte 0. */}
+                <motion.div
+                  id={`faq-antwoord-${index}`}
+                  initial={false}
+                  animate={openIndex === index ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                  aria-hidden={openIndex !== index}
+                >
+                  <p className="text-primary-dark opacity-80 mt-4 pt-4 border-t border-secondary-dark border-opacity-20">{faq.answer}</p>
+                </motion.div>
               </Card>
             </motion.div>
           ))}

@@ -1,6 +1,18 @@
 import type { Metadata } from 'next'
 import { WEEKDAY_OPENING_HOURS, WEEKEND_OPENING_HOURS } from '@/lib/booking-slots'
-import { GOOGLE_MAPS_REVIEW_URL } from '@/lib/socials'
+import { GOOGLE_MAPS_REVIEW_URL, instagram } from '@/lib/socials'
+import { ENTERPRISE_NUMBER } from '@/lib/business'
+import { EXTRAS_CATALOG } from '@/lib/extras-catalog'
+import {
+  coatingServices,
+  exterieurCatalog,
+  fullServices,
+  interieurCatalog,
+  polierenComparison,
+  polierenFromPrices,
+  polierenLevels,
+} from '@/lib/services-catalog'
+import type { Service } from '@/lib/types'
 
 function canonicalSiteUrl(): string {
   const raw = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.trcardetail.be').replace(/\/$/, '')
@@ -11,6 +23,12 @@ function canonicalSiteUrl(): string {
 export const SITE_URL = canonicalSiteUrl()
 
 export const SITE_NAME = 'T&R Car Detail'
+
+/**
+ * Laatste inhoudelijke wijziging van de site (sitemap <lastmod>).
+ * Bijwerken bij een echte inhoudswijziging; niet bij elke build, anders negeert Google het signaal.
+ */
+export const SITE_LAST_MODIFIED = '2026-10-16'
 
 export const BUSINESS = {
   name: SITE_NAME,
@@ -42,7 +60,11 @@ export const BUSINESS = {
     'Dendermonde',
   ],
   googleMapsReviewUrl: GOOGLE_MAPS_REVIEW_URL,
+  instagramUrl: instagram.url,
 } as const
+
+const fromPriceInterieur = Math.min(...interieurCatalog.map((s) => s.basePrice))
+const fromPriceExterieur = Math.min(...exterieurCatalog.map((s) => s.basePrice))
 
 const DEFAULT_KEYWORDS = [
   'car detailing Vlaanderen',
@@ -110,7 +132,7 @@ export const pageMetadata = {
   home: createPageMetadata({
     title: 'Car Detailing Vlaanderen – Autoreiniging aan Huis',
     description:
-      'Boek car detailing aan huis in Vlaanderen. T&R Car Detail vanuit Sint-Niklaas: interieur, exterieur en volledige pakketten. Online afspraak in een paar stappen.',
+      `Car detailing aan huis in Vlaanderen vanuit Sint-Niklaas. Interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, polijsten en coating. Boek online in een paar stappen.`,
     path: '/',
     keywords: ['car cleaning Vlaanderen', 'detailing aan huis België', 'car detailing boeken'],
   }),
@@ -123,7 +145,7 @@ export const pageMetadata = {
   services: createPageMetadata({
     title: 'Diensten – Auto Detailing & Car Cleaning Vlaanderen',
     description:
-      'Bekijk pakketten en boek direct online. Interieur, exterieur, polieren en extra\'s — car detailing aan huis in Vlaanderen.',
+      `Alle pakketten en prijzen: interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, volledig pakket, polijsten, coating en extra's. Car detailing aan huis in Vlaanderen.`,
     path: '/services',
     keywords: ['auto detailing pakketten', 'interieur detailing', 'exterieur detailing', 'car detailing boeken'],
   }),
@@ -144,7 +166,7 @@ export const pageMetadata = {
   faq: createPageMetadata({
     title: 'Veelgestelde Vragen – Car Detailing Vlaanderen',
     description:
-      'Antwoorden over prijzen, duur, afspraken en werkwijze van onze car detailing diensten aan huis in Vlaanderen.',
+      'Prijzen, duur, wat inbegrepen is, water en stroom, kilometervergoeding en werkgebied: antwoorden over car detailing aan huis in Vlaanderen.',
     path: '/faq',
   }),
   privacy: createPageMetadata({
@@ -157,7 +179,7 @@ export const pageMetadata = {
   zakelijk: createPageMetadata({
     title: 'Zakelijk – Vlootdetailing Vlaanderen',
     description:
-      'Car detailing voor bedrijven en fleets in Vlaanderen. Op uw parking of werflocatie: minder stilstand, herhaalbare kwaliteit, één aanspreekpunt. Vraag een offerte.',
+      'Car detailing voor bedrijven en fleets in Vlaanderen. Op uw parking of werflocatie: minder stilstand, vaste kwaliteit, één aanspreekpunt. Vraag een offerte.',
     path: '/zakelijk',
     keywords: [
       'vloot detailing',
@@ -189,9 +211,14 @@ export function buildLocalBusinessJsonLd() {
     '@type': 'AutoWash',
     '@id': `${SITE_URL}/#business`,
     name: BUSINESS.name,
+    alternateName: 'T&R Car Detailing',
+    slogan: BUSINESS.tagline,
     description:
-      'Professionele car detailing en autoreiniging aan huis in Vlaanderen. Interieur, exterieur, polieren en volledige pakketten.',
+      'Mobiele car detailing en autoreiniging aan huis in Vlaanderen, vanuit Sint-Niklaas (Oost-Vlaanderen). Interieur, exterieur, volledige pakketten, polijsten, keramische coating en vlootdetailing voor bedrijven.',
     url: SITE_URL,
+    vatID: ENTERPRISE_NUMBER,
+    currenciesAccepted: 'EUR',
+    knowsLanguage: 'nl-BE',
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
     image: `${SITE_URL}/logo.jpg`,
@@ -213,15 +240,23 @@ export function buildLocalBusinessJsonLd() {
       '@type': 'AdministrativeArea',
       name,
     })),
-    serviceType: [
+    // serviceType bestaat niet op LocalBusiness; knowsAbout wel (Organization)
+    knowsAbout: [
       'Car detailing',
       'Auto detailing',
       'Interieur reiniging',
       'Exterieur reiniging',
       'Autoreiniging aan huis',
       'Mobiele car detailing',
+      'Polijsten',
+      'Keramische coating',
+      'Vlootdetailing',
     ],
     priceRange: '€€',
+    employee: [
+      { '@type': 'Person', name: 'Thibo', jobTitle: 'Specialist in exterieurreiniging, lakbescherming en showroomglans' },
+      { '@type': 'Person', name: 'Renzo', jobTitle: 'Specialist in interieurreiniging, stoffering en dieptereiniging' },
+    ],
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
@@ -236,13 +271,12 @@ export function buildLocalBusinessJsonLd() {
         closes: WEEKEND_OPENING_HOURS.closes,
       },
     ],
-    sameAs: [BUSINESS.googleMapsReviewUrl],
+    sameAs: [BUSINESS.instagramUrl, BUSINESS.googleMapsReviewUrl],
     potentialAction: {
       '@type': 'ReserveAction',
       target: {
         '@type': 'EntryPoint',
         urlTemplate: `${SITE_URL}/booking`,
-        inLanguage: 'nl-BE',
         actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
       },
       result: {
@@ -307,5 +341,97 @@ export const SITEMAP_PATHS = [
   { path: '/about', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/contact', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/faq', priority: 0.7, changeFrequency: 'monthly' as const },
-  { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
+  // /privacy staat bewust niet in de sitemap: die pagina is noindex.
 ]
+
+// ---------------------------------------------------------------------------
+// Diensten + prijzen als schema.org OfferCatalog (zelfde bron als de dienstenpagina)
+// ---------------------------------------------------------------------------
+
+type OfferInput = { name: string; description: string; price: number; fromPrice?: boolean; url: string }
+
+function offer({ name, description, price, fromPrice = false, url }: OfferInput) {
+  return {
+    '@type': 'Offer',
+    url,
+    priceCurrency: 'EUR',
+    ...(fromPrice
+      ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: price, priceCurrency: 'EUR' } }
+      : { price }),
+    itemOffered: {
+      '@type': 'Service',
+      name,
+      description,
+      provider: { '@id': `${SITE_URL}/#business` },
+      areaServed: { '@type': 'AdministrativeArea', name: 'Vlaanderen' },
+    },
+  }
+}
+
+function catalogOffers(services: Service[], category: string, fromPrice = false) {
+  return services
+    .filter((s) => s.basePrice > 0 && !s.comingSoon)
+    .map((s) =>
+      offer({
+        name: s.name,
+        description: s.features.length ? `${s.description} Inbegrepen: ${s.features.join(', ')}.` : s.description,
+        price: s.basePrice,
+        fromPrice,
+        url: `${SITE_URL}/services?category=${category}`,
+      }),
+    )
+}
+
+export function buildOfferCatalogJsonLd() {
+  const polierenOffers = polierenLevels.map((level, i) =>
+    offer({
+      name: `Polijsten ${level}`,
+      description: `Lakcorrectie ${level}. Geschikt voor: ${polierenComparison[0].values[i]}. Resultaat: ${polierenComparison[1].values[i]}. Toeslag sedan/station en jeep/SUV volgens prijstabel.`,
+      price: polierenFromPrices[i],
+      fromPrice: true,
+      url: `${SITE_URL}/services?category=polieren`,
+    }),
+  )
+  const extrasOffers = EXTRAS_CATALOG.map((e) =>
+    offer({
+      name: e.name,
+      description: e.description,
+      price: e.priceExclBtwEuro,
+      fromPrice: e.priceNote === 'vanaf',
+      url: `${SITE_URL}/services?category=extras`,
+    }),
+  )
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AutoWash',
+    '@id': `${SITE_URL}/#business`,
+    name: BUSINESS.name,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Car detailing aan huis – pakketten en prijzen',
+      itemListElement: [
+        { '@type': 'OfferCatalog', name: 'Interieur', itemListElement: catalogOffers(interieurCatalog, 'interieur') },
+        { '@type': 'OfferCatalog', name: 'Exterieur', itemListElement: catalogOffers(exterieurCatalog, 'exterieur') },
+        { '@type': 'OfferCatalog', name: 'Volledig pakket', itemListElement: catalogOffers(fullServices, 'full') },
+        { '@type': 'OfferCatalog', name: 'Polijsten', itemListElement: polierenOffers },
+        { '@type': 'OfferCatalog', name: 'Keramische coating', itemListElement: catalogOffers(coatingServices, 'coating') },
+        { '@type': 'OfferCatalog', name: "Extra's", itemListElement: extrasOffers },
+      ],
+    },
+  }
+}
+
+export function buildBreadcrumbJsonLd(items: { name: string; path: string }[]) {
+  const trail = [{ name: 'Home', path: '' }, ...items]
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: trail.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.path}`,
+    })),
+  }
+}

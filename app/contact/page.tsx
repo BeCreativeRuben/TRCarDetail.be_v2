@@ -103,7 +103,7 @@ export default function ContactPage() {
                   <FiMapPin className="text-accent-red mt-1 flex-shrink-0" size={20} />
                   <div>
                     <p className="text-primary-dark font-semibold">Adres</p>
-                    <p className="text-primary-dark opacity-70 text-sm">Heidebloemstraat 66 Bus 11<br />9100 Sint Niklaas</p>
+                    <p className="text-primary-dark opacity-70 text-sm">Heidebloemstraat 66 Bus 11<br />9100 Sint-Niklaas</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

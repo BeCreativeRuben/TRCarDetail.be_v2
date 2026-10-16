@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FiFileText, FiCheck } from 'react-icons/fi'
 import Button from '@/components/ui/Button'
-import { pageMetadata } from '@/lib/seo'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildBreadcrumbJsonLd, pageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = pageMetadata.zakelijkAanbod
 
@@ -30,6 +31,7 @@ const offerings = [
 export default function ZakelijkAanbodPage() {
   return (
     <div className="bg-light min-h-screen">
+      <JsonLd data={buildBreadcrumbJsonLd([{ name: 'Zakelijk', path: '/zakelijk' }, { name: 'Aanbod', path: '/zakelijk/aanbod' }])} />
       <section className="bg-primary-dark text-light py-16 md:py-20">
         <div className="container-custom max-w-3xl text-center">
           <p className="text-accent-red text-sm font-semibold uppercase tracking-wider mb-3">Aanbod</p>

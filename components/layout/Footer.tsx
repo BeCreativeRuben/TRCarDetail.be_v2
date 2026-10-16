@@ -30,7 +30,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-light">
               <li className="flex items-start gap-2">
                 <FiMapPin className="text-accent-red flex-shrink-0 mt-0.5" />
-                <span>Heidebloemstraat 66 Bus 11<br />9100 Sint Niklaas</span>
+                <span>Heidebloemstraat 66 Bus 11<br />9100 Sint-Niklaas</span>
               </li>
               <li className="flex items-center gap-2">
                 <FiPhone className="text-accent-red flex-shrink-0" />
