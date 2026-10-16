@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FiCalendar, FiList } from 'react-icons/fi'
 import Button from '../ui/Button'
 import TrackedBookLink from '../analytics/TrackedBookLink'
+import Logo from '../brand/Logo'
+import ServiceIcons from '../brand/ServiceIcons'
+import Texture from '../brand/Texture'
+import TornEdge from '../brand/TornEdge'
 
 const HERO_VIDEO_SOURCES = [
   '/videos/hero-video.mp4',
@@ -13,6 +16,11 @@ const HERO_VIDEO_SOURCES = [
   'https://assets.mixkit.co/videos/47588/47588-720.mp4'
 ].filter(Boolean) as string[]
 
+/**
+ * Hero in de stijl van Tristans T&R-banner: donkere gekreukte textuur, groot logo,
+ * video in een gekanteld kader met gescheurd rood papier, service-iconen op een rode band.
+ * Geen fade-in op de tekst (sneller LCP); de video laadt alleen metadata vooraf.
+ */
 export default function Hero() {
   const [videoError, setVideoError] = useState(false)
   const [sourceIndex, setSourceIndex] = useState(0)
@@ -27,74 +35,62 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-primary-dark via-secondary-dark to-primary-dark" />
-        {!videoError && currentSrc && (
-          <video
-            key={currentSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="/images/home-about.webp"
-            className="absolute inset-0 w-full h-full object-cover"
-            onError={handleVideoError}
-          >
-            <source src={currentSrc} type="video/mp4" />
-          </video>
-        )}
-      </div>
-
-      <div className="absolute inset-0 bg-primary-dark bg-opacity-60 z-10" />
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative z-20 text-center px-4"
-      >
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-light mb-4 tracking-wider">
-          CAR CLEANING & DETAILING{' '}
-          <span className="block text-accent-red">VLAANDEREN</span>
-        </h1>
-        <p className="text-xl md:text-2xl text-light mb-4 max-w-2xl mx-auto">
-          Professionele autoreiniging aan huis in Vlaanderen
-        </p>
-        <p className="text-sm md:text-base text-light/80 mb-8 max-w-xl mx-auto">
-          Mobiele car detailing vanuit Sint-Niklaas · Oost-Vlaanderen &amp; heel Vlaanderen
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <TrackedBookLink href="/booking?from=hero" location="hero">
-            <Button variant="primary" size="lg" className="flex items-center gap-2">
-              <FiCalendar className="w-5 h-5" />
-              Boek Nu
-            </Button>
-          </TrackedBookLink>
-          <Link href="/services">
-            <Button variant="outline" size="lg" className="flex items-center gap-2">
-              <FiList className="w-5 h-5" />
-              Bekijk pakketten
-            </Button>
-          </Link>
+    <section className="relative overflow-hidden bg-primary-dark">
+      <Texture />
+      <div className="relative z-10 container-custom pt-12 pb-20 lg:pt-20 lg:pb-28 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-12 items-center">
+        <div className="text-center lg:text-left">
+          <Logo priority className="h-20 md:h-28 w-auto mx-auto lg:mx-0 mb-8" />
+          <p className="text-accent-red font-brand font-bold uppercase tracking-[0.25em] text-xs md:text-sm mb-3">Precisiedetailing voor sportieve &amp; exclusieve wagens</p>
+          <h1 className="text-light mb-5">Car cleaning &amp; detailing <span className="text-accent-red">Vlaanderen</span></h1>
+          <p className="text-lg text-light/85 max-w-xl mx-auto lg:mx-0 mb-8">Professionele auto detailing voor een perfect resultaat. Mobiel aan huis vanuit Sint-Niklaas · Oost-Vlaanderen &amp; heel Vlaanderen.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <TrackedBookLink href="/booking?from=hero" location="hero">
+              <Button variant="primary" size="lg" className="flex items-center gap-2 w-full sm:w-auto">
+                <FiCalendar className="w-5 h-5" />
+                Boek Nu
+              </Button>
+            </TrackedBookLink>
+            <Link href="/services">
+              <Button variant="outline" size="lg" className="flex items-center gap-2 w-full sm:w-auto text-white border-white/80 hover:border-accent-red">
+                <FiList className="w-5 h-5" />
+                Bekijk pakketten
+              </Button>
+            </Link>
+          </div>
         </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-light rounded-full flex justify-center"
-        >
-          <div className="w-1 h-3 bg-light rounded-full mt-2" />
-        </motion.div>
-      </motion.div>
+        <div className="relative mx-auto w-full max-w-xl">
+          <div aria-hidden className="absolute -right-6 -bottom-8 w-[80%] aspect-[879/624] bg-no-repeat bg-contain bg-right-bottom rotate-6" style={{ backgroundImage: "url('/brand/paper-red.png')" }} />
+          <div className="relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,.6)] -rotate-2 bg-secondary-dark">
+            {!videoError && currentSrc && (
+              <video
+                key={currentSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster="/images/home-about.webp"
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={handleVideoError}
+                aria-hidden
+              >
+                <source src={currentSrc} type="video/mp4" />
+              </video>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/80 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white font-brand">
+              <span className="text-xs uppercase tracking-[0.25em]">Sint-Niklaas · Vlaanderen</span>
+              <a href="tel:+32499128500" className="text-sm font-bold hover:text-accent-red">+32 499 12 85 00</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="relative z-10 bg-accent-red">
+        <TornEdge position="top" color="#FF2E00" />
+        <div className="container-custom py-6">
+          <ServiceIcons className="max-w-3xl mx-auto [&_img]:brightness-0 [&_img]:invert" />
+        </div>
+      </div>
     </section>
   )
 }

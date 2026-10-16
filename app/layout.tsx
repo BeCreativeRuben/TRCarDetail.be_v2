@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Bebas_Neue, Inter } from 'next/font/google'
+import { Bebas_Neue, Inter, Montserrat } from 'next/font/google'
 import GoogleTag from '@/components/GoogleTag'
 import SiteChrome from '@/components/layout/SiteChrome'
 import JsonLd from '@/components/seo/JsonLd'
@@ -8,6 +8,7 @@ import './globals.css'
 
 const bebas = Bebas_Neue({ weight: '400', variable: '--font-bebas', subsets: ['latin'] })
 const inter = Inter({ variable: '--font-inter', subsets: ['latin'] })
+const montserrat = Montserrat({ weight: ['400', '600', '700', '800'], variable: '--font-montserrat', subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -37,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="nl-BE" className={`${bebas.variable} ${inter.variable}`}>
+    <html lang="nl-BE" className={`${bebas.variable} ${inter.variable} ${montserrat.variable}`}>
       <body className="bg-primary-dark text-light min-h-screen">
         <JsonLd data={[buildLocalBusinessJsonLd(), buildWebSiteJsonLd()]} />
         <GoogleTag />

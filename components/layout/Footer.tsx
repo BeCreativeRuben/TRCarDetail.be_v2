@@ -1,13 +1,19 @@
 import Link from 'next/link'
 import { FiInstagram, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import { instagram } from '@/lib/socials'
+import Logo from '@/components/brand/Logo'
+import Texture from '@/components/brand/Texture'
+import TornEdge from '@/components/brand/TornEdge'
 export default function Footer() {
   return (
-    <footer className="bg-secondary-dark border-t border-primary-dark">
-      <div className="container-custom py-12">
+    <footer className="relative overflow-hidden bg-primary-dark">
+      <Texture className="opacity-90" />
+      <TornEdge position="top" color="#FF2E00" />
+      <div className="relative container-custom py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold text-accent-red mb-4">T&R Car Detail</h3>
+            <Logo className="h-14 w-auto mb-3" />
+            <p className="text-accent-red text-xs font-semibold uppercase tracking-[0.2em] mb-3">Precisiedetailing voor sportieve &amp; exclusieve wagens</p>
             <p className="text-light text-sm">
               Professionele car detailing en autoreiniging aan huis in Vlaanderen. Vanuit Sint-Niklaas (Oost-Vlaanderen) brengen wij uw auto terug in absolute showroomstaat.
             </p>
@@ -54,7 +60,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="w-full mt-8 pt-6 pb-6 border-t border-primary-dark bg-primary-dark bg-opacity-50">
+      <div className="relative w-full mt-8 pt-6 pb-6 border-t border-primary-dark bg-primary-dark bg-opacity-50">
         <div className="container-custom space-y-2">
           <p className="text-center text-xs text-light opacity-80 max-w-2xl mx-auto">
             Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.

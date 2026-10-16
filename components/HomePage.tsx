@@ -10,11 +10,21 @@ import CTASection from '@/components/sections/CTASection'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { images } from '@/lib/images'
+import ReviewCTA from '@/components/brand/ReviewCTA'
+import Highlights from '@/components/brand/Highlights'
+import Texture from '@/components/brand/Texture'
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <section className="relative py-10 bg-primary-dark overflow-hidden">
+        <Texture />
+        <div className="relative container-custom">
+          <p className="text-center text-xs uppercase tracking-[0.3em] text-light/60 mb-6">Ontdek T&amp;R</p>
+          <Highlights />
+        </div>
+      </section>
       <section className="py-16 bg-light">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -33,6 +43,7 @@ export default function HomePage() {
       <ServicesPreview />
       <ProcessSection />
       <Testimonials />
+      <ReviewCTA />
       <SocialsSection />
       <QualitySection />
       <CTASection

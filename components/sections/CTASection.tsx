@@ -5,6 +5,7 @@ import Button from '../ui/Button'
 import { FiCalendar, FiMail, FiList } from 'react-icons/fi'
 import TrackedBookLink from '../analytics/TrackedBookLink'
 import Link from 'next/link'
+import Texture from '../brand/Texture'
 
 interface CTASectionProps {
   title: string
@@ -30,8 +31,9 @@ export default function CTASection({
   const secondaryIsBooking = secondaryAction?.to.startsWith('/booking')
 
   return (
-    <section className={`pt-24 md:pt-28 pb-20 bg-gradient-to-r from-accent-red to-accent-dark-red ${!noTopMargin ? 'mt-16 md:mt-20' : ''}`}>
-      <div className="container-custom text-center">
+    <section className={`relative overflow-hidden pt-24 md:pt-28 pb-20 bg-primary-dark ${!noTopMargin ? 'mt-16 md:mt-20' : ''}`}>
+      <Texture withRedPaper />
+      <div className="relative container-custom text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,14 +47,14 @@ export default function CTASection({
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {primaryIsBooking ? (
               <TrackedBookLink href={primaryAction.to.includes('?') ? primaryAction.to : `${primaryAction.to}?from=${trackLocation}`} location={trackLocation}>
-                <Button variant="secondary" size="lg" className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
+                <Button variant="primary" size="lg" className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
                   <PrimaryIcon className="w-5 h-5" />
                   {primaryAction.label}
                 </Button>
               </TrackedBookLink>
             ) : (
               <Link href={primaryAction.to}>
-                <Button variant="secondary" size="lg" className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
+                <Button variant="primary" size="lg" className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
                   <PrimaryIcon className="w-5 h-5" />
                   {primaryAction.label}
                 </Button>

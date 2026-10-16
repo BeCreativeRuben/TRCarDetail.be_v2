@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { FiMenu, FiX, FiHome, FiGrid, FiUser, FiCalendar, FiHelpCircle, FiMail, FiBriefcase } from 'react-icons/fi'
 import Button from '../ui/Button'
 import TrackedBookLink from '../analytics/TrackedBookLink'
+import Logo from '../brand/Logo'
 
 const navLinks = [
   { path: '/', label: 'Home', icon: FiHome },
@@ -66,7 +67,7 @@ export default function Navigation() {
             >
               <div className="flex flex-col h-full">
                 <div className="flex justify-between items-center p-6 pb-4 border-b border-secondary-dark/50">
-                  <span className="text-xl font-bold text-accent-red tracking-wide">T&R Car Detail</span>
+                  <Logo className="h-9 w-auto" />
                   <button
                     onClick={() => setIsOpen(false)}
                     className="p-2 rounded-lg text-light/80 hover:text-accent-red hover:bg-accent-red/10 transition-colors"

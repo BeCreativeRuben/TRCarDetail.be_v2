@@ -9,7 +9,7 @@ export default function SocialsSection() {
   const shortcodes = instagram.postShortcodes
 
   return (
-    <section className="py-20 bg-light">
+    <section id="realisaties" className="py-20 bg-light scroll-mt-20">
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <motion.div

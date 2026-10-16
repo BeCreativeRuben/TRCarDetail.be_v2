@@ -6,6 +6,13 @@ import { motion } from 'framer-motion'
 import { Service } from '@/lib/types'
 import { images } from '@/lib/images'
 
+const BRAND_ICON: Partial<Record<string, string>> = {
+  exterieur: '/brand/icon-exterieur.png',
+  interieur: '/brand/icon-interieur.png',
+  polieren: '/brand/icon-polijsten.png',
+  coating: '/brand/icon-coating.png',
+}
+
 type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'coating' | 'moto' | 'extras'
 
 function getCategoryFromServiceId(id: string): ServiceCategory {
@@ -52,6 +59,11 @@ export default function ServiceCard({ service, index }: ServiceCardProps) {
             <div className="absolute top-3 right-3 z-10 bg-secondary-dark text-light text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded">
               Coming soon
             </div>
+          )}
+          {BRAND_ICON[category] && (
+            <span className="absolute top-3 left-3 z-10 w-12 h-12 rounded-full bg-primary-dark/70 backdrop-blur-sm">
+              <Image src={BRAND_ICON[category]!} alt="" fill sizes="48px" className="object-contain" />
+            </span>
           )}
           <Image
             src={img}

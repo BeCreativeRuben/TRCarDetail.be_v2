@@ -23,6 +23,7 @@ import Button from '@/components/ui/Button'
 import CTASection from '@/components/sections/CTASection'
 import { FiCalendar, FiShield, FiCheck, FiPlusCircle } from 'react-icons/fi'
 import TrackedBookLink from '@/components/analytics/TrackedBookLink'
+import PageHero from '@/components/brand/PageHero'
 
 type ServiceCategory = 'interieur' | 'exterieur' | 'full' | 'polieren' | 'coating' | 'moto' | 'extras'
 
@@ -261,21 +262,20 @@ function ServicesPageContent() {
   const [activeCategory, setActiveCategory] = useState<ServiceCategory>('exterieur')
 
   return (
-    <div className="pt-20 pb-0 bg-light min-h-screen">
-      <div className="container-custom">
-        <Suspense fallback={null}>
-          <CategoryFromUrl onChange={setActiveCategory} />
-        </Suspense>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Onze Diensten</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto mb-6">Car detailing aan huis in Vlaanderen – interieur, exterieur, polieren en volledige pakketten.</p>
+    <div className="pb-0 bg-light min-h-screen">
+        <PageHero eyebrow="Precisiedetailing voor sportieve & exclusieve wagens" title="Onze Diensten">
+          <p className="text-lg md:text-xl text-light/85 max-w-3xl mx-auto mb-6">Car detailing aan huis in Vlaanderen – interieur, exterieur, polieren en volledige pakketten.</p>
           <TrackedBookLink href="/booking?from=services_top" location="services_top" className="inline-flex">
             <Button variant="primary" size="md" className="flex items-center gap-2 mx-auto">
               <FiCalendar className="w-5 h-5" />
               Direct boeken
             </Button>
           </TrackedBookLink>
-        </motion.div>
+        </PageHero>
+      <div className="container-custom">
+        <Suspense fallback={null}>
+          <CategoryFromUrl onChange={setActiveCategory} />
+        </Suspense>
 
         <div className="max-lg:sticky max-lg:top-[81px] max-lg:z-30 max-lg:bg-light max-lg:-mx-4 max-lg:px-4 max-lg:py-2 flex flex-wrap justify-center gap-3 mb-12">
           <button onClick={() => setActiveCategory('exterieur')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'exterieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
