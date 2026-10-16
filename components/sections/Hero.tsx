@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FiCalendar, FiList } from 'react-icons/fi'
 import Button from '../ui/Button'
@@ -16,6 +16,9 @@ const HERO_VIDEO_SOURCES = [
   'https://assets.mixkit.co/videos/47588/47588-720.mp4'
 ].filter(Boolean) as string[]
 
+/** Geoptimaliseerde poster (zelfde beeld als voorheen, via de Next image optimizer i.p.v. de 430 KB-bron). */
+const HERO_POSTER = '/_next/image?url=%2Fimages%2Fhome-about.webp&w=750&q=75'
+
 /**
  * Hero in de stijl van Tristans T&R-banner: donkere gekreukte textuur, groot logo,
  * video in een gekanteld kader met gescheurd rood papier, service-iconen op een rode band.
@@ -25,6 +28,18 @@ export default function Hero() {
   const [videoError, setVideoError] = useState(false)
   const [sourceIndex, setSourceIndex] = useState(0)
   const currentSrc = HERO_VIDEO_SOURCES[sourceIndex]
+  // Video pas laden na de page load (poster toont meteen hetzelfde beeld) → snellere LCP/minder bandbreedte op mobiel.
+  const [loadVideo, setLoadVideo] = useState(false)
+  useEffect(() => {
+    const start = () => {
+      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback
+      if (ric) ric(() => setLoadVideo(true), { timeout: 2500 })
+      else setTimeout(() => setLoadVideo(true), 1200)
+    }
+    if (document.readyState === 'complete') start()
+    else window.addEventListener('load', start, { once: true })
+    return () => window.removeEventListener('load', start)
+  }, [])
 
   const handleVideoError = () => {
     if (sourceIndex < HERO_VIDEO_SOURCES.length - 1) {
@@ -36,7 +51,7 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-primary-dark">
-      <Texture />
+      <Texture priority />
       <div className="relative z-10 container-custom pt-12 pb-20 lg:pt-20 lg:pb-28 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-12 items-center">
         <div className="text-center lg:text-left">
           <Logo priority className="h-20 md:h-28 w-auto mx-auto lg:mx-0 mb-8" />
@@ -61,7 +76,9 @@ export default function Hero() {
         <div className="relative mx-auto w-full max-w-xl">
           <div aria-hidden className="absolute -right-6 -bottom-8 w-[80%] aspect-[879/624] bg-no-repeat bg-contain bg-right-bottom rotate-6" style={{ backgroundImage: "url('/brand/paper-red.png')" }} />
           <div className="relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,.6)] -rotate-2 bg-secondary-dark">
-            {!videoError && currentSrc && (
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={HERO_POSTER} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" />
+            {loadVideo && !videoError && currentSrc && (
               <video
                 key={currentSrc}
                 autoPlay
@@ -69,7 +86,7 @@ export default function Hero() {
                 muted
                 playsInline
                 preload="metadata"
-                poster="/images/home-about.webp"
+                poster={HERO_POSTER}
                 className="absolute inset-0 w-full h-full object-cover"
                 onError={handleVideoError}
                 aria-hidden

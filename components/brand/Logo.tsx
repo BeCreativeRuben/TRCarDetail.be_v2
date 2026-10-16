@@ -8,6 +8,7 @@ export default function Logo({ className = 'h-11 w-auto', priority = false }: { 
       alt="T&R Car Detailing"
       width={640}
       height={307}
+      sizes="240px"
       priority={priority}
       className={className}
     />
