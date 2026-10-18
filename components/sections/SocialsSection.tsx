@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { FiInstagram, FiPlay, FiLayers } from 'react-icons/fi'
 import Button from '../ui/Button'
 import { instagram } from '@/lib/socials'
 import type { InstagramPost } from '@/lib/behold'
+import { CONSENT_CHANGE_EVENT, readConsent } from '@/lib/consent'
 
 type Props = {
   /** Live posts uit de Behold-feed; null/leeg → vaste shortcodes (iframe-embeds). */
@@ -14,6 +16,13 @@ type Props = {
 export default function SocialsSection({ posts = null }: Props) {
   const shortcodes = instagram.postShortcodes
   const livePosts = posts && posts.length > 0 ? posts : null
+  const [marketing, setMarketing] = useState(false)
+  useEffect(() => {
+    const sync = () => setMarketing(Boolean(readConsent()?.marketing))
+    sync()
+    window.addEventListener(CONSENT_CHANGE_EVENT, sync)
+    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, sync)
+  }, [])
 
   return (
     <section id="realisaties" className="py-20 bg-light scroll-mt-20">
@@ -95,26 +104,41 @@ export default function SocialsSection({ posts = null }: Props) {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {shortcodes.map((shortcode, index) => (
-                <motion.div
-                  key={shortcode}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="relative w-full overflow-hidden rounded-lg bg-white shadow-lg"
-                >
-                  <div className="w-full min-h-[480px] sm:min-h-[540px]">
-                    <iframe
-                      src={`https://www.instagram.com/p/${shortcode}/embed`}
-                      className="w-full h-full min-h-[480px] sm:min-h-[540px] border-0"
-                      allowFullScreen
-                      loading="lazy"
-                      title={`Instagram post ${index + 1}`}
-                    />
-                  </div>
-                </motion.div>
-              ))}
+              {marketing
+                ? shortcodes.map((shortcode, index) => (
+                    <motion.div
+                      key={shortcode}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="relative w-full overflow-hidden rounded-lg bg-white shadow-lg"
+                    >
+                      <div className="w-full min-h-[480px] sm:min-h-[540px]">
+                        <iframe
+                          src={`https://www.instagram.com/p/${shortcode}/embed`}
+                          className="w-full h-full min-h-[480px] sm:min-h-[540px] border-0"
+                          allowFullScreen
+                          loading="lazy"
+                          title={`Instagram post ${index + 1}`}
+                        />
+                      </div>
+                    </motion.div>
+                  ))
+                : shortcodes.map((shortcode) => (
+                    <a
+                      key={shortcode}
+                      href={`https://www.instagram.com/p/${shortcode}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex min-h-44 items-center justify-center rounded-lg bg-primary-dark p-6 text-center text-light"
+                    >
+                      <span>
+                        <FiInstagram className="mx-auto mb-3 h-8 w-8 text-accent-red" aria-hidden />
+                        Bekijk deze post op Instagram
+                      </span>
+                    </a>
+                  ))}
             </div>
           )}
         </motion.div>

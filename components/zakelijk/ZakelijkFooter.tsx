@@ -3,6 +3,7 @@ import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import Logo from '@/components/brand/Logo'
 import Texture from '@/components/brand/Texture'
 import TornEdge from '@/components/brand/TornEdge'
+import CookieSettingsLink from '@/components/consent/CookieSettingsLink'
 
 const focusRing =
   'rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark'
@@ -50,6 +51,9 @@ export default function ZakelijkFooter() {
                   <Link href="/privacy" className={`text-light hover:text-accent-red transition-colors ${focusRing}`}>
                     Privacy
                   </Link>
+                </li>
+                <li>
+                  <CookieSettingsLink className={`text-light hover:text-accent-red transition-colors text-left ${focusRing}`} />
                 </li>
               </ul>
             </div>

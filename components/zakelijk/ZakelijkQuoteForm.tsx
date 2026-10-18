@@ -8,26 +8,11 @@ import {
   trackB2bQuoteStart,
   trackB2bQuoteSuccess,
 } from '@/lib/analytics'
+import { FLEET_SIZE_OPTIONS, FREQUENCY_OPTIONS, VEHICLE_TYPE_OPTIONS } from '@/lib/b2b-labels'
 
-const FLEET_SIZES = [
-  { value: '1-5', label: '1 – 5 wagens' },
-  { value: '5-10', label: '5 – 10 wagens' },
-  { value: '11-25', label: '11 – 25 wagens' },
-  { value: '26-50', label: '26 – 50 wagens' },
-  { value: '50+', label: 'Meer dan 50 wagens' },
-]
-
-const VEHICLE_TYPES = [
-  { value: 'personenwagens', label: 'Personenwagens' },
-  { value: 'bestel', label: 'Bestelwagens' },
-  { value: 'mixed', label: 'Gemengd' },
-]
-
-const FREQUENCIES = [
-  { value: 'eenmalig', label: 'Eenmalig' },
-  { value: 'maandelijks', label: 'Maandelijks / periodiek' },
-  { value: 'op-maat', label: 'Op maat / te bespreken' },
-]
+const FLEET_SIZES = FLEET_SIZE_OPTIONS
+const VEHICLE_TYPES = VEHICLE_TYPE_OPTIONS
+const FREQUENCIES = FREQUENCY_OPTIONS
 
 const selectClass =
   'w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark/30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200'

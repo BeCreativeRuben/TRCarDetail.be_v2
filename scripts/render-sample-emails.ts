@@ -14,6 +14,8 @@ import {
   renderTransactionalEmails,
   type BookingPayload,
 } from '@/lib/email'
+import { EMAIL_LOGO_URL } from '@/lib/email-layout'
+import { buildReviewRequestHtml, REVIEW_MAIL_SUBJECT } from '@/lib/review-email'
 import { formatServiceType } from '@/lib/service-labels'
 
 const booking: BookingPayload = {
@@ -115,11 +117,15 @@ for (const email of [bookingAdmin, bookingCustomer]) {
 assert.ok(bookingAdmin.html.includes('Opmerking &lt;b&gt;bold&lt;/b&gt;'))
 
 assert.ok(bookingCustomer.html.includes('https://wa.me/32499128500'))
-assert.ok(bookingCustomer.html.includes('tel:+32499128500'))
-assert.ok(bookingCustomer.text.includes('https://wa.me/32499128500'))
-assert.equal(bookingCustomer.html.includes('WhatsApp op <a href="tel:'), false)
-assert.ok(bookingCustomer.html.includes('Boekingsaanvraag ontvangen'))
-assert.ok(bookingCustomer.html.includes('nog niet bevestigd'))
+assert.ok(bookingCustomer.html.includes('href="tel:+32499128500"'))
+assert.ok(bookingCustomer.html.includes('Stuur ons een'))
+assert.ok(bookingCustomer.text.includes('Stuur ons een WhatsApp'))
+assert.equal(bookingCustomer.html.includes('WhatsApp op'), false)
+assert.equal((bookingCustomer.html.match(/\+32 499 12 85 00/g) || []).length, 1)
+assert.ok(bookingCustomer.html.includes('We hebben uw aanvraag ontvangen en bevestigen uw afspraak nog.'))
+assert.equal(bookingCustomer.html.includes('nog niet bevestigd'), false)
+assert.equal(bookingCustomer.html.includes('We zullen'), false)
+assert.equal((bookingCustomer.html.match(/bevestigen uw afspraak nog/g) || []).length, 1)
 assert.ok(bookingCustomer.text.includes('Uw aanvraag:'))
 
 assert.ok(contactAdmin.html.includes('Piet &lt;img src=x onerror=alert(1)&gt;'))
@@ -128,16 +134,69 @@ assert.ok(contactCustomer.html.includes('Piet &lt;img src=x onerror=alert(1)&gt;
 assert.ok(b2bAdmin.html.includes('Vloot &amp; Co &lt;script&gt;'))
 assert.ok(b2bAdmin.html.includes('Graag een &lt;offerte&gt;'))
 assert.ok(b2bCustomer.html.includes('An &lt;i&gt;Janssens&lt;/i&gt;'))
-assert.equal(b2bAdmin.subject, 'B2B offerte: Vloot & Co <script> (5-10)')
+assert.equal(b2bAdmin.subject, 'B2B offerte: Vloot & Co <script> (5 – 10 wagens)')
+assert.ok(b2bAdmin.html.includes('Personenwagens'))
+assert.ok(b2bAdmin.html.includes('Maandelijks / periodiek'))
+assert.ok(b2bAdmin.html.includes('5 – 10 wagens'))
+assert.equal(b2bAdmin.html.includes('personenwagens'), false)
+assert.equal(b2bAdmin.html.includes('eenmalig'), false)
+assert.equal(b2bAdmin.html.includes('5-10'), false)
+assert.ok(b2bAdmin.text.includes('Personenwagens'))
 
-const customBooking: BookingPayload = { ...booking, serviceType: 'full-custom', vehicleInfo: { ...booking.vehicleInfo, size: 'large' } }
+for (const email of emails) {
+  assert.ok(email.html.includes(EMAIL_LOGO_URL), `${email.id} mist het logo`)
+  assert.ok(email.html.includes('email-torn.png'), `${email.id} mist de scheurrand`)
+}
+
+const customNotes = [
+  '--- Combinatie op maat ---',
+  'Exterieur: Exterieur Basis',
+  'Interieur: Interieur Deluxe',
+  'Uitgesloten onderdelen:',
+  '  - Bandendressing',
+  'Richtprijs (indicatie): €120.00 (Vrijgesteld van btw volgens artikel 44)',
+  'Toelichting: deze richtprijs is een indicatie op basis van uw selectie.',
+  '',
+  'Graag <i>zacht</i>',
+].join('\n')
+const customBooking: BookingPayload = {
+  ...booking,
+  serviceType: 'full-custom',
+  vehicleInfo: { ...booking.vehicleInfo, size: 'large' },
+  specialRequests: customNotes,
+  totalExclBtw: 185,
+  selectedExtras: [{ id: 'extra-hondenharen', name: 'Hondenharen', priceExclBtwEuro: 15 }],
+}
 const customMails = renderTransactionalEmails({ booking: customBooking, contact, quote }, routing)
 const customCustomer = customMails.find((email) => email.id === 'booking-customer')
-assert.ok(customCustomer)
+const customAdmin = customMails.find((email) => email.id === 'booking-admin')
+assert.ok(customCustomer && customAdmin)
 assert.ok(customCustomer.html.includes('Combinatie op maat'))
 assert.equal(customCustomer.html.includes('full-custom'), false)
+assert.ok(customCustomer.html.includes('Exterieur Basis'))
+assert.ok(customCustomer.html.includes('Interieur Deluxe'))
+assert.ok(customCustomer.html.includes('Bandendressing'))
+assert.ok(customCustomer.html.includes('€120.00'))
+assert.ok(customCustomer.html.includes('Hondenharen'))
+assert.ok(customCustomer.html.includes('€185.00'))
+assert.ok(customCustomer.html.includes('Graag &lt;i&gt;zacht&lt;/i&gt;'))
+assert.ok(customCustomer.html.includes('indicatie op basis van uw selectie'))
+assert.equal(customCustomer.html.includes('--- Combinatie op maat ---'), false)
+assert.ok(customAdmin.html.includes('--- Combinatie op maat ---'))
 assert.ok(customCustomer.html.includes('Groot'))
 assert.equal(customCustomer.html.includes('· large'), false)
+
+const reviewHtml = buildReviewRequestHtml({
+  customerName: 'Jan <script>alert("x")</script>',
+  serviceType: 'exterieur-basis',
+  appointmentDate: '2026-11-01',
+})
+assert.equal(REVIEW_MAIL_SUBJECT, 'Hoe was uw ervaring? – T&R Car Detail')
+assert.ok(reviewHtml.includes(EMAIL_LOGO_URL))
+assert.ok(reviewHtml.includes('Exterieur Basis'))
+assert.ok(reviewHtml.includes('zondag 1 november 2026'))
+assert.equal(reviewHtml.includes('exterieur-basis'), false)
+assert.equal(reviewHtml.includes('<script'), false)
 
 assert.equal(formatServiceType('exterieur-basis'), 'Exterieur Basis')
 assert.equal(formatServiceType('full-custom'), 'Combinatie op maat')
@@ -153,6 +212,9 @@ mkdirSync(outDir, { recursive: true })
 for (const email of emails) {
   writeFileSync(path.join(outDir, email.filename), email.html, 'utf8')
 }
+writeFileSync(path.join(outDir, '02b-booking-customer-custom.html'), customCustomer.html, 'utf8')
+writeFileSync(path.join(outDir, '01b-booking-admin-custom.html'), customAdmin.html, 'utf8')
+writeFileSync(path.join(outDir, '07-review.html'), reviewHtml, 'utf8')
 writeFileSync(
   path.join(outDir, 'manifest.json'),
   JSON.stringify(

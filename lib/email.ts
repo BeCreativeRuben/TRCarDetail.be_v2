@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer'
-import { ENTERPRISE_NUMBER_LABEL, VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
+import { fleetSizeLabel, frequencyLabel, vehicleTypeLabel } from '@/lib/b2b-labels'
+import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
+import { EMAIL_BRAND, emailWrapper } from '@/lib/email-layout'
 import { formatDutchDate, formatVehicleSize } from '@/lib/email-format'
 import { buildReviewRequestHtml, buildReviewRequestText, REVIEW_MAIL_SUBJECT } from '@/lib/review-email'
 import { BUSINESS } from '@/lib/seo'
@@ -88,20 +90,79 @@ export const BOOKING_CUSTOMER_SUBJECT = 'Boekingsaanvraag ontvangen – T&R Car 
 const WHATSAPP_URL = `https://wa.me/${BUSINESS.phone.replace(/\D/g, '')}`
 const PHONE_TEL = `tel:${BUSINESS.phone}`
 
-// —— T&R Car Detail branding (BRAND-BOOK.md): primary-dark, secondary-dark, light, accent-red ——
-const BRAND = {
-  name: 'T&R Car Detail',
-  tagline: 'Professionele autoreiniging aan huis',
-  primaryDark: '#0A0908',
-  secondaryDark: '#22333B',
-  light: '#F2F4F3',
-  accentRed: '#FF2E00',
-  accentDarkRed: '#B80C09',
-  white: '#ffffff',
-  border: '#22333B',
-  bg: '#F2F4F3',
-  text: '#0A0908',
-  textMuted: '#22333B',
+const BRAND = EMAIL_BRAND
+
+const CUSTOM_PACKAGE_MARKER = '--- Combinatie op maat ---'
+
+type CustomPackageBreakdown = {
+  exterieur?: string
+  interieur?: string
+  excluded: string[]
+  noneExcluded: boolean
+  estimate?: string
+  explanation?: string
+  customerNote: string
+}
+
+function isCustomPackageService(serviceType: string): boolean {
+  const value = serviceType.trim()
+  return value === 'full-custom' || formatServiceType(value) === 'Combinatie op maat'
+}
+
+function parseCustomPackageNotes(specialRequests?: string): CustomPackageBreakdown | null {
+  if (!specialRequests?.includes(CUSTOM_PACKAGE_MARKER)) return null
+  const after = specialRequests.slice(specialRequests.indexOf(CUSTOM_PACKAGE_MARKER) + CUSTOM_PACKAGE_MARKER.length).trim()
+  const parts = after.split(/\n\s*\n/)
+  const block = parts[0] ?? ''
+  const customerNote = parts.slice(1).join('\n\n').trim()
+  const excluded: string[] = []
+  let exterieur: string | undefined
+  let interieur: string | undefined
+  let estimate: string | undefined
+  let explanation: string | undefined
+  let inExcluded = false
+  let noneExcluded = false
+  for (const rawLine of block.split('\n')) {
+    const line = rawLine.trim()
+    if (!line) continue
+    if (line.startsWith('Exterieur:')) {
+      exterieur = line.slice('Exterieur:'.length).trim()
+      inExcluded = false
+      continue
+    }
+    if (line.startsWith('Interieur:')) {
+      interieur = line.slice('Interieur:'.length).trim()
+      inExcluded = false
+      continue
+    }
+    if (line.startsWith('Uitgesloten onderdelen:')) {
+      inExcluded = true
+      continue
+    }
+    if (line === 'Geen onderdelen uitgesloten.') {
+      noneExcluded = true
+      inExcluded = false
+      continue
+    }
+    if (line.startsWith('Richtprijs')) {
+      const amount = line.match(/€\s?[\d.,]+/)
+      estimate = amount ? amount[0].replace(/\s/g, '') : line
+      inExcluded = false
+      continue
+    }
+    if (line.startsWith('Toelichting:')) {
+      explanation = line.slice('Toelichting:'.length).trim()
+      inExcluded = false
+      continue
+    }
+    if (line.startsWith('-')) {
+      excluded.push(line.replace(/^-\s*/, '').trim())
+      inExcluded = true
+      continue
+    }
+    if (inExcluded) excluded.push(line)
+  }
+  return { exterieur, interieur, excluded, noneExcluded, estimate, explanation, customerNote }
 }
 
 /** Zelfde escaping als de B2B-mails: alle gebruikersinvoer in HTML. */
@@ -172,62 +233,74 @@ function extrasLinesText(booking: BookingPayload): string[] {
 }
 
 function pricingTotalHtml(total: number): string {
-  return `<div style="background:${BRAND.bg}; border-left:4px solid ${BRAND.accentRed}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;"><p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Richtprijs (indicatie)</p><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px; color:${BRAND.text};"><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted}; font-weight:700;">Totaal</td><td style="padding:4px 0; font-weight:700; color:${BRAND.accentRed};">€${total.toFixed(2)}</td></tr></table><p style="margin:12px 0 0; font-size:12px; color:${BRAND.textMuted};">${VAT_EXEMPT_SHORT}<br/>${VAT_EXEMPT_LEGAL}</p></div>`
+  return `<div style="background:${BRAND.bg}; border-left:4px solid ${BRAND.accentRed}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;"><p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Richtprijs (indicatie)</p><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px; color:${BRAND.text};"><tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted}; font-weight:700;">Totaal</td><td class="em-accent" style="padding:4px 0; font-weight:700; color:${BRAND.accentRed};">€${total.toFixed(2)}</td></tr></table><p style="margin:12px 0 0; font-size:12px; color:${BRAND.textMuted};">${VAT_EXEMPT_SHORT}<br/>${VAT_EXEMPT_LEGAL}</p></div>`
 }
 
 function pricingTotalText(total: number): string[] {
   return ['', 'Richtprijs (indicatie):', `- Totaal: €${total.toFixed(2)}`, VAT_EXEMPT_SHORT, VAT_EXEMPT_LEGAL]
 }
 
-function emailLegalFooterHtml(): string {
-  return `${BRAND.name} · Wij zorgen voor uw wagen<br/><span style="display:block; margin-top:8px;">${ENTERPRISE_NUMBER_LABEL}<br/>${VAT_EXEMPT_LEGAL}</span>`
+function detailRow(label: string, valueHtml: string): string {
+  return `<tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted}; vertical-align:top;">${label}</td><td style="padding:4px 0;">${valueHtml}</td></tr>`
+}
+
+function customPackageRowsHtml(booking: BookingPayload): string {
+  if (!isCustomPackageService(booking.serviceType)) return ''
+  const parsed = parseCustomPackageNotes(booking.specialRequests)
+  if (!parsed) return ''
+  const rows = [
+    parsed.exterieur ? detailRow('Exterieur', `<strong>${esc(parsed.exterieur)}</strong>`) : '',
+    parsed.interieur ? detailRow('Interieur', `<strong>${esc(parsed.interieur)}</strong>`) : '',
+    parsed.excluded.length
+      ? detailRow('Niet inbegrepen', parsed.excluded.map((item) => esc(item)).join('<br>'))
+      : parsed.noneExcluded
+        ? detailRow('Onderdelen', 'Geen onderdelen uitgesloten.')
+        : '',
+    parsed.estimate ? detailRow('Pakketindicatie', `<span class="em-accent" style="color:${BRAND.accentRed}; font-weight:700;">${esc(parsed.estimate)}</span>`) : '',
+  ]
+  return rows.join('')
+}
+
+function customPackageNotesHtml(booking: BookingPayload): string {
+  if (!isCustomPackageService(booking.serviceType)) return ''
+  const parsed = parseCustomPackageNotes(booking.specialRequests)
+  if (!parsed) {
+    return booking.specialRequests
+      ? `<p style="margin:16px 0 0;"><strong>Uw opmerking</strong><br><span style="white-space:pre-wrap;">${esc(booking.specialRequests)}</span></p>`
+      : ''
+  }
+  const explanation = parsed.explanation
+    ? `<p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted};">${esc(parsed.explanation)}</p>`
+    : ''
+  const note = parsed.customerNote
+    ? `<p style="margin:16px 0 0;"><strong>Uw opmerking</strong><br><span style="white-space:pre-wrap;">${esc(parsed.customerNote)}</span></p>`
+    : ''
+  return explanation + note
+}
+
+function customPackageLinesText(booking: BookingPayload): string[] {
+  if (!isCustomPackageService(booking.serviceType)) return []
+  const parsed = parseCustomPackageNotes(booking.specialRequests)
+  if (!parsed) {
+    return booking.specialRequests ? ['', 'Uw opmerking:', booking.specialRequests] : []
+  }
+  const lines = [
+    ...(parsed.exterieur ? [`- Exterieur: ${parsed.exterieur}`] : []),
+    ...(parsed.interieur ? [`- Interieur: ${parsed.interieur}`] : []),
+    ...(parsed.excluded.length ? [`- Niet inbegrepen: ${parsed.excluded.join(', ')}`] : parsed.noneExcluded ? ['- Geen onderdelen uitgesloten.'] : []),
+    ...(parsed.estimate ? [`- Pakketindicatie: ${parsed.estimate}`] : []),
+    ...(parsed.explanation ? ['', parsed.explanation] : []),
+    ...(parsed.customerNote ? ['', 'Uw opmerking:', parsed.customerNote] : []),
+  ]
+  return lines
 }
 
 function reachUsHtml(): string {
-  return `Vragen? Contacteer ons via WhatsApp op <a href="${WHATSAPP_URL}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${BUSINESS.phoneDisplay}</a> of bel ons op <a href="${PHONE_TEL}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${BUSINESS.phoneDisplay}</a>.`
+  return `Stuur ons een <a href="${WHATSAPP_URL}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">WhatsApp</a> of bel <a href="${PHONE_TEL}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${BUSINESS.phoneDisplay}</a>.`
 }
 
 function reachUsText(): string {
-  return `Vragen? Contacteer ons via WhatsApp: ${WHATSAPP_URL} of bel ons op ${BUSINESS.phoneDisplay}.`
-}
-
-function emailWrapper(previewText: string, title: string, content: string): string {
-  return `
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
-  <title>${esc(title)}</title>
-</head>
-<body style="margin:0; padding:0; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color:${BRAND.bg}; color:${BRAND.text}; font-size:16px; line-height:1.6;">
-  <div style="display:none; max-height:0; overflow:hidden;">${esc(previewText)}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${BRAND.secondaryDark}; padding:24px 16px;">
-    <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:${BRAND.white}; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid ${BRAND.border};">
-        <tr>
-          <td style="background:${BRAND.primaryDark}; color:${BRAND.light}; padding:28px 32px; text-align:center;">
-            <span style="font-size:26px; font-weight:700; letter-spacing:0.04em;">T&amp;R Car Detail</span>
-            <p style="margin:8px 0 0; font-size:14px; opacity:0.9;">${BRAND.tagline}</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:32px; background:${BRAND.white}; color:${BRAND.text};">
-            ${content}
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 32px; background:${BRAND.bg}; border-top:1px solid ${BRAND.border}; font-size:13px; color:${BRAND.textMuted}; text-align:center;">
-            ${emailLegalFooterHtml()}
-          </td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>
-  `.trim()
+  return `Stuur ons een WhatsApp (${WHATSAPP_URL}) of bel ${BUSINESS.phoneDisplay}.`
 }
 
 function bookingConfirmationHtml(booking: BookingPayload): string {
@@ -235,13 +308,13 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
   const date = formatDutchDate(booking.preferredDate)
   const content = `
     <h1 style="margin:0 0 8px; font-size:24px; color:${BRAND.primaryDark};">Boekingsaanvraag ontvangen</h1>
-    <p style="margin:0 0 24px; color:${BRAND.textMuted}; font-size:15px;">We hebben uw aanvraag goed ontvangen. Uw afspraak is nog niet bevestigd.</p>
     <p style="margin:0 0 20px;">Beste ${esc(booking.customerName)},</p>
-    <p style="margin:0 0 24px;">We zullen <strong>uw afspraak nog bevestigen</strong>. U ontvangt zo snel mogelijk een bericht van ons om de datum en het tijdstip definitief te maken.</p>
+    <p style="margin:0 0 24px;">We hebben uw aanvraag ontvangen en bevestigen uw afspraak nog.</p>
     <div style="background:${BRAND.bg}; border-left:4px solid ${BRAND.accentRed}; padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0;">
       <p style="margin:0 0 8px; font-size:13px; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.04em;">Uw aanvraag</p>
       <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px; color:${BRAND.text};">
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Service</td><td style="padding:4px 0;"><strong>${esc(label)}</strong></td></tr>
+        ${customPackageRowsHtml(booking)}
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Datum</td><td style="padding:4px 0;">${esc(date)}</td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Tijd</td><td style="padding:4px 0;">${esc(booking.preferredTime)}</td></tr>
         <tr><td style="padding:4px 12px 4px 0; color:${BRAND.textMuted};">Voertuig</td><td style="padding:4px 0;">${esc(vehicleLine(booking))}</td></tr>
@@ -251,13 +324,14 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
         ${extrasRowsHtml(booking)}
       </table>
     </div>
+    ${customPackageNotesHtml(booking)}
     ${booking.totalExclBtw != null && booking.totalExclBtw > 0 ? pricingTotalHtml(booking.totalExclBtw) : ''}
     <p style="margin:24px 0 0;">${reachUsHtml()}</p>
     <p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted}; font-style:italic;">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
     <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong></p>
   `
   return emailWrapper(
-    `Uw boekingsaanvraag bij T&R Car Detail: ${label} op ${date}. We bevestigen uw afspraak nog.`,
+    `Uw boekingsaanvraag bij T&R Car Detail: ${label} op ${date}.`,
     'Boekingsaanvraag ontvangen - T&R Car Detail',
     content
   )
@@ -269,10 +343,11 @@ function bookingConfirmationText(booking: BookingPayload): string {
     '',
     `Beste ${booking.customerName},`,
     '',
-    'We hebben uw aanvraag ontvangen. Uw afspraak is nog niet bevestigd. We zullen uw afspraak nog bevestigen – u ontvangt zo snel mogelijk een bericht van ons om de datum en het tijdstip definitief te maken.',
+    'We hebben uw aanvraag ontvangen en bevestigen uw afspraak nog.',
     '',
     'Uw aanvraag:',
     `- Service: ${serviceLabel(booking.serviceType)}`,
+    ...customPackageLinesText(booking),
     `- Datum: ${formatDutchDate(booking.preferredDate)}`,
     `- Tijd: ${booking.preferredTime}`,
     `- Voertuig: ${vehicleLine(booking)}`,
@@ -453,10 +528,10 @@ function contactAutoReplyText(contact: ContactPayload): string {
 function b2bQuoteNotificationHtml(quote: B2bQuotePayload): string {
   const optionalRows = [
     quote.vehicleType
-      ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Type voertuigen</td><td style="padding:12px 16px;">${esc(quote.vehicleType)}</td></tr>`
+      ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Type voertuigen</td><td style="padding:12px 16px;">${esc(vehicleTypeLabel(quote.vehicleType))}</td></tr>`
       : '',
     quote.frequency
-      ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Frequentie</td><td style="padding:12px 16px;">${esc(quote.frequency)}</td></tr>`
+      ? `<tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Frequentie</td><td style="padding:12px 16px;">${esc(frequencyLabel(quote.frequency))}</td></tr>`
       : '',
     quote.message
       ? `<tr><td colspan="2" style="padding:16px; border-top:1px solid ${BRAND.border};"><strong>Bericht</strong><br><span style="white-space:pre-wrap;">${esc(quote.message)}</span></td></tr>`
@@ -473,7 +548,7 @@ function b2bQuoteNotificationHtml(quote: B2bQuotePayload): string {
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">E-mail</td><td style="padding:12px 16px;"><a href="mailto:${esc(quote.email)}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${esc(quote.email)}</a></td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Telefoon</td><td style="padding:12px 16px;"><a href="tel:${esc(quote.phone)}" style="color:${BRAND.accentRed}; text-decoration:none; font-weight:600;">${esc(quote.phone)}</a></td></tr>
       <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Locatie</td><td style="padding:12px 16px;">${esc(quote.location)}</td></tr>
-      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Vlootomvang</td><td style="padding:12px 16px;">${esc(quote.fleetSize)}</td></tr>
+      <tr><td style="padding:12px 16px; background:${BRAND.bg}; color:${BRAND.textMuted};">Vlootomvang</td><td style="padding:12px 16px;">${esc(fleetSizeLabel(quote.fleetSize))}</td></tr>
       ${optionalRows}
     </table>
   `
@@ -491,9 +566,9 @@ function b2bQuoteNotificationText(quote: B2bQuotePayload): string {
     `E-mail: ${quote.email}`,
     `Telefoon: ${quote.phone}`,
     `Locatie: ${quote.location}`,
-    `Vlootomvang: ${quote.fleetSize}`,
-    ...(quote.vehicleType ? [`Type voertuigen: ${quote.vehicleType}`] : []),
-    ...(quote.frequency ? [`Frequentie: ${quote.frequency}`] : []),
+    `Vlootomvang: ${fleetSizeLabel(quote.fleetSize)}`,
+    ...(quote.vehicleType ? [`Type voertuigen: ${vehicleTypeLabel(quote.vehicleType)}`] : []),
+    ...(quote.frequency ? [`Frequentie: ${frequencyLabel(quote.frequency)}`] : []),
     ...(quote.message ? ['', 'Bericht:', quote.message] : []),
   ].join('\n')
 }
@@ -581,7 +656,7 @@ function b2bMessages(quote: B2bQuotePayload, routing: MailRouting): { admin: Out
       from,
       to: routing.adminEmail,
       replyTo: replyAddress(quote.email),
-      subject: `B2B offerte: ${singleLine(quote.companyName)} (${singleLine(quote.fleetSize)})`,
+      subject: `B2B offerte: ${singleLine(quote.companyName)} (${singleLine(fleetSizeLabel(quote.fleetSize))})`,
       text: b2bQuoteNotificationText(quote),
       html: b2bQuoteNotificationHtml(quote),
     },

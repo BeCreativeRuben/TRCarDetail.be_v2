@@ -1,9 +1,6 @@
-import Image from 'next/image'
-
 /**
- * Donkere gekreukte-papier-textuur uit Tristans banner, als achtergrondlaag.
- * Via next/image (responsieve srcset + preload met `priority` in de hero) i.p.v. een CSS-achtergrond,
- * zodat de textuur – vaak het LCP-element – vroeg en kleiner geladen wordt.
+ * Donkere gekreukte-papier-textuur. Op mobiel een klein AVIF-bestand (LCP),
+ * ontdekt via <picture> — geen CSS-achtergrond.
  */
 export default function Texture({
   withRedPaper = false,
@@ -15,20 +12,34 @@ export default function Texture({
   className?: string
 }) {
   return (
-    <div aria-hidden className={`absolute inset-0 ${className}`}>
-      <Image
-        src="/brand/texture-dark.webp"
-        alt=""
-        fill
-        sizes="100vw"
-        quality={70}
-        priority={priority}
-        className="object-cover object-center"
-      />
+    <div aria-hidden className={`pointer-events-none absolute inset-0 ${className}`}>
+      <picture>
+        <source media="(max-width: 768px)" srcSet="/brand/texture-dark-mobile.avif" type="image/avif" />
+        <source media="(max-width: 768px)" srcSet="/brand/texture-dark-mobile.webp" type="image/webp" />
+        <source srcSet="/brand/texture-dark.avif" type="image/avif" />
+        {/* Al op maat gemaakte AVIF/WebP; next/image zou dit LCP-bestand opnieuw verwerken. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/texture-dark.webp"
+          alt=""
+          width={1640}
+          height={624}
+          fetchPriority={priority ? 'high' : 'low'}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+      </picture>
       {withRedPaper && (
-        <div
-          className="absolute bottom-0 right-0 w-[70%] md:w-[46%] aspect-[879/624] bg-no-repeat bg-right-bottom bg-contain"
-          style={{ backgroundImage: "url('/brand/paper-red.png')" }}
+        // eslint-disable-next-line @next/next/no-img-element -- decoratief papier, geen LCP
+        <img
+          src="/brand/paper-red.png"
+          alt=""
+          width={879}
+          height={624}
+          loading="lazy"
+          decoding="async"
+          className="absolute bottom-0 right-0 w-[70%] md:w-[46%] h-auto"
         />
       )}
     </div>

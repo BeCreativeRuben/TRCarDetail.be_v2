@@ -16,8 +16,7 @@ const HERO_VIDEO_SOURCES = [
   'https://assets.mixkit.co/videos/47588/47588-720.mp4'
 ].filter(Boolean) as string[]
 
-/** Geoptimaliseerde poster (zelfde beeld als voorheen, via de Next image optimizer i.p.v. de 430 KB-bron). */
-const HERO_POSTER = '/_next/image?url=%2Fimages%2Fhome-about.webp&w=750&q=75'
+const HERO_POSTER = '/images/hero-poster.webp'
 
 /**
  * Hero in de stijl van Tristans T&R-banner: donkere gekreukte textuur, groot logo,
@@ -54,7 +53,7 @@ export default function Hero() {
       <Texture priority />
       <div className="relative z-10 container-custom pt-12 pb-20 lg:pt-20 lg:pb-28 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-12 items-center">
         <div className="text-center lg:text-left">
-          <Logo priority className="h-20 md:h-28 w-auto mx-auto lg:mx-0 mb-8" />
+          <Logo className="h-20 md:h-28 w-auto mx-auto lg:mx-0 mb-8" />
           <p className="text-accent-red font-brand font-bold uppercase tracking-[0.25em] text-xs md:text-sm mb-3">Precisiedetailing voor sportieve &amp; exclusieve wagens</p>
           <h1 className="text-light mb-5">Car cleaning &amp; detailing <span className="text-accent-red">Vlaanderen</span></h1>
           <p className="text-lg text-light/85 max-w-xl mx-auto lg:mx-0 mb-8">Professionele auto detailing voor een perfect resultaat. Mobiel aan huis vanuit Sint-Niklaas · Oost-Vlaanderen &amp; heel Vlaanderen.</p>
@@ -74,10 +73,17 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative mx-auto w-full max-w-xl">
-          <div aria-hidden className="pointer-events-none absolute right-0 sm:-right-6 -bottom-8 w-[80%] aspect-[879/624] bg-no-repeat bg-contain bg-right-bottom rotate-6" style={{ backgroundImage: "url('/brand/paper-red.png')" }} />
+          {/* eslint-disable-next-line @next/next/no-img-element -- decoratief papier, geen LCP */}
+          <img src="/brand/paper-red.png" alt="" width={879} height={624} loading="lazy" decoding="async" aria-hidden className="pointer-events-none absolute right-0 sm:-right-6 -bottom-8 w-[80%] h-auto rotate-6" />
           <div className="relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,.6)] -rotate-2 bg-secondary-dark">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={HERO_POSTER} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" />
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/images/hero-poster-mobile.avif" type="image/avif" />
+              <source media="(max-width: 768px)" srcSet="/images/hero-poster-mobile.webp" type="image/webp" />
+              <source srcSet="/images/hero-poster.avif" type="image/avif" />
+              {/* Mobiele en desktopposter zijn al AVIF/WebP op de juiste maat. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/hero-poster.webp" alt="" aria-hidden width={1100} height={880} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+            </picture>
             {loadVideo && !videoError && currentSrc && (
               <video
                 key={currentSrc}

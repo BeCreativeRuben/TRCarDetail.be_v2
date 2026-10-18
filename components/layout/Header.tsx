@@ -13,7 +13,7 @@ export default function Header() {
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark" aria-label="T&R Car Detail – home">
-            <Logo priority className="h-12 w-auto" />
+            <Logo className="h-12 w-auto" />
           </Link>
 
           <Navigation />

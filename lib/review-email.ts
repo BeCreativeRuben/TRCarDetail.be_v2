@@ -59,7 +59,7 @@ export function buildReviewRequestHtml(fields: ReviewEmailFields): string {
     <p style="margin:0 0 24px;">${serviceSentence(fields.serviceType, fields.appointmentDate)}</p>
     ${customBlock}
     <p style="margin:24px 0 0;">
-      <a href="${GOOGLE_MAPS_REVIEW_URL}" style="display:inline-block; background:${BRAND.accentRed}; color:${BRAND.white}; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600;">Review achterlaten</a>
+      <a href="${GOOGLE_MAPS_REVIEW_URL}" class="em-btn" style="display:inline-block; background:${BRAND.accentRed}; color:${BRAND.primaryDark}; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:700;">Review achterlaten</a>
     </p>
     <p style="margin:24px 0 0;">Alvast bedankt,<br><strong>${BRAND.name}</strong></p>
   `
