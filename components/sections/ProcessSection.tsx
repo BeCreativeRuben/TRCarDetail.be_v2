@@ -26,13 +26,13 @@ export default function ProcessSection({ variant = 'full' }: ProcessSectionProps
         transition={{ duration: 0.4 }}
         className="mb-10 p-6 rounded-lg bg-primary-dark/5 border border-primary-dark/10"
       >
-        <h3 className="text-lg font-semibold text-primary-dark mb-4">Zo werkt het</h3>
+        <h2 className="text-lg font-semibold normal-case leading-snug tracking-normal text-primary-dark mb-4">Zo werkt het</h2>
         <ol className="space-y-3 text-primary-dark opacity-90 text-sm">
           {STEPS.map((step, index) => {
             const Icon = step.icon
             return (
               <li key={index} className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-accent-red text-white flex items-center justify-center text-xs font-bold">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-accent-red text-primary-dark flex items-center justify-center text-xs font-bold">
                   {index + 1}
                 </span>
                 <span>

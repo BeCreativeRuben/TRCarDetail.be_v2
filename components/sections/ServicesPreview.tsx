@@ -33,14 +33,14 @@ export default function ServicesPreview() {
           ))}
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <TrackedBookLink href="/booking?from=home_services" location="home_services">
-            <Button variant="primary" size="lg" className="flex items-center gap-2">
+          <TrackedBookLink href="/booking?from=home_services" location="home_services" className="inline-flex">
+            <Button variant="primary" size="lg" className="pointer-events-none flex items-center gap-2">
               <FiCalendar className="w-5 h-5" />
               Direct boeken
             </Button>
           </TrackedBookLink>
-          <Link href="/services">
-            <Button variant="outline" size="lg" className="flex items-center gap-2">
+          <Link href="/services" className="inline-flex">
+            <Button variant="outline" size="lg" className="pointer-events-none flex items-center gap-2">
               Bekijk Alle Diensten
               <FiArrowRight className="w-5 h-5" />
             </Button>

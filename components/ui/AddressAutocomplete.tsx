@@ -23,6 +23,7 @@ export default function AddressAutocomplete({
   required = false,
 }: AddressAutocompleteProps) {
   const generatedId = useId()
+  const listId = useId()
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -116,6 +117,7 @@ export default function AddressAutocomplete({
         autoComplete="off"
         role="combobox"
         aria-expanded={isOpen && suggestions.length > 0}
+        aria-controls={listId}
         aria-autocomplete="list"
         className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200"
       />
@@ -125,6 +127,8 @@ export default function AddressAutocomplete({
       <AnimatePresence>
         {isOpen && suggestions.length > 0 && (
           <motion.ul
+            id={listId}
+            role="listbox"
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}

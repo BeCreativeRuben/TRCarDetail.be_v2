@@ -36,7 +36,7 @@ import {
 } from '@/lib/custom-package-estimate'
 
 const services: Service[] = [
-  { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€60 · Glanzend en in topvorm', basePrice: 60, largeCarSurcharge: 0, features: [] },
+  { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€50 · Glanzend en in topvorm', basePrice: 50, largeCarSurcharge: 0, features: [] },
   { id: 'exterieur-deluxe', name: 'Exterieur Deluxe', description: '€90 · Decontaminatie was', basePrice: 90, largeCarSurcharge: 0, features: [] },
   { id: 'full-basis', name: 'Basis Pakket', description: '€100 · Basis Pakket', basePrice: 100, largeCarSurcharge: 0, features: [] },
   { id: 'full-deluxe', name: 'Deluxe Pakket', description: '€170 · Deluxe Pakket', basePrice: 170, largeCarSurcharge: 0, features: [] },
@@ -49,7 +49,7 @@ const services: Service[] = [
     largeCarSurcharge: 0,
     features: [],
   },
-  { id: 'interieur-basis', name: 'Interieur Basis', description: '€50 · Opfrissen', basePrice: 50, largeCarSurcharge: 0, features: [] },
+  { id: 'interieur-basis', name: 'Interieur Basis', description: '€60 · Opfrissen', basePrice: 60, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: '€130 · Uitgebreide dieptereiniging', basePrice: 130, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Vanaf €300 · 1-staps correctie', basePrice: 0, fromPrice: 300, largeCarSurcharge: 0, features: [] },
@@ -448,8 +448,8 @@ export default function BookingForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <label className="block text-sm font-medium text-primary-dark mb-4">Selecteer Service *</label>
-        <div className="space-y-6">
+        <p id="booking-service-label" className="block text-sm font-medium text-primary-dark mb-4">Selecteer Service *</p>
+        <div className="space-y-6" role="group" aria-labelledby="booking-service-label">
           {SERVICE_GROUPS.map((group) => {
             const groupServices = services.filter((s) => group.ids.includes(s.id))
             if (groupServices.length === 0) return null
@@ -473,13 +473,14 @@ export default function BookingForm() {
                         trackSelectService(service.id, 'form')
                         setTimeout(() => extrasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
                       }}
-                      className={`p-4 rounded-lg border-2 text-left transition-all ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10 ring-2 ring-accent-red ring-offset-2' : 'border-primary-dark/20 bg-light hover:border-accent-red hover:bg-accent-red/5'}`}
+                      aria-pressed={formData.serviceType === service.id}
+                      className={`p-4 rounded-lg border-2 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10 ring-2 ring-accent-red ring-offset-2' : 'border-primary-dark/20 bg-light hover:border-accent-red hover:bg-accent-red/5'}`}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                     >
                       <h4 className="font-semibold text-primary-dark mb-1 text-sm md:text-base">{service.name}</h4>
                       <p className="text-xs text-primary-dark opacity-70 mb-2 line-clamp-2">{service.description}</p>
-                      <p className="text-accent-red font-bold text-sm">
+                      <p className="text-accent-dark-red font-bold text-sm">
                         {service.id === 'full-custom'
                           ? 'Richtprijs (indicatie)'
                           : service.fromPrice && service.basePrice === 0
@@ -542,7 +543,7 @@ export default function BookingForm() {
                 <span className="flex h-full flex-1 flex-col">
                   <span className="font-semibold block">{extra.name}</span>
                   <span className="text-primary-dark/75 block mt-0.5 line-clamp-2">{extra.description}</span>
-                  <span className="text-accent-red font-bold mt-auto pt-1 inline-block">
+                  <span className="text-accent-dark-red font-bold mt-auto pt-1 inline-block">
                     {extra.priceNote ? `${extra.priceNote} €${extra.priceExclBtwEuro}` : `+€${extra.priceExclBtwEuro}`}
                   </span>
                 </span>
@@ -581,7 +582,8 @@ export default function BookingForm() {
                   setFormData({ ...formData, preferredTime: time })
                   trackSelectTime(time)
                 }}
-                className={`py-2 px-4 rounded-lg font-medium transition-all ${formData.preferredTime === time ? 'bg-accent-red text-white' : 'bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark hover:border-accent-red hover:text-accent-red'}`}
+                aria-pressed={formData.preferredTime === time}
+                className={`min-h-11 py-2 px-4 rounded-lg font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${formData.preferredTime === time ? 'bg-accent-red text-primary-dark' : 'bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark hover:border-accent-red hover:text-accent-red'}`}
               >
                 {time}
               </button>
@@ -627,7 +629,7 @@ export default function BookingForm() {
           {formData.vehicleInfo?.make && formData.vehicleInfo?.model && (
             <p className="text-sm text-primary-dark md:col-span-2">
               {formData.vehicleInfo?.size === 'large' ? (
-                <span className="inline-flex items-center gap-1.5 text-accent-red font-medium">
+                <span className="inline-flex items-center gap-1.5 text-accent-dark-red font-medium">
                   Groot voertuig – toeslag van toepassing
                   {largeCarSurcharge > 0 && ` (+€${largeCarSurcharge})`}
                 </span>
@@ -660,7 +662,7 @@ export default function BookingForm() {
               required
             />
             <p className="text-sm text-primary-dark opacity-60 mt-1">
-              Wij rijden naar u toe. Binnen {TRAVEL_CONFIG.freeRadiusKm} km van Heidebloemstraat 66, Sint-Niklaas is de kilometervergoeding gratis. Vanaf {TRAVEL_CONFIG.freeRadiusKm} km: €{TRAVEL_CONFIG.pricePerKmEuro.toFixed(2)} per extra km.
+              Wij rijden naar u toe. Binnen {TRAVEL_CONFIG.freeRadiusKm} km van Heidebloemstraat 66 Bus 11, Sint-Niklaas is de kilometervergoeding gratis. Vanaf {TRAVEL_CONFIG.freeRadiusKm} km: €{TRAVEL_CONFIG.pricePerKmEuro.toFixed(2)} per extra km.
             </p>
             {travelFeeLoading && <p className="text-sm text-primary-dark opacity-70 mt-1">Afstand wordt berekend…</p>}
             {travelFeeUnavailable && (
@@ -678,8 +680,8 @@ export default function BookingForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-primary-dark mb-2">Speciale Verzoeken of Opmerkingen</label>
-        <textarea rows={4} value={formData.specialRequests || ''} onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200" />
+        <label htmlFor="booking-special-requests" className="block text-sm font-medium text-primary-dark mb-2">Speciale Verzoeken of Opmerkingen</label>
+        <textarea id="booking-special-requests" rows={4} value={formData.specialRequests || ''} onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200" />
       </div>
 
       {selectedService && (
@@ -812,7 +814,7 @@ export default function BookingForm() {
           <p className="text-sm opacity-90">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
         </div>
       )}
-      {submitStatus === 'error' && <div className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-red">{submitError || 'Er is een fout opgetreden. Controleer of alle verplichte velden zijn ingevuld en probeer het opnieuw.'}</div>}
+      {submitStatus === 'error' && <div role="alert" className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-dark-red">{submitError || 'Er is een fout opgetreden. Controleer of alle verplichte velden zijn ingevuld en probeer het opnieuw.'}</div>}
 
       <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Verzenden...' : 'Boeking Versturen'}

@@ -1,23 +1,25 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import BookingForm from '@/components/booking/BookingForm'
 import ProcessSection from '@/components/sections/ProcessSection'
 import { Suspense } from 'react'
+import PageHero from '@/components/brand/PageHero'
 
 function BookingContent() {
   return (
-    <div className="pt-20 pb-16 md:pb-24 bg-light min-h-screen">
-      <div className="container-custom">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Boek Uw Afspraak</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-2xl mx-auto">
+    <div className="pb-16 md:pb-24 bg-light min-h-screen">
+        <PageHero eyebrow="Reserveer je afspraak" title="Boek Uw Afspraak" withRedPaper={false}>
+          <p className="text-lg md:text-xl text-light/85 max-w-2xl mx-auto">
             Vul het formulier in om een afspraak te maken. We nemen zo spoedig mogelijk contact met u op om te bevestigen.
           </p>
-        </motion.div>
+        </PageHero>
+      <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           <ProcessSection variant="compact" />
-          <BookingForm />
+          {/* Alleen het formulier leest de URL (useSearchParams); titel en uitleg blijven server-side gerenderd. */}
+          <Suspense fallback={<div className="py-16 text-center text-primary-dark opacity-70">Laden...</div>}>
+            <BookingForm />
+          </Suspense>
         </div>
       </div>
     </div>
@@ -25,9 +27,5 @@ function BookingContent() {
 }
 
 export default function BookingPage() {
-  return (
-    <Suspense fallback={<div className="pt-20 pb-16 bg-light min-h-screen flex items-center justify-center">Laden...</div>}>
-      <BookingContent />
-    </Suspense>
-  )
+  return <BookingContent />
 }

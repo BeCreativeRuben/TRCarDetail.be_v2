@@ -22,7 +22,7 @@ export default function MaintenancePage() {
       </p>
       <a
         href="mailto:info@trcardetail.be"
-        className="inline-flex items-center justify-center rounded-lg bg-accent-red text-white font-semibold px-6 py-3 hover:opacity-90 transition-opacity"
+        className="inline-flex items-center justify-center min-h-11 rounded-lg bg-accent-red text-primary-dark font-semibold px-6 py-3 hover:bg-accent-dark-red hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
       >
         Mail ons
       </a>

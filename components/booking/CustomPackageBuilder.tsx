@@ -54,7 +54,7 @@ export default function CustomPackageBuilder({
             className="w-full px-3 py-2.5 rounded-lg border-2 border-secondary-dark/30 bg-light text-primary-dark focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
             <option value="none">Geen</option>
-            <option value="basis">Exterieur Basis (€60)</option>
+            <option value="basis">Exterieur Basis (€50)</option>
             <option value="deluxe">Exterieur Deluxe (€90)</option>
           </select>
         </div>
@@ -66,7 +66,7 @@ export default function CustomPackageBuilder({
             className="w-full px-3 py-2.5 rounded-lg border-2 border-secondary-dark/30 bg-light text-primary-dark focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
             <option value="none">Geen</option>
-            <option value="basis">Interieur Basis (€50)</option>
+            <option value="basis">Interieur Basis (€60)</option>
             <option value="deluxe">Interieur Deluxe (€130)</option>
             <option value="premium">Interieur Premium (€220)</option>
           </select>

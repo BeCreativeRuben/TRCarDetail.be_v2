@@ -2,6 +2,10 @@ type JsonLdProps = {
   data: Record<string, unknown> | Record<string, unknown>[]
 }
 
+function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c')
+}
+
 export default function JsonLd({ data }: JsonLdProps) {
   const items = Array.isArray(data) ? data : [data]
   return (
@@ -10,7 +14,7 @@ export default function JsonLd({ data }: JsonLdProps) {
         <script
           key={index}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(item) }}
         />
       ))}
     </>

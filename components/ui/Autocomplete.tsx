@@ -21,6 +21,7 @@ export default function Autocomplete({
   required = false
 }: AutocompleteProps) {
   const inputId = useId()
+  const listId = useId()
   const [isOpen, setIsOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -88,11 +89,14 @@ export default function Autocomplete({
         className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200"
         role="combobox"
         aria-expanded={isOpen && filteredOptions.length > 0}
+        aria-controls={listId}
         aria-autocomplete="list"
       />
       <AnimatePresence>
         {isOpen && filteredOptions.length > 0 && (
           <motion.ul
+            id={listId}
+            role="listbox"
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}

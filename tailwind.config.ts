@@ -21,6 +21,7 @@ const config: Config = {
       fontFamily: {
         heading: ['var(--font-bebas)', 'sans-serif'],
         body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        brand: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
       },
     },
   },
