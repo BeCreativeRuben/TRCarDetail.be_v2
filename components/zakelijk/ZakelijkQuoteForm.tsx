@@ -30,7 +30,7 @@ const FREQUENCIES = [
 ]
 
 const selectClass =
-  'w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark/30 text-primary-dark focus:outline-none focus:ring-2 focus:ring-accent-red'
+  'w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark/30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200'
 
 export default function ZakelijkQuoteForm() {
   const [form, setForm] = useState({
@@ -118,7 +118,7 @@ export default function ZakelijkQuoteForm() {
 
   if (status === 'success') {
     return (
-      <div className="rounded-xl border border-green-500/40 bg-green-50 p-6 text-center">
+      <div className="rounded-xl border border-green-600/30 bg-green-50 p-6 text-center" role="status">
         <h3 className="text-xl font-bold text-primary-dark mb-2">Offerteaanvraag ontvangen</h3>
         <p className="text-primary-dark/80 text-sm">
           Bedankt. We nemen binnen 1–2 werkdagen contact met u op om uw vloot en planning te bespreken.
@@ -182,8 +182,9 @@ export default function ZakelijkQuoteForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div>
-          <label className="block text-sm font-medium text-primary-dark mb-2">Vlootomvang *</label>
+          <label htmlFor="fleetSize" className="block text-sm font-medium text-primary-dark mb-2">Vlootomvang *</label>
           <select
+            id="fleetSize"
             className={selectClass}
             value={form.fleetSize}
             onChange={update('fleetSize')}
@@ -198,8 +199,8 @@ export default function ZakelijkQuoteForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-primary-dark mb-2">Type voertuigen</label>
-          <select className={selectClass} value={form.vehicleType} onChange={update('vehicleType')}>
+          <label htmlFor="vehicleType" className="block text-sm font-medium text-primary-dark mb-2">Type voertuigen</label>
+          <select id="vehicleType" className={selectClass} value={form.vehicleType} onChange={update('vehicleType')}>
             <option value="">Optioneel…</option>
             {VEHICLE_TYPES.map((o) => (
               <option key={o.value} value={o.value}>
@@ -209,8 +210,8 @@ export default function ZakelijkQuoteForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-primary-dark mb-2">Frequentie</label>
-          <select className={selectClass} value={form.frequency} onChange={update('frequency')}>
+          <label htmlFor="frequency" className="block text-sm font-medium text-primary-dark mb-2">Frequentie</label>
+          <select id="frequency" className={selectClass} value={form.frequency} onChange={update('frequency')}>
             <option value="">Optioneel…</option>
             {FREQUENCIES.map((o) => (
               <option key={o.value} value={o.value}>
@@ -222,8 +223,9 @@ export default function ZakelijkQuoteForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-primary-dark mb-2">Bericht (optioneel)</label>
+        <label htmlFor="message" className="block text-sm font-medium text-primary-dark mb-2">Bericht (optioneel)</label>
         <textarea
+          id="message"
           rows={4}
           value={form.message}
           onChange={update('message')}
@@ -232,7 +234,11 @@ export default function ZakelijkQuoteForm() {
         />
       </div>
 
-      {error && <p className="text-sm text-accent-red">{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm text-accent-red">
+          {error}
+        </p>
+      )}
 
       <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full md:w-auto">
         {isSubmitting ? 'Verzenden…' : 'Offerte aanvragen'}
