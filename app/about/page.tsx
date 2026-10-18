@@ -6,15 +6,15 @@ import { FiPackage, FiUsers, FiAward } from 'react-icons/fi'
 import { images } from '@/lib/images'
 import Card from '@/components/ui/Card'
 import CTASection from '@/components/sections/CTASection'
+import PageHero from '@/components/brand/PageHero'
 
 export default function AboutPage() {
   return (
-    <div className="pt-20 pb-0 bg-light min-h-screen">
+    <div className="pb-0 bg-light min-h-screen">
+      <PageHero eyebrow="Vanuit Sint-Niklaas" title="Over T&R Car Detail" withRedPaper={false}>
+        <p className="text-lg md:text-xl text-light/85 max-w-3xl mx-auto">Professionele car detailing in Vlaanderen – met passie voor perfectie, vanuit Sint-Niklaas.</p>
+      </PageHero>
       <div className="container-custom">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Over T&R Car Detail</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-3xl mx-auto">Professionele car detailing in Vlaanderen – met passie voor perfectie, vanuit Sint-Niklaas.</p>
-        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="relative h-96 bg-secondary-dark rounded-lg overflow-hidden">
@@ -41,7 +41,7 @@ export default function AboutPage() {
                   <Image src={images.teamThibo} alt="Thibo – Exterieur Expert bij T&R Car Detail" fill sizes="96px" className="object-cover" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark mb-1">Thibo</h3>
-                <p className="text-accent-red font-semibold text-sm">Exterieur Expert</p>
+                <p className="text-accent-dark-red font-semibold text-sm">Exterieur Expert</p>
                 <p className="text-primary-dark opacity-70 text-sm mt-2">Specialist in exterieurreiniging, lakbescherming en showroomglans</p>
               </Card>
             </motion.div>
@@ -51,7 +51,7 @@ export default function AboutPage() {
                   <Image src={images.teamRenzo} alt="Renzo – Interieur Expert bij T&R Car Detail" fill sizes="96px" className="object-cover" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark mb-1">Renzo</h3>
-                <p className="text-accent-red font-semibold text-sm">Interieur Expert</p>
+                <p className="text-accent-dark-red font-semibold text-sm">Interieur Expert</p>
                 <p className="text-primary-dark opacity-70 text-sm mt-2">Specialist in interieurreiniging, stoffering en dieptereiniging</p>
               </Card>
             </motion.div>

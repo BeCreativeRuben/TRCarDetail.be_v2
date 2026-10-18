@@ -33,9 +33,9 @@ function PolierenLevelBookButton({ serviceId, level }: { serviceId: string; leve
     <TrackedBookLink
       href={`/booking?service=${serviceId}&from=services_card`}
       location="services_card"
-      className="block"
+      className="block leading-none"
     >
-      <Button variant="primary" size="md" className="w-full flex items-center justify-center gap-2">
+      <Button variant="primary" size="md" className="pointer-events-none w-full flex items-center justify-center gap-2">
         <FiCalendar className="w-4 h-4" />
         Boek dit pakket
         <span className="sr-only">, {level}</span>
@@ -117,11 +117,11 @@ function CategoryPanel({ category }: { category: ServiceCategory }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex justify-between items-center bg-light rounded-lg px-4 py-3">
                     <span className="text-primary-dark font-medium">2-staps polijsten</span>
-                    <span className="text-accent-red font-bold">+ €120</span>
+                    <span className="text-accent-dark-red font-bold">+ €120</span>
                   </div>
                   <div className="flex justify-between items-center bg-light rounded-lg px-4 py-3">
                     <span className="text-primary-dark font-medium">3-staps polijsten</span>
-                    <span className="text-accent-red font-bold">+ €220</span>
+                    <span className="text-accent-dark-red font-bold">+ €220</span>
                   </div>
                 </div>
               </div>
@@ -161,7 +161,7 @@ function CategoryPanel({ category }: { category: ServiceCategory }) {
                         {polierenComparison.map((row) => (
                           <div key={row.label} className="px-4 py-3 border-t border-primary-dark/10">
                             <dt className="text-sm font-semibold text-primary-dark">{row.label}</dt>
-                            <dd className={`mt-1 text-sm ${row.emphasize ? 'font-bold text-accent-red' : 'text-primary-dark opacity-80'}`}>
+                            <dd className={`mt-1 text-sm ${row.emphasize ? 'font-bold text-accent-dark-red' : 'text-primary-dark opacity-80'}`}>
                               {row.values[index]}
                             </dd>
                           </div>
@@ -190,7 +190,7 @@ function CategoryPanel({ category }: { category: ServiceCategory }) {
                           {row.values.map((value, i) => (
                             <td
                               key={`${row.label}-${polierenLevels[i]}`}
-                              className={`py-3 px-3 align-top ${row.emphasize ? 'font-bold text-accent-red whitespace-nowrap' : 'text-primary-dark opacity-80'}`}
+                              className={`py-3 px-3 align-top ${row.emphasize ? 'font-bold text-accent-dark-red whitespace-nowrap' : 'text-primary-dark opacity-80'}`}
                             >
                               {value}
                             </td>
@@ -278,25 +278,25 @@ function ServicesPageContent() {
         </Suspense>
 
         <div className="max-lg:sticky max-lg:top-[81px] max-lg:z-30 max-lg:bg-light max-lg:-mx-4 max-lg:px-4 max-lg:py-2 flex flex-wrap justify-center gap-3 mb-12">
-          <button onClick={() => setActiveCategory('exterieur')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'exterieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'exterieur'} onClick={() => setActiveCategory('exterieur')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'exterieur' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Exterieur
           </button>
-          <button onClick={() => setActiveCategory('interieur')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'interieur' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'interieur'} onClick={() => setActiveCategory('interieur')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'interieur' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Interieur
           </button>
-          <button onClick={() => setActiveCategory('full')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'full' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'full'} onClick={() => setActiveCategory('full')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'full' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             <FiShield /> Volledig Pakket
           </button>
-          <button onClick={() => setActiveCategory('polieren')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'polieren' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'polieren'} onClick={() => setActiveCategory('polieren')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'polieren' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Polieren
           </button>
-          <button onClick={() => setActiveCategory('coating')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'coating' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'coating'} onClick={() => setActiveCategory('coating')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'coating' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             <FiShield /> Keramische Coating
           </button>
-          <button onClick={() => setActiveCategory('moto')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'moto' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'moto'} onClick={() => setActiveCategory('moto')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'moto' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             Moto
           </button>
-          <button onClick={() => setActiveCategory('extras')} className={`px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm ${activeCategory === 'extras' ? 'bg-accent-red text-white' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
+          <button type="button" aria-pressed={activeCategory === 'extras'} onClick={() => setActiveCategory('extras')} className={`min-h-11 px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 ${activeCategory === 'extras' ? 'bg-accent-red text-primary-dark' : 'bg-primary-dark text-light hover:bg-secondary-dark'}`}>
             <FiPlusCircle /> Extra&apos;s
           </button>
         </div>

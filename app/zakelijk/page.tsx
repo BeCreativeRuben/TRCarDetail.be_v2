@@ -50,17 +50,17 @@ export default function ZakelijkHomePage() {
               vanuit Sint-Niklaas door heel Vlaanderen.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link href="/zakelijk/offerte" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="flex items-center gap-2 w-full sm:w-auto">
+              <Link href="/zakelijk/offerte" className="inline-flex w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="pointer-events-none flex items-center gap-2 w-full sm:w-auto">
                   <FiFileText className="w-5 h-5" aria-hidden />
                   Offerte aanvragen
                 </Button>
               </Link>
-              <Link href="/zakelijk/aanbod" className="w-full sm:w-auto">
+              <Link href="/zakelijk/aanbod" className="inline-flex w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
-                  className="flex items-center gap-2 w-full sm:w-auto text-white border-white/80 hover:border-accent-red"
+                  className="pointer-events-none flex items-center gap-2 w-full sm:w-auto text-white border-white/80 hover:border-accent-red"
                 >
                   Bekijk ons aanbod
                 </Button>

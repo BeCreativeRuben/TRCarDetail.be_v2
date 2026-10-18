@@ -235,7 +235,7 @@ export default function ZakelijkQuoteForm() {
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-accent-red">
+        <p role="alert" className="text-sm text-accent-dark-red">
           {error}
         </p>
       )}

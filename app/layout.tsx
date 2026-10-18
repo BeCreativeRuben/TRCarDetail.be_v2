@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   },
   description: pageMetadata.home.description as string,
   keywords: pageMetadata.home.keywords as string[],
-  alternates: { canonical: SITE_URL },
+  alternates: {
+    canonical: SITE_URL,
+    languages: { 'nl-BE': SITE_URL, 'x-default': SITE_URL },
+  },
   icons: {
     icon: '/logo.jpg',
     apple: '/logo.jpg',

@@ -14,13 +14,11 @@ import {
 } from '@/lib/services-catalog'
 import type { Service } from '@/lib/types'
 
-function canonicalSiteUrl(): string {
-  const raw = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.trcardetail.be').replace(/\/$/, '')
-  // Enforce www as the canonical host (non-www 307-redirects to www in production)
-  return raw.replace('https://trcardetail.be', 'https://www.trcardetail.be')
-}
-
-export const SITE_URL = canonicalSiteUrl()
+/**
+ * Altijd de productiehost. Preview- en lokale builds mogen NEXT_PUBLIC_SITE_URL
+ * niet laten doorlekken naar canonicals, OG-urls, sitemap of JSON-LD.
+ */
+export const SITE_URL = 'https://www.trcardetail.be'
 
 export const SITE_NAME = 'T&R Car Detail'
 
@@ -28,7 +26,7 @@ export const SITE_NAME = 'T&R Car Detail'
  * Laatste inhoudelijke wijziging van de site (sitemap <lastmod>).
  * Bijwerken bij een echte inhoudswijziging; niet bij elke build, anders negeert Google het signaal.
  */
-export const SITE_LAST_MODIFIED = '2026-10-16'
+export const SITE_LAST_MODIFIED = '2026-10-18'
 
 export const BUSINESS = {
   name: SITE_NAME,
@@ -101,7 +99,13 @@ export function createPageMetadata({
     title: fullTitle,
     description,
     keywords: [...keywords, ...DEFAULT_KEYWORDS],
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        'nl-BE': url,
+        'x-default': url,
+      },
+    },
     robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
       title: fullTitle,
@@ -130,41 +134,41 @@ export function createPageMetadata({
 
 export const pageMetadata = {
   home: createPageMetadata({
-    title: 'Car Detailing Vlaanderen – Autoreiniging aan Huis',
+    title: 'Car Detailing aan Huis in Vlaanderen',
     description:
       `Car detailing aan huis in Vlaanderen vanuit Sint-Niklaas. Interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, polijsten en coating. Boek online in een paar stappen.`,
-    path: '/',
+    path: '',
     keywords: ['car cleaning Vlaanderen', 'detailing aan huis België', 'car detailing boeken'],
   }),
   about: createPageMetadata({
-    title: 'Over Ons – Car Detailing Team in Vlaanderen',
+    title: 'Over Ons – Detailing in Vlaanderen',
     description:
-      'Leer T&R Car Detail kennen: ervaren team voor auto detailing in Vlaanderen. Showroomkwaliteit, aan huis, vanuit Sint-Niklaas.',
+      'Leer T&R Car Detail kennen: Thibo en Renzo voor auto detailing aan huis in Vlaanderen. Showroomkwaliteit vanuit Sint-Niklaas, met de beste producten.',
     path: '/about',
   }),
   services: createPageMetadata({
-    title: 'Diensten – Auto Detailing & Car Cleaning Vlaanderen',
+    title: 'Diensten & Prijzen – Detailing Vlaanderen',
     description:
       `Alle pakketten en prijzen: interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, volledig pakket, polijsten, coating en extra's. Car detailing aan huis in Vlaanderen.`,
     path: '/services',
     keywords: ['auto detailing pakketten', 'interieur detailing', 'exterieur detailing', 'car detailing boeken'],
   }),
   booking: createPageMetadata({
-    title: 'Boek Uw Afspraak – Car Detailing aan Huis Vlaanderen',
+    title: 'Boek Uw Afspraak – Detailing aan Huis',
     description:
       'Boek hier uw car detailing aan huis in Vlaanderen. Kies pakket, datum en tijd — wij komen naar u toe vanuit Sint-Niklaas (Oost-Vlaanderen).',
     path: '/booking',
     keywords: ['car detailing boeken', 'afspraak autoreiniging', 'car detailing Vlaanderen boeken'],
   }),
   contact: createPageMetadata({
-    title: 'Contact – Car Detailing Sint-Niklaas & Vlaanderen',
+    title: 'Contact Car Detailing Sint-Niklaas',
     description:
-      'Neem contact op met T&R Car Detail. Heidebloemstraat 66, 9100 Sint-Niklaas. Car detailing aan huis in Vlaanderen – bel, mail of boek online.',
+      'Neem contact op met T&R Car Detail. Heidebloemstraat 66 Bus 11, 9100 Sint-Niklaas. Car detailing aan huis in Vlaanderen – bel, mail of boek online.',
     path: '/contact',
     keywords: ['car detailing Sint-Niklaas contact'],
   }),
   faq: createPageMetadata({
-    title: 'Veelgestelde Vragen – Car Detailing Vlaanderen',
+    title: 'Veelgestelde Vragen – Vlaanderen',
     description:
       'Prijzen, duur, wat inbegrepen is, water en stroom, kilometervergoeding en werkgebied: antwoorden over car detailing aan huis in Vlaanderen.',
     path: '/faq',
@@ -172,7 +176,7 @@ export const pageMetadata = {
   privacy: createPageMetadata({
     title: 'Privacyvoorwaarden',
     description:
-      'Privacy en cookiegebruik op de website van T&R Car Detail. We gebruiken Google Analytics voor anonieme statistieken.',
+      'Privacybeleid van T&R Car Detail, Heidebloemstraat 66 Bus 11, Sint-Niklaas. Cookies, Google Analytics en hoe we contact- en boekingsgegevens verwerken.',
     path: '/privacy',
     noIndex: true,
   }),
@@ -208,7 +212,7 @@ export const pageMetadata = {
 export function buildLocalBusinessJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'AutoWash',
+    '@type': ['AutoRepair', 'LocalBusiness'],
     '@id': `${SITE_URL}/#business`,
     name: BUSINESS.name,
     alternateName: 'T&R Car Detailing',
@@ -351,13 +355,16 @@ export const SITEMAP_PATHS = [
 type OfferInput = { name: string; description: string; price: number; fromPrice?: boolean; url: string }
 
 function offer({ name, description, price, fromPrice = false, url }: OfferInput) {
+  const priceText = price.toFixed(2)
   return {
     '@type': 'Offer',
     url,
     priceCurrency: 'EUR',
+    price: priceText,
+    availability: 'https://schema.org/InStock',
     ...(fromPrice
-      ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: price, priceCurrency: 'EUR' } }
-      : { price }),
+      ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: priceText, priceCurrency: 'EUR' } }
+      : {}),
     itemOffered: {
       '@type': 'Service',
       name,
@@ -404,7 +411,7 @@ export function buildOfferCatalogJsonLd() {
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'AutoWash',
+    '@type': ['AutoRepair', 'LocalBusiness'],
     '@id': `${SITE_URL}/#business`,
     name: BUSINESS.name,
     hasOfferCatalog: {

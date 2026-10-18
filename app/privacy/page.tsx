@@ -2,25 +2,18 @@
 
 import { motion } from 'framer-motion'
 import Card from '@/components/ui/Card'
+import PageHero from '@/components/brand/PageHero'
 import { ENTERPRISE_NUMBER_LABEL, VAT_EXEMPT_LEGAL } from '@/lib/business'
 
 export default function PrivacyPage() {
   return (
-    <div className="pt-20 pb-20 bg-light min-h-screen">
+    <div className="pb-20 bg-light min-h-screen">
+      <PageHero eyebrow="Juridisch" title="Privacyvoorwaarden" withRedPaper={false}>
+        <p className="text-lg md:text-xl text-light/85 max-w-2xl mx-auto">
+          Hoe wij omgaan met uw gegevens op deze website
+        </p>
+      </PageHero>
       <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">
-            Privacyvoorwaarden
-          </h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-2xl mx-auto">
-            Hoe wij omgaan met uw gegevens op deze website
-          </p>
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,11 +28,11 @@ export default function PrivacyPage() {
               <br />
               Heidebloemstraat 66 Bus 11, 9100 Sint-Niklaas
               <br />
-              <a href="mailto:info@trcardetail.be" className="text-accent-red font-semibold hover:underline">
+              <a href="mailto:info@trcardetail.be" className="text-accent-dark-red font-semibold hover:underline">
                 info@trcardetail.be
               </a>
               {' · '}
-              <a href="tel:+32499128500" className="text-accent-red font-semibold hover:underline">
+              <a href="tel:+32499128500" className="text-accent-dark-red font-semibold hover:underline">
                 +32 499 12 85 00
               </a>
             </p>
@@ -60,7 +53,7 @@ export default function PrivacyPage() {
             </p>
             <p className="text-primary-dark opacity-80 leading-relaxed mt-4">
               Voor vragen over ons privacybeleid kunt u contact met ons opnemen via{' '}
-              <a href="mailto:info@trcardetail.be" className="text-accent-red font-semibold hover:underline">
+              <a href="mailto:info@trcardetail.be" className="text-accent-dark-red font-semibold hover:underline">
                 info@trcardetail.be
               </a>.
             </p>

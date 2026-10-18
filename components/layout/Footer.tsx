@@ -4,6 +4,12 @@ import { instagram } from '@/lib/socials'
 import Logo from '@/components/brand/Logo'
 import Texture from '@/components/brand/Texture'
 import TornEdge from '@/components/brand/TornEdge'
+
+const focusRing =
+  'rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark'
+
+const footerHeading = 'text-lg font-semibold normal-case leading-snug tracking-normal text-light mb-4'
+
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-primary-dark">
@@ -20,19 +26,19 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-light mb-4">Links</h4>
+            <h2 className={footerHeading}>Links</h2>
             <ul className="space-y-2">
-              <li><Link href="/about" className="text-light hover:text-accent-red transition-colors text-sm">Over ons</Link></li>
-              <li><Link href="/services" className="text-light hover:text-accent-red transition-colors text-sm">Diensten</Link></li>
-              <li><Link href="/zakelijk" className="text-light hover:text-accent-red transition-colors text-sm">Zakelijk</Link></li>
-              <li><Link href="/faq" className="text-light hover:text-accent-red transition-colors text-sm">FAQ</Link></li>
-              <li><Link href="/contact" className="text-light hover:text-accent-red transition-colors text-sm">Contact</Link></li>
-              <li><Link href="/privacy" className="text-light hover:text-accent-red transition-colors text-sm">Privacy</Link></li>
+              <li><Link href="/about" className={`text-light hover:text-accent-red transition-colors text-sm ${focusRing}`}>Over ons</Link></li>
+              <li><Link href="/services" className={`text-light hover:text-accent-red transition-colors text-sm ${focusRing}`}>Diensten</Link></li>
+              <li><Link href="/zakelijk" className={`text-light hover:text-accent-red transition-colors text-sm ${focusRing}`}>Zakelijk</Link></li>
+              <li><Link href="/faq" className={`text-light hover:text-accent-red transition-colors text-sm ${focusRing}`}>FAQ</Link></li>
+              <li><Link href="/contact" className={`text-light hover:text-accent-red transition-colors text-sm ${focusRing}`}>Contact</Link></li>
+              <li><Link href="/privacy" className={`text-light hover:text-accent-red transition-colors text-sm ${focusRing}`}>Privacy</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-light mb-4">Contact</h4>
+            <h2 className={footerHeading}>Contact</h2>
             <ul className="space-y-3 text-sm text-light">
               <li className="flex items-start gap-2">
                 <FiMapPin className="text-accent-red flex-shrink-0 mt-0.5" />
@@ -40,19 +46,19 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <FiPhone className="text-accent-red flex-shrink-0" />
-                <a href="tel:+32499128500" className="hover:text-accent-red transition-colors">+32 499 12 85 00</a>
+                <a href="tel:+32499128500" className={`hover:text-accent-red transition-colors ${focusRing}`}>+32 499 12 85 00</a>
               </li>
               <li className="flex items-center gap-2">
                 <FiMail className="text-accent-red flex-shrink-0" />
-                <a href="mailto:info@trcardetail.be" className="hover:text-accent-red transition-colors">info@trcardetail.be</a>
+                <a href="mailto:info@trcardetail.be" className={`hover:text-accent-red transition-colors ${focusRing}`}>info@trcardetail.be</a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-light mb-4">Volg ons</h4>
+            <h2 className={footerHeading}>Volg ons</h2>
             <div className="flex space-x-4">
-              <a href={instagram.url} target="_blank" rel="noopener noreferrer" className="text-light hover:text-accent-red transition-colors" aria-label="Instagram">
+              <a href={instagram.url} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center min-h-11 min-w-11 text-light hover:text-accent-red transition-colors ${focusRing}`} aria-label="Instagram">
                 <FiInstagram size={24} />
               </a>
             </div>

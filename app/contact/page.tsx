@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
@@ -9,6 +8,7 @@ import Card from '@/components/ui/Card'
 import { FiMail, FiPhone, FiMapPin, FiCalendar } from 'react-icons/fi'
 import { trackContactConversion } from '@/lib/google-ads'
 import { WEEKDAY_OPENING_HOURS, WEEKEND_OPENING_HOURS } from '@/lib/booking-slots'
+import PageHero from '@/components/brand/PageHero'
 
 function formatHoursRange(opens: string, closes: string): string {
   return `${opens} – ${closes}`
@@ -26,11 +26,11 @@ function OpeningHours() {
           Tot begin april zijn er geen vaste openingstijden. Neem contact op via telefoon of e-mail voor beschikbaarheid.
         </p>
         <div className="flex flex-wrap gap-3">
-          <a href="tel:+32499128500" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors text-sm">
+          <a href="tel:+32499128500" className="inline-flex items-center gap-2 min-h-11 text-accent-dark-red font-semibold hover:underline transition-colors text-sm">
             <FiPhone size={18} />
             Bel ons
           </a>
-          <a href="mailto:info@trcardetail.be" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors text-sm">
+          <a href="mailto:info@trcardetail.be" className="inline-flex items-center gap-2 min-h-11 text-accent-dark-red font-semibold hover:underline transition-colors text-sm">
             <FiMail size={18} />
             Mail ons
           </a>
@@ -51,7 +51,7 @@ function OpeningHours() {
           <span className="font-medium text-primary-dark">{formatHoursRange(WEEKEND_OPENING_HOURS.opens, WEEKEND_OPENING_HOURS.closes)}</span>
         </li>
       </ul>
-      <Link href="/booking" className="inline-flex items-center gap-2 text-accent-red font-semibold hover:underline transition-colors">
+      <Link href="/booking" className="inline-flex items-center gap-2 min-h-11 text-accent-dark-red font-semibold hover:underline transition-colors">
         <FiCalendar size={18} />
         Bekijk kalender
       </Link>
@@ -87,17 +87,16 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="pt-20 pb-0 bg-light min-h-screen">
+    <div className="pb-16 bg-light min-h-screen">
+      <PageHero eyebrow="Sint-Niklaas" title="Contact">
+        <p className="text-lg md:text-xl text-light/85 max-w-2xl mx-auto">Heeft u vragen of wilt u meer informatie? Neem gerust contact met ons op!</p>
+      </PageHero>
       <div className="container-custom">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-dark mb-6">Contact</h1>
-          <p className="text-xl text-primary-dark opacity-80 max-w-2xl mx-auto">Heeft u vragen of wilt u meer informatie? Neem gerust contact met ons op!</p>
-        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="space-y-6 lg:order-1">
             <Card>
-              <h3 className="text-xl font-bold text-primary-dark mb-4">Contactgegevens</h3>
+              <h2 className="text-xl font-bold normal-case leading-snug tracking-normal text-primary-dark mb-4">Contactgegevens</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <FiMapPin className="text-accent-red mt-1 flex-shrink-0" size={20} />
@@ -123,14 +122,14 @@ export default function ContactPage() {
               </div>
             </Card>
             <Card>
-              <h3 className="text-xl font-bold text-primary-dark mb-4">Openingstijden</h3>
+              <h2 className="text-xl font-bold normal-case leading-snug tracking-normal text-primary-dark mb-4">Openingstijden</h2>
               <OpeningHours />
             </Card>
           </div>
 
           <div className="lg:col-span-2 lg:order-2">
             <Card>
-              <h2 className="text-2xl font-bold text-primary-dark mb-6">Stuur ons een bericht</h2>
+              <h2 className="text-2xl font-bold normal-case leading-snug tracking-normal text-primary-dark mb-6">Stuur ons een bericht</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input label="Naam" type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
@@ -138,11 +137,11 @@ export default function ContactPage() {
                 </div>
                 <Input label="Telefoon" type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                 <div>
-                  <label className="block text-sm font-medium text-primary-dark mb-2">Bericht</label>
-                  <textarea required rows={6} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200" />
+                  <label htmlFor="contact-message" className="block text-sm font-medium text-primary-dark mb-2">Bericht</label>
+                  <textarea id="contact-message" required rows={6} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-lg bg-light border-2 border-secondary-dark border-opacity-30 text-primary-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-red focus:border-transparent transition-all duration-200" />
                 </div>
-                {submitStatus === 'success' && <div className="bg-green-500 bg-opacity-20 border border-green-500 rounded-lg p-4 text-green-400">Bedankt! Uw bericht is verzonden. We nemen zo spoedig mogelijk contact met u op.</div>}
-                {submitStatus === 'error' && <div className="bg-accent-red bg-opacity-20 border border-accent-red rounded-lg p-4 text-accent-red">Er is een fout opgetreden. Probeer het later opnieuw.</div>}
+                {submitStatus === 'success' && <div role="status" className="bg-green-50 border border-green-800 rounded-lg p-4 text-green-900">Bedankt! Uw bericht is verzonden. We nemen zo spoedig mogelijk contact met u op.</div>}
+                {submitStatus === 'error' && <div role="alert" className="bg-accent-red/10 border border-accent-dark-red rounded-lg p-4 text-accent-dark-red">Er is een fout opgetreden. Probeer het later opnieuw.</div>}
                 <Button
                   type="submit"
                   id="contact-form-submit"

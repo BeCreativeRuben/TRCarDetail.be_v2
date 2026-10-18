@@ -8,7 +8,7 @@ import PageHero from '@/components/brand/PageHero'
 function BookingContent() {
   return (
     <div className="pb-16 md:pb-24 bg-light min-h-screen">
-        <PageHero eyebrow="Reserveer je afspraak" title="Boek Uw Afspraak">
+        <PageHero eyebrow="Reserveer je afspraak" title="Boek Uw Afspraak" withRedPaper={false}>
           <p className="text-lg md:text-xl text-light/85 max-w-2xl mx-auto">
             Vul het formulier in om een afspraak te maken. We nemen zo spoedig mogelijk contact met u op om te bevestigen.
           </p>

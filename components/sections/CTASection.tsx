@@ -46,15 +46,15 @@ export default function CTASection({
           )}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {primaryIsBooking ? (
-              <TrackedBookLink href={primaryAction.to.includes('?') ? primaryAction.to : `${primaryAction.to}?from=${trackLocation}`} location={trackLocation}>
-                <Button variant="primary" size="lg" className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
+              <TrackedBookLink href={primaryAction.to.includes('?') ? primaryAction.to : `${primaryAction.to}?from=${trackLocation}`} location={trackLocation} className="inline-flex">
+                <Button variant="primary" size="lg" className="pointer-events-none flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
                   <PrimaryIcon className="w-5 h-5" />
                   {primaryAction.label}
                 </Button>
               </TrackedBookLink>
             ) : (
-              <Link href={primaryAction.to}>
-                <Button variant="primary" size="lg" className="flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
+              <Link href={primaryAction.to} className="inline-flex">
+                <Button variant="primary" size="lg" className="pointer-events-none flex items-center gap-2 hover:bg-white hover:text-primary-dark hover:shadow-lg">
                   <PrimaryIcon className="w-5 h-5" />
                   {primaryAction.label}
                 </Button>
@@ -62,15 +62,15 @@ export default function CTASection({
             )}
             {secondaryAction && (
               secondaryIsBooking ? (
-                <TrackedBookLink href={secondaryAction.to.includes('?') ? secondaryAction.to : `${secondaryAction.to}?from=${trackLocation}_secondary`} location={`${trackLocation}_secondary`}>
-                  <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white/95 hover:text-primary-dark hover:border-white flex items-center gap-2">
+                <TrackedBookLink href={secondaryAction.to.includes('?') ? secondaryAction.to : `${secondaryAction.to}?from=${trackLocation}_secondary`} location={`${trackLocation}_secondary`} className="inline-flex">
+                  <Button variant="outline" size="lg" className="pointer-events-none bg-transparent border-white text-white hover:bg-white/95 hover:text-primary-dark hover:border-white flex items-center gap-2">
                     <SecondaryIcon className="w-5 h-5" />
                     {secondaryAction.label}
                   </Button>
                 </TrackedBookLink>
               ) : (
-                <Link href={secondaryAction.to}>
-                  <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white/95 hover:text-primary-dark hover:border-white flex items-center gap-2">
+                <Link href={secondaryAction.to} className="inline-flex">
+                  <Button variant="outline" size="lg" className="pointer-events-none bg-transparent border-white text-white hover:bg-white/95 hover:text-primary-dark hover:border-white flex items-center gap-2">
                     <SecondaryIcon className="w-5 h-5" />
                     {secondaryAction.label}
                   </Button>

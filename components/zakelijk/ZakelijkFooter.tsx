@@ -24,7 +24,7 @@ export default function ZakelijkFooter() {
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold text-light mb-4">Links</h4>
+              <h2 className="text-lg font-semibold normal-case leading-snug tracking-normal text-light mb-4">Links</h2>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link href="/zakelijk" className={`text-light hover:text-accent-red transition-colors ${focusRing}`}>
@@ -55,7 +55,7 @@ export default function ZakelijkFooter() {
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold text-light mb-4">Contact</h4>
+              <h2 className="text-lg font-semibold normal-case leading-snug tracking-normal text-light mb-4">Contact</h2>
               <ul className="space-y-3 text-sm text-light">
                 <li className="flex items-start gap-2">
                   <FiMapPin className="text-accent-red flex-shrink-0 mt-0.5" aria-hidden />

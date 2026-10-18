@@ -28,7 +28,7 @@ export default function ReviewCTA() {
           <p className="text-light/80 text-lg max-w-xl mx-auto lg:mx-0 mb-8">
             Bij T&R Car Detail streven we naar perfectie, tot in de kleinste details. Heb je genoten van onze service? Laat dan een review achter op Google.
           </p>
-          <a href={GOOGLE_MAPS_REVIEW_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-accent-red px-7 py-3 font-semibold text-white hover:bg-accent-dark-red transition-colors">
+          <a href={GOOGLE_MAPS_REVIEW_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-accent-red px-7 py-3 font-semibold text-primary-dark hover:bg-accent-dark-red hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark">
             Schrijf een Google-review <FiArrowUpRight className="w-5 h-5" />
           </a>
         </div>

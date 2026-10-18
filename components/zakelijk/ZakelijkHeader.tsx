@@ -28,7 +28,6 @@ export default function ZakelijkHeader() {
           <Link
             href="/zakelijk"
             className={`flex items-center gap-3 min-w-0 rounded-sm ${focusRing}`}
-            aria-label="T&R Car Detail Zakelijk – home"
           >
             <Logo priority className="h-11 sm:h-12 w-auto shrink-0" />
             <span className="hidden lg:flex flex-col leading-none border-l border-white/20 pl-3">
@@ -63,7 +62,7 @@ export default function ZakelijkHeader() {
 
           <div className="hidden md:block shrink-0">
             <Link href="/zakelijk/offerte" className={`inline-flex rounded-sm ${focusRing}`}>
-              <Button variant="primary" size="sm" className="flex items-center gap-2">
+              <Button variant="primary" size="sm" className="pointer-events-none flex items-center gap-2">
                 <FiFileText className="w-4 h-4" aria-hidden />
                 Offerte aanvragen
               </Button>
@@ -72,7 +71,7 @@ export default function ZakelijkHeader() {
 
           <button
             type="button"
-            className={`md:hidden text-light hover:text-accent-red transition-colors rounded-lg p-2 ${focusRing}`}
+            className={`md:hidden inline-flex items-center justify-center min-h-11 min-w-11 text-light hover:text-accent-red transition-colors rounded-lg ${focusRing}`}
             onClick={() => setIsOpen((open) => !open)}
             aria-label={isOpen ? 'Sluit menu' : 'Menu'}
             aria-expanded={isOpen}
@@ -112,7 +111,7 @@ export default function ZakelijkHeader() {
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className={`p-2 rounded-lg text-light/80 hover:text-accent-red hover:bg-accent-red/10 transition-colors shrink-0 ${focusRing}`}
+                    className={`inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-light/80 hover:text-accent-red hover:bg-accent-red/10 transition-colors shrink-0 ${focusRing}`}
                     aria-label="Sluit menu"
                   >
                     <FiX size={24} />

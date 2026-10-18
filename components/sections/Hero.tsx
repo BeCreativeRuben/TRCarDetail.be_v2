@@ -59,14 +59,14 @@ export default function Hero() {
           <h1 className="text-light mb-5">Car cleaning &amp; detailing <span className="text-accent-red">Vlaanderen</span></h1>
           <p className="text-lg text-light/85 max-w-xl mx-auto lg:mx-0 mb-8">Professionele auto detailing voor een perfect resultaat. Mobiel aan huis vanuit Sint-Niklaas · Oost-Vlaanderen &amp; heel Vlaanderen.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <TrackedBookLink href="/booking?from=hero" location="hero">
-              <Button variant="primary" size="lg" className="flex items-center gap-2 w-full sm:w-auto">
+            <TrackedBookLink href="/booking?from=hero" location="hero" className="inline-flex">
+              <Button variant="primary" size="lg" className="pointer-events-none flex items-center gap-2 w-full sm:w-auto">
                 <FiCalendar className="w-5 h-5" />
                 Boek Nu
               </Button>
             </TrackedBookLink>
-            <Link href="/services">
-              <Button variant="outline" size="lg" className="flex items-center gap-2 w-full sm:w-auto text-white border-white/80 hover:border-accent-red">
+            <Link href="/services" className="inline-flex">
+              <Button variant="outline" size="lg" className="pointer-events-none flex items-center gap-2 w-full sm:w-auto text-white border-white/80 hover:border-accent-red">
                 <FiList className="w-5 h-5" />
                 Bekijk pakketten
               </Button>
@@ -74,7 +74,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative mx-auto w-full max-w-xl">
-          <div aria-hidden className="absolute -right-6 -bottom-8 w-[80%] aspect-[879/624] bg-no-repeat bg-contain bg-right-bottom rotate-6" style={{ backgroundImage: "url('/brand/paper-red.png')" }} />
+          <div aria-hidden className="pointer-events-none absolute right-0 sm:-right-6 -bottom-8 w-[80%] aspect-[879/624] bg-no-repeat bg-contain bg-right-bottom rotate-6" style={{ backgroundImage: "url('/brand/paper-red.png')" }} />
           <div className="relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,.6)] -rotate-2 bg-secondary-dark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={HERO_POSTER} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover" />
@@ -105,7 +105,7 @@ export default function Hero() {
       <div className="relative z-10 bg-accent-red">
         <TornEdge position="top" color="#FF2E00" />
         <div className="container-custom py-6">
-          <ServiceIcons className="max-w-3xl mx-auto [&_img]:brightness-0 [&_img]:invert" />
+          <ServiceIcons className="max-w-3xl mx-auto [&_img]:brightness-0 [&_img]:invert [&_a>span:last-child]:!text-primary-dark [&_a:hover>span:last-child]:!text-primary-dark" />
         </div>
       </div>
     </section>

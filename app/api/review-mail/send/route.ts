@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server'
+import { isAdminConfigured } from '@/lib/admin-auth'
 import { sendReviewRequest } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    if (process.env.ADMIN_PASSWORD && body.password !== process.env.ADMIN_PASSWORD) {
+    if (!isAdminConfigured()) {
+      return NextResponse.json(
+        { error: 'Review-mail is uitgeschakeld. Stel ADMIN_PASSWORD in.' },
+        { status: 401 }
+      )
+    }
+
+    if (body.password !== process.env.ADMIN_PASSWORD) {
       return NextResponse.json({ error: 'Onjuist wachtwoord.' }, { status: 401 })
     }
 

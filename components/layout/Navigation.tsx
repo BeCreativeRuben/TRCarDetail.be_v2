@@ -30,7 +30,7 @@ export default function Navigation() {
           <Link
             key={path}
             href={path}
-            className={`text-sm font-medium transition-colors duration-200 ${
+            className={`text-sm font-medium transition-colors duration-200 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark ${
               pathname === path ? 'text-accent-red' : 'text-light hover:text-accent-red'
             }`}
           >
@@ -40,9 +40,11 @@ export default function Navigation() {
       </nav>
 
       <button
-        className="md:hidden text-light hover:text-accent-red transition-colors"
+        className="md:hidden inline-flex items-center justify-center min-h-11 min-w-11 text-light hover:text-accent-red transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle menu"
+        aria-label={isOpen ? 'Sluit menu' : 'Open menu'}
+        aria-expanded={isOpen}
+        aria-controls="mobile-nav"
       >
         {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
       </button>
@@ -59,6 +61,8 @@ export default function Navigation() {
               onClick={() => setIsOpen(false)}
             />
             <motion.nav
+              id="mobile-nav"
+              aria-label="Hoofdmenu"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -70,7 +74,7 @@ export default function Navigation() {
                   <Logo className="h-9 w-auto" />
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-lg text-light/80 hover:text-accent-red hover:bg-accent-red/10 transition-colors"
+                    className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg text-light/80 hover:text-accent-red hover:bg-accent-red/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
                     aria-label="Sluit menu"
                   >
                     <FiX size={24} />
@@ -90,7 +94,7 @@ export default function Navigation() {
                         <Link
                           href={path}
                           onClick={() => setIsOpen(false)}
-                          className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                          className={`flex items-center gap-3 min-h-11 px-4 py-3 rounded-xl font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${
                             isActive ? 'bg-accent-red/15 text-accent-red' : 'text-light/90 hover:bg-secondary-dark/50 hover:text-accent-red'
                           }`}
                         >
