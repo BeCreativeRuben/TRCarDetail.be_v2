@@ -1,4 +1,6 @@
 import { EMAIL_BRAND, emailWrapper, escapeHtml } from '@/lib/email-layout'
+import { formatDutchDate } from '@/lib/email-format'
+import { formatServiceType } from '@/lib/service-labels'
 import { GOOGLE_MAPS_REVIEW_URL } from '@/lib/socials'
 
 export const REVIEW_MAIL_SUBJECT = 'Hoe was uw ervaring? – T&R Car Detail'
@@ -10,25 +12,35 @@ export type ReviewEmailFields = {
   personalMessage?: string
 }
 
+function displayService(serviceType: string): string {
+  return formatServiceType(serviceType.trim() || 'behandeling')
+}
+
+function displayDate(appointmentDate?: string): string {
+  const value = appointmentDate?.trim()
+  return value ? formatDutchDate(value) : ''
+}
+
 function serviceSentence(serviceType: string, appointmentDate?: string): string {
-  const service = escapeHtml(serviceType.trim() || 'behandeling')
-  if (appointmentDate?.trim()) {
-    return `Onlangs heeft u bij ons een <strong>${service}</strong> laten uitvoeren (${escapeHtml(appointmentDate.trim())}). We hopen dat u tevreden bent!`
+  const service = escapeHtml(displayService(serviceType))
+  const date = displayDate(appointmentDate)
+  if (date) {
+    return `Onlangs heeft u bij ons een <strong>${service}</strong> laten uitvoeren (${escapeHtml(date)}). We hopen dat u tevreden bent!`
   }
   return `Onlangs heeft u bij ons een <strong>${service}</strong> laten uitvoeren. We hopen dat u tevreden bent!`
 }
 
 function serviceSentenceText(serviceType: string, appointmentDate?: string): string {
-  const service = serviceType.trim() || 'behandeling'
-  if (appointmentDate?.trim()) {
-    return `Onlangs heeft u bij ons een ${service} laten uitvoeren (${appointmentDate.trim()}). We hopen dat u tevreden bent!`
+  const service = displayService(serviceType)
+  const date = displayDate(appointmentDate)
+  if (date) {
+    return `Onlangs heeft u bij ons een ${service} laten uitvoeren (${date}). We hopen dat u tevreden bent!`
   }
   return `Onlangs heeft u bij ons een ${service} laten uitvoeren. We hopen dat u tevreden bent!`
 }
 
-export function defaultReviewPersonalMessage(customerName: string, serviceType: string): string {
-  const name = customerName.trim() || 'klant'
-  const service = serviceType.trim() || 'behandeling'
+export function defaultReviewPersonalMessage(_customerName: string, serviceType: string): string {
+  const service = displayService(serviceType)
   return `We hopen dat u tevreden bent met uw ${service}! Zou u even willen laten weten hoe u onze service ervaren heeft? Uw feedback helpt ons enorm — u kunt eenvoudig antwoorden op deze e-mail.`
 }
 

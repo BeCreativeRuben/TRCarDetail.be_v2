@@ -1,20 +1,35 @@
-const SERVICE_LABELS: Record<string, string> = {
-  'exterieur-basis': 'Exterieur Basis',
-  'exterieur-deluxe': 'Exterieur Deluxe',
-  'full-basis': 'Basis Pakket',
-  'full-deluxe': 'Deluxe Pakket',
-  'full-premium': 'Premium Pakket',
-  'full-custom': 'Combinatie op maat',
-  'interieur-basis': 'Interieur Basis',
-  'interieur-deluxe': 'Interieur Deluxe',
-  'interieur-premium': 'Interieur Premium',
+import {
+  coatingServices,
+  exterieurCatalog,
+  extrasServices,
+  fullServices,
+  interieurCatalog,
+  motoServices,
+} from '@/lib/services-catalog'
+
+/**
+ * Polijsten staat in de catalogus als vergelijkingstabel, niet als Service met id+name.
+ * Deze fallback dekt die ids tot ze daar een eigen naam krijgen.
+ */
+const FALLBACK_LABELS: Record<string, string> = {
   'polijsten-light': 'Light Polish',
   'polijsten-full': 'Full Polish',
-  'coating-basis': 'Coating Basis',
-  'coating-deluxe': 'Coating Deluxe',
-  'coating-premium': 'Coating Premium',
 }
 
+const catalogNames = new Map<string, string>()
+for (const service of [
+  ...interieurCatalog,
+  ...exterieurCatalog,
+  ...fullServices,
+  ...coatingServices,
+  ...motoServices,
+  ...extrasServices,
+]) {
+  catalogNames.set(service.id, service.name)
+}
+
+/** Id uit de diensten-catalogus → weergavenaam. Een naam die al uitgeschreven is, blijft staan. */
 export function formatServiceType(serviceType: string): string {
-  return SERVICE_LABELS[serviceType] ?? serviceType
+  const key = serviceType.trim()
+  return catalogNames.get(key) ?? FALLBACK_LABELS[key] ?? serviceType
 }
