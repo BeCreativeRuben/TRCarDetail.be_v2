@@ -13,8 +13,9 @@ import { images } from '@/lib/images'
 import ReviewCTA from '@/components/brand/ReviewCTA'
 import Highlights from '@/components/brand/Highlights'
 import Texture from '@/components/brand/Texture'
+import type { InstagramPost } from '@/lib/behold'
 
-export default function HomePage() {
+export default function HomePage({ instagramPosts = null }: { instagramPosts?: InstagramPost[] | null }) {
   return (
     <>
       <Hero />
@@ -44,7 +45,7 @@ export default function HomePage() {
       <ProcessSection />
       <Testimonials />
       <ReviewCTA />
-      <SocialsSection />
+      <SocialsSection posts={instagramPosts} />
       <QualitySection />
       <CTASection
         title="Klaar om uw Auto te Laten Detailen?"

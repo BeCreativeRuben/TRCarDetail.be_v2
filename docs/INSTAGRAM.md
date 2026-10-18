@@ -1,5 +1,25 @@
 # Instagram-integratie
 
+## Live feed via Behold (actief)
+
+De sectie "Laatste posts" op de homepage haalt de **3 laatste posts** op via een
+[Behold](https://behold.so) JSON-feed (`lib/behold.ts`). De fetch gebeurt server-side met
+ISR (revalidate 1 uur), dus bezoekers raken Behold nooit rechtstreeks en we blijven ruim onder
+de 1.200 views/maand van het gratis plan (Behold telt elke request naar de feed-URL als 1 view).
+
+- Env var (Vercel, Production + Preview, server-only): `BEHOLD_FEED_URL=https://feeds.behold.so/<feed-id>`
+- Ontbreekt de variabele, of faalt de feed (timeout 5 s, HTTP-fout, lege feed), dan toont de site
+  de vaste posts uit `NEXT_PUBLIC_INSTAGRAM_POST_SHORTCODES` / de fallback in `lib/socials.ts`.
+- Free plan: max 6 posts, Behold ververst 1x per dag. Een nieuwe post kan dus tot ~25 uur nodig
+  hebben om op de site te verschijnen (dag Behold + max 1 u ISR).
+- Behold-instellingen: feed-type **JSON**, *Domain whitelist* leeg laten (server-side requests hebben
+  geen Origin-header).
+- Vereist een **Business**- of **Creator**-Instagram-account.
+
+---
+
+## Legacy (niet meer gebruikt door de homepage)
+
 De site gebruikt Instagram op twee manieren:
 
 1. **Links** – De knop “Volg ons op Instagram” en het icoon in de footer linken naar jullie Instagram-profiel.
