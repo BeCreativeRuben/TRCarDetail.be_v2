@@ -27,7 +27,7 @@ export function escapeHtml(value: string): string {
 }
 
 function emailLegalFooterHtml(): string {
-  return `${EMAIL_BRAND.name} · Wij zorgen voor uw wagen<br/><span style="display:block; margin-top:8px;">${ENTERPRISE_NUMBER_LABEL}<br/>${VAT_EXEMPT_LEGAL}</span>`
+  return `${escapeHtml(EMAIL_BRAND.name)} · Wij zorgen voor uw wagen<br/><span style="display:block; margin-top:8px;">${escapeHtml(ENTERPRISE_NUMBER_LABEL)}<br/>${escapeHtml(VAT_EXEMPT_LEGAL)}</span>`
 }
 
 /**

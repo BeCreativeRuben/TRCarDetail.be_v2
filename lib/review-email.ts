@@ -61,7 +61,7 @@ export function buildReviewRequestHtml(fields: ReviewEmailFields): string {
     <p style="margin:24px 0 0;">
       <a href="${GOOGLE_MAPS_REVIEW_URL}" class="em-btn" style="display:inline-block; background:${BRAND.accentRed}; color:${BRAND.primaryDark}; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:700;">Review achterlaten</a>
     </p>
-    <p style="margin:24px 0 0;">Alvast bedankt,<br><strong>${BRAND.name}</strong></p>
+    <p style="margin:24px 0 0;">Alvast bedankt,<br><strong>${escapeHtml(BRAND.name)}</strong></p>
   `
 
   return emailWrapper(

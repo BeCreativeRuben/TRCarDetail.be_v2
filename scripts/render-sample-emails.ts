@@ -9,6 +9,7 @@ import path from 'node:path'
 import { formatDutchDate, formatVehicleSize } from '@/lib/email-format'
 import {
   BOOKING_CUSTOMER_SUBJECT,
+  CONTACT_CUSTOMER_SUBJECT,
   CUSTOMER_REPLY_TO,
   mailFromAddress,
   renderTransactionalEmails,
@@ -95,6 +96,9 @@ for (const email of [bookingCustomer, contactCustomer, b2bCustomer]) {
 
 assert.equal(bookingCustomer.subject, BOOKING_CUSTOMER_SUBJECT)
 assert.equal(bookingCustomer.subject, 'Boekingsaanvraag ontvangen – T&R Car Detail')
+assert.equal(contactCustomer.subject, CONTACT_CUSTOMER_SUBJECT)
+assert.equal(contactCustomer.subject, 'Bericht ontvangen – T&R Car Detail')
+assert.ok(contactCustomer.html.includes('<title>Bericht ontvangen – T&amp;R Car Detail</title>'))
 assert.equal(bookingCustomer.subject.includes('Bevestiging'), false)
 assert.equal(bookingAdmin.subject, 'Nieuwe boeking: Exterieur Basis – T&R Car Detail')
 
@@ -146,6 +150,8 @@ assert.ok(b2bAdmin.text.includes('Personenwagens'))
 for (const email of emails) {
   assert.ok(email.html.includes(EMAIL_LOGO_URL), `${email.id} mist het logo`)
   assert.ok(email.html.includes('email-torn.png'), `${email.id} mist de scheurrand`)
+  assert.equal(email.html.includes('T&R'), false, `${email.id} heeft een ruwe ampersand in de merknaam`)
+  assert.ok(email.html.includes('T&amp;R'), `${email.id} mist de merknaam`)
 }
 
 const customNotes = [
@@ -180,7 +186,15 @@ assert.ok(customCustomer.html.includes('€120.00'))
 assert.ok(customCustomer.html.includes('Hondenharen'))
 assert.ok(customCustomer.html.includes('€185.00'))
 assert.ok(customCustomer.html.includes('Graag &lt;i&gt;zacht&lt;/i&gt;'))
-assert.ok(customCustomer.html.includes('indicatie op basis van uw selectie'))
+assert.ok(customCustomer.html.includes('Deze richtprijs is een indicatie op basis van uw selectie'))
+assert.equal(customCustomer.html.includes('>deze richtprijs'), false)
+assert.ok(customCustomer.text.includes('Deze richtprijs is een indicatie op basis van uw selectie'))
+assert.equal(customCustomer.text.includes('deze richtprijs'), false)
+const adresAt = customCustomer.text.indexOf('- Adres:')
+const opmerkingAt = customCustomer.text.indexOf('Uw opmerking:')
+const datumAt = customCustomer.text.indexOf('- Datum:')
+assert.ok(datumAt > 0 && adresAt > datumAt && opmerkingAt > adresAt, 'Uw opmerking staat na de aanvraagdetails')
+assert.ok(customCustomer.text.indexOf('Deze richtprijs') > adresAt)
 assert.equal(customCustomer.html.includes('--- Combinatie op maat ---'), false)
 assert.ok(customAdmin.html.includes('--- Combinatie op maat ---'))
 assert.ok(customCustomer.html.includes('Groot'))
@@ -197,6 +211,8 @@ assert.ok(reviewHtml.includes('Exterieur Basis'))
 assert.ok(reviewHtml.includes('zondag 1 november 2026'))
 assert.equal(reviewHtml.includes('exterieur-basis'), false)
 assert.equal(reviewHtml.includes('<script'), false)
+assert.equal(reviewHtml.includes('T&R'), false)
+assert.ok(reviewHtml.includes('T&amp;R'))
 
 assert.equal(formatServiceType('exterieur-basis'), 'Exterieur Basis')
 assert.equal(formatServiceType('full-custom'), 'Combinatie op maat')

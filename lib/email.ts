@@ -87,6 +87,8 @@ export const CUSTOMER_REPLY_TO = BUSINESS.email
 
 export const BOOKING_CUSTOMER_SUBJECT = 'Boekingsaanvraag ontvangen – T&R Car Detail'
 
+export const CONTACT_CUSTOMER_SUBJECT = 'Bericht ontvangen – T&R Car Detail'
+
 const WHATSAPP_URL = `https://wa.me/${BUSINESS.phone.replace(/\D/g, '')}`
 const PHONE_TEL = `tel:${BUSINESS.phone}`
 
@@ -151,7 +153,7 @@ function parseCustomPackageNotes(specialRequests?: string): CustomPackageBreakdo
       continue
     }
     if (line.startsWith('Toelichting:')) {
-      explanation = line.slice('Toelichting:'.length).trim()
+      explanation = capitaliseFirst(line.slice('Toelichting:'.length).trim())
       inExcluded = false
       continue
     }
@@ -166,6 +168,11 @@ function parseCustomPackageNotes(specialRequests?: string): CustomPackageBreakdo
 }
 
 /** Zelfde escaping als de B2B-mails: alle gebruikersinvoer in HTML. */
+function capitaliseFirst(value: string): string {
+  if (!value) return value
+  return value.charAt(0).toLocaleUpperCase('nl-BE') + value.slice(1)
+}
+
 function escapeEmailHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -278,21 +285,28 @@ function customPackageNotesHtml(booking: BookingPayload): string {
   return explanation + note
 }
 
-function customPackageLinesText(booking: BookingPayload): string[] {
+function customPackageDetailLines(booking: BookingPayload): string[] {
+  if (!isCustomPackageService(booking.serviceType)) return []
+  const parsed = parseCustomPackageNotes(booking.specialRequests)
+  if (!parsed) return []
+  return [
+    ...(parsed.exterieur ? [`- Exterieur: ${parsed.exterieur}`] : []),
+    ...(parsed.interieur ? [`- Interieur: ${parsed.interieur}`] : []),
+    ...(parsed.excluded.length ? [`- Niet inbegrepen: ${parsed.excluded.join(', ')}`] : parsed.noneExcluded ? ['- Geen onderdelen uitgesloten.'] : []),
+    ...(parsed.estimate ? [`- Pakketindicatie: ${parsed.estimate}`] : []),
+  ]
+}
+
+function customPackageNoteLines(booking: BookingPayload): string[] {
   if (!isCustomPackageService(booking.serviceType)) return []
   const parsed = parseCustomPackageNotes(booking.specialRequests)
   if (!parsed) {
     return booking.specialRequests ? ['', 'Uw opmerking:', booking.specialRequests] : []
   }
-  const lines = [
-    ...(parsed.exterieur ? [`- Exterieur: ${parsed.exterieur}`] : []),
-    ...(parsed.interieur ? [`- Interieur: ${parsed.interieur}`] : []),
-    ...(parsed.excluded.length ? [`- Niet inbegrepen: ${parsed.excluded.join(', ')}`] : parsed.noneExcluded ? ['- Geen onderdelen uitgesloten.'] : []),
-    ...(parsed.estimate ? [`- Pakketindicatie: ${parsed.estimate}`] : []),
+  return [
     ...(parsed.explanation ? ['', parsed.explanation] : []),
     ...(parsed.customerNote ? ['', 'Uw opmerking:', parsed.customerNote] : []),
   ]
-  return lines
 }
 
 function reachUsHtml(): string {
@@ -328,7 +342,7 @@ function bookingConfirmationHtml(booking: BookingPayload): string {
     ${booking.totalExclBtw != null && booking.totalExclBtw > 0 ? pricingTotalHtml(booking.totalExclBtw) : ''}
     <p style="margin:24px 0 0;">${reachUsHtml()}</p>
     <p style="margin:16px 0 0; font-size:13px; color:${BRAND.textMuted}; font-style:italic;">Bij diensten aan huis maken we gebruik van uw water en elektriciteit om de werken uit te voeren.</p>
-    <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong></p>
+    <p style="margin:20px 0 0;">Met vriendelijke groet,<br><strong>${esc(BRAND.name)}</strong></p>
   `
   return emailWrapper(
     `Uw boekingsaanvraag bij T&R Car Detail: ${label} op ${date}.`,
@@ -347,7 +361,7 @@ function bookingConfirmationText(booking: BookingPayload): string {
     '',
     'Uw aanvraag:',
     `- Service: ${serviceLabel(booking.serviceType)}`,
-    ...customPackageLinesText(booking),
+    ...customPackageDetailLines(booking),
     `- Datum: ${formatDutchDate(booking.preferredDate)}`,
     `- Tijd: ${booking.preferredTime}`,
     `- Voertuig: ${vehicleLine(booking)}`,
@@ -359,6 +373,7 @@ function bookingConfirmationText(booking: BookingPayload): string {
         ? ['- Kilometervergoeding: Gratis (binnen 15 km)']
         : []),
     ...extrasLinesText(booking),
+    ...customPackageNoteLines(booking),
     ...(booking.totalExclBtw != null && booking.totalExclBtw > 0 ? pricingTotalText(booking.totalExclBtw) : []),
     '',
     reachUsText(),
@@ -501,11 +516,11 @@ function contactAutoReplyHtml(contact: ContactPayload): string {
     <p style="margin:0 0 20px;">Beste ${esc(contact.name)},</p>
     <p style="margin:0 0 24px;">We hebben uw bericht ontvangen en nemen zo spoedig mogelijk contact met u op.</p>
     <p style="margin:24px 0 0;">${reachUsHtml()}</p>
-    <p style="margin:24px 0 0;">Tot dan,<br><strong>${BRAND.name}</strong></p>
+    <p style="margin:24px 0 0;">Tot dan,<br><strong>${esc(BRAND.name)}</strong></p>
   `
   return emailWrapper(
     'We hebben uw bericht ontvangen en nemen zo snel mogelijk contact met u op.',
-    'Bericht ontvangen - T&R Car Detail',
+    CONTACT_CUSTOMER_SUBJECT,
     content
   )
 }
@@ -580,7 +595,7 @@ function b2bQuoteAutoReplyHtml(quote: B2bQuotePayload): string {
     <p style="margin:0 0 20px;">Beste ${esc(quote.contactName)},</p>
     <p style="margin:0 0 24px;">We hebben de aanvraag voor <strong>${esc(quote.companyName)}</strong> goed ontvangen. We nemen binnen 1–2 werkdagen contact met u op om uw vloot, locatie en planning te bespreken.</p>
     <p style="margin:24px 0 0;">${reachUsHtml()}</p>
-    <p style="margin:24px 0 0;">Met vriendelijke groet,<br><strong>${BRAND.name}</strong><br>Zakelijk · Vlootdetailing</p>
+    <p style="margin:24px 0 0;">Met vriendelijke groet,<br><strong>${esc(BRAND.name)}</strong><br>Zakelijk · Vlootdetailing</p>
   `
   return emailWrapper(
     'We hebben uw B2B-offerteaanvraag ontvangen.',
@@ -642,7 +657,7 @@ function contactMessages(contact: ContactPayload, routing: MailRouting): { admin
       from,
       to: contact.email,
       replyTo: CUSTOMER_REPLY_TO,
-      subject: 'Bericht Ontvangen - T&R Car Detail',
+      subject: CONTACT_CUSTOMER_SUBJECT,
       text: contactAutoReplyText(contact),
       html: contactAutoReplyHtml(contact),
     },
