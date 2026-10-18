@@ -36,7 +36,7 @@ import {
 } from '@/lib/custom-package-estimate'
 
 const services: Service[] = [
-  { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€60 · Glanzend en in topvorm', basePrice: 60, largeCarSurcharge: 0, features: [] },
+  { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€50 · Glanzend en in topvorm', basePrice: 50, largeCarSurcharge: 0, features: [] },
   { id: 'exterieur-deluxe', name: 'Exterieur Deluxe', description: '€90 · Decontaminatie was', basePrice: 90, largeCarSurcharge: 0, features: [] },
   { id: 'full-basis', name: 'Basis Pakket', description: '€100 · Basis Pakket', basePrice: 100, largeCarSurcharge: 0, features: [] },
   { id: 'full-deluxe', name: 'Deluxe Pakket', description: '€170 · Deluxe Pakket', basePrice: 170, largeCarSurcharge: 0, features: [] },
@@ -49,7 +49,7 @@ const services: Service[] = [
     largeCarSurcharge: 0,
     features: [],
   },
-  { id: 'interieur-basis', name: 'Interieur Basis', description: '€50 · Opfrissen', basePrice: 50, largeCarSurcharge: 0, features: [] },
+  { id: 'interieur-basis', name: 'Interieur Basis', description: '€60 · Opfrissen', basePrice: 60, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-deluxe', name: 'Interieur Deluxe', description: '€130 · Uitgebreide dieptereiniging', basePrice: 130, largeCarSurcharge: 0, features: [] },
   { id: 'interieur-premium', name: 'Interieur Premium', description: '€220 · Meest complete interieurbehandeling', basePrice: 220, largeCarSurcharge: 0, features: [] },
   { id: 'polijsten-light', name: 'Light Polish – Basis correctie', description: 'Vanaf €300 · 1-staps correctie', basePrice: 0, fromPrice: 300, largeCarSurcharge: 0, features: [] },

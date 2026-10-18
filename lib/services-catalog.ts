@@ -8,7 +8,7 @@ export const interieurCatalog: Service[] = [
     name: 'Interieur Basis',
     description:
       'Bedoeld voor mensen die hun wagen goed hebben onderhouden en hun wagen eens willen laten opfrissen. LET OP: dit is geen dieptereiniging.',
-    basePrice: 50,
+    basePrice: 60,
     largeCarSurcharge: 0,
     features: [
       'Interieur stofzuigen',
@@ -59,7 +59,7 @@ export const exterieurCatalog: Service[] = [
     name: 'Exterieur Basis',
     description:
       'Houd je auto glanzend en in topvorm! Grondige wasbeurt, zorgvuldige reiniging van alle details en een stralende afwerking.',
-    basePrice: 60,
+    basePrice: 50,
     largeCarSurcharge: 0,
     popular: true,
     features: [
