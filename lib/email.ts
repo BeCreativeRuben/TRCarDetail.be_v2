@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { fleetSizeLabel, frequencyLabel, vehicleTypeLabel } from '@/lib/b2b-labels'
+import { singleMailbox } from '@/lib/single-mailbox'
 import { VAT_EXEMPT_LEGAL, VAT_EXEMPT_SHORT } from '@/lib/business'
 import { EMAIL_BRAND, emailWrapper } from '@/lib/email-layout'
 import { formatDutchDate, formatVehicleSize } from '@/lib/email-format'
@@ -194,7 +195,34 @@ function replyAddress(value: string): string {
 }
 
 export function mailFromAddress(smtpUser: string): string {
-  return `"T&R Car Detail" <${smtpUser}>`
+  const safeUser = smtpUser.replace(/[\r\n]/g, '').trim()
+  return `"T&R Car Detail" <${safeUser}>`
+}
+
+/** Business inbox only. Never taken from the request. */
+function adminNotificationAddress(): string {
+  const clean = (value: string | undefined) => value?.replace(/[\r\n]/g, '').trim() || ''
+  const recipient = clean(process.env.ADMIN_EMAIL) || clean(process.env.SMTP_USER)
+  if (!recipient) {
+    throw new Error('Admin notification recipient is not configured')
+  }
+  return recipient
+}
+
+async function deliver(mail: OutgoingMail, recipient: string): Promise<void> {
+  const envelopeFrom = process.env.SMTP_USER?.replace(/[\r\n]/g, '').trim()
+  if (!envelopeFrom) {
+    throw new Error('Email is not configured')
+  }
+  await transporter.sendMail({
+    from: mail.from,
+    to: recipient,
+    replyTo: mail.replyTo.replace(/[\r\n]/g, '').trim(),
+    subject: mail.subject.replace(/[\r\n]+/g, ' ').trim(),
+    text: mail.text,
+    html: mail.html,
+    envelope: { from: envelopeFrom, to: recipient },
+  })
 }
 
 function serviceLabel(serviceType: string): string {
@@ -704,19 +732,26 @@ export function renderTransactionalEmails(
 }
 
 export async function sendBookingConfirmation(booking: BookingPayload): Promise<void> {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  if (!smtpUser || !smtpPass) {
     console.log('Email not configured. Booking details:', booking)
     return
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER
-  const mails = bookingMessages(booking, { smtpUser: process.env.SMTP_USER, adminEmail })
+  const email = singleMailbox(booking.email)
+  if (!email) {
+    throw new Error('Invalid booking recipient')
+  }
 
-  await transporter.sendMail(mails.admin)
+  const adminEmail = adminNotificationAddress()
+  const mails = bookingMessages({ ...booking, email }, { smtpUser, adminEmail })
+
+  await deliver(mails.admin, adminEmail)
   console.log('Booking notification sent to admin:', adminEmail)
 
-  await transporter.sendMail(mails.customer)
-  console.log('Booking confirmation email sent to:', booking.email)
+  await deliver(mails.customer, email)
+  console.log('Booking confirmation email sent to:', email)
 }
 
 export async function sendReviewRequest(booking: {
@@ -726,59 +761,82 @@ export async function sendReviewRequest(booking: {
   preferredDate: string
   personalMessage?: string
 }): Promise<void> {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  if (!smtpUser || !smtpPass) {
     console.log('Email not configured. Review request skipped for:', booking.email)
-    return
+    throw new Error('Email is not configured')
   }
-  await transporter.sendMail({
-    from: mailFromAddress(process.env.SMTP_USER),
-    to: booking.email,
-    replyTo: CUSTOMER_REPLY_TO,
-    subject: REVIEW_MAIL_SUBJECT,
-    text: buildReviewRequestText({
-      customerName: booking.customerName,
-      serviceType: booking.serviceType,
-      appointmentDate: booking.preferredDate,
-      personalMessage: booking.personalMessage,
-    }),
-    html: buildReviewRequestHtml({
-      customerName: booking.customerName,
-      serviceType: booking.serviceType,
-      appointmentDate: booking.preferredDate,
-      personalMessage: booking.personalMessage,
-    }),
-  })
-  console.log('Review request email sent to:', booking.email)
+  const email = singleMailbox(booking.email)
+  if (!email) {
+    throw new Error('Invalid review recipient')
+  }
+  await deliver(
+    {
+      from: mailFromAddress(smtpUser),
+      to: email,
+      replyTo: CUSTOMER_REPLY_TO,
+      subject: REVIEW_MAIL_SUBJECT,
+      text: buildReviewRequestText({
+        customerName: booking.customerName,
+        serviceType: booking.serviceType,
+        appointmentDate: booking.preferredDate,
+        personalMessage: booking.personalMessage,
+      }),
+      html: buildReviewRequestHtml({
+        customerName: booking.customerName,
+        serviceType: booking.serviceType,
+        appointmentDate: booking.preferredDate,
+        personalMessage: booking.personalMessage,
+      }),
+    },
+    email
+  )
+  console.log('Review request email sent to:', email)
 }
 
 export async function sendContactNotification(contact: ContactPayload): Promise<void> {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  if (!smtpUser || !smtpPass) {
     console.log('Email not configured. Contact submission:', contact)
     return
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER
-  const mails = contactMessages(contact, { smtpUser: process.env.SMTP_USER, adminEmail })
+  const email = singleMailbox(contact.email)
+  if (!email) {
+    throw new Error('Invalid contact recipient')
+  }
 
-  await transporter.sendMail(mails.admin)
+  const adminEmail = adminNotificationAddress()
+  const mails = contactMessages({ ...contact, email }, { smtpUser, adminEmail })
+
+  await deliver(mails.admin, adminEmail)
   console.log('Contact notification email sent to admin')
 
-  await transporter.sendMail(mails.customer)
-  console.log('Auto-reply email sent to:', contact.email)
+  await deliver(mails.customer, email)
+  console.log('Auto-reply email sent to:', email)
 }
 
 export async function sendB2bQuoteNotification(quote: B2bQuotePayload): Promise<void> {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = process.env.SMTP_USER
+  const smtpPass = process.env.SMTP_PASS
+  if (!smtpUser || !smtpPass) {
     console.log('Email not configured. B2B quote:', quote)
     return
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER
-  const mails = b2bMessages(quote, { smtpUser: process.env.SMTP_USER, adminEmail })
+  const email = singleMailbox(quote.email)
+  if (!email) {
+    throw new Error('Invalid quote recipient')
+  }
 
-  await transporter.sendMail(mails.admin)
+  const adminEmail = adminNotificationAddress()
+  const mails = b2bMessages({ ...quote, email }, { smtpUser, adminEmail })
+
+  await deliver(mails.admin, adminEmail)
   console.log('B2B quote notification sent to admin')
 
-  await transporter.sendMail(mails.customer)
-  console.log('B2B quote auto-reply sent to:', quote.email)
+  await deliver(mails.customer, email)
+  console.log('B2B quote auto-reply sent to:', email)
 }

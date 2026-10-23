@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendB2bQuoteNotification, type B2bQuotePayload } from '@/lib/email'
+import { singleMailbox } from '@/lib/single-mailbox'
 
 const FLEET_SIZES = new Set(['1-5', '5-10', '11-25', '26-50', '50+'])
 
@@ -9,7 +10,8 @@ export async function POST(request: Request) {
 
     const companyName = typeof body.companyName === 'string' ? body.companyName.trim() : ''
     const contactName = typeof body.contactName === 'string' ? body.contactName.trim() : ''
-    const email = typeof body.email === 'string' ? body.email.trim() : ''
+    const rawEmail = typeof body.email === 'string' ? body.email.trim() : ''
+    const email = singleMailbox(body.email) ?? ''
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
     const vatNumber = typeof body.vatNumber === 'string' ? body.vatNumber.trim() : ''
     const location = typeof body.location === 'string' ? body.location.trim() : ''
@@ -18,7 +20,7 @@ export async function POST(request: Request) {
     const frequency = typeof body.frequency === 'string' ? body.frequency.trim() : ''
     const message = typeof body.message === 'string' ? body.message.trim() : ''
 
-    if (!companyName || !contactName || !email || !phone || !vatNumber || !location || !fleetSize) {
+    if (!companyName || !contactName || !rawEmail || !phone || !vatNumber || !location || !fleetSize) {
       return NextResponse.json({ error: 'Niet alle verplichte velden zijn ingevuld.' }, { status: 400 })
     }
 
@@ -26,7 +28,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Ongeldige vlootomvang.' }, { status: 400 })
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email) {
       return NextResponse.json({ error: 'Ongeldig e-mailadres.' }, { status: 400 })
     }
 

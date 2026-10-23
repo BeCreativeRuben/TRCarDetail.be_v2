@@ -6,6 +6,7 @@ import {
   getAdminSessionCookieOptions,
   isAdminConfigured,
 } from '@/lib/admin-auth'
+import { secretsEqual } from '@/lib/timing-safe-equal'
 
 export async function POST(request: Request) {
   if (!isAdminConfigured()) {
@@ -14,8 +15,9 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const password = typeof body.password === 'string' ? body.password : ''
-    if (!password || password !== process.env.ADMIN_PASSWORD) {
+    const password =
+      body && typeof body === 'object' && typeof body.password === 'string' ? body.password : ''
+    if (!password || !secretsEqual(password, process.env.ADMIN_PASSWORD)) {
       return NextResponse.json({ error: 'Onjuist wachtwoord.' }, { status: 401 })
     }
 

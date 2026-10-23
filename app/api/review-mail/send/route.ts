@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { isAdminConfigured } from '@/lib/admin-auth'
 import { sendReviewRequest } from '@/lib/email'
+import { singleMailbox } from '@/lib/single-mailbox'
+import { secretsEqual } from '@/lib/timing-safe-equal'
 
 export async function POST(request: Request) {
   try {
@@ -13,15 +15,24 @@ export async function POST(request: Request) {
       )
     }
 
-    if (body.password !== process.env.ADMIN_PASSWORD) {
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return NextResponse.json({ error: 'Onjuist wachtwoord.' }, { status: 401 })
+    }
+
+    const suppliedPassword = typeof body.password === 'string' ? body.password : ''
+    if (!secretsEqual(suppliedPassword, process.env.ADMIN_PASSWORD)) {
       return NextResponse.json({ error: 'Onjuist wachtwoord.' }, { status: 401 })
     }
 
     const customerName = typeof body.customerName === 'string' ? body.customerName.trim() : ''
-    const email = typeof body.email === 'string' ? body.email.trim() : ''
+    const email = singleMailbox(body.email) ?? ''
     const serviceType = typeof body.serviceType === 'string' ? body.serviceType.trim() : ''
     const appointmentDate = typeof body.appointmentDate === 'string' ? body.appointmentDate.trim() : ''
     const personalMessage = typeof body.personalMessage === 'string' ? body.personalMessage.trim() : ''
+
+    if (typeof body.email === 'string' && body.email.trim() && !email) {
+      return NextResponse.json({ error: 'Ongeldig e-mailadres.' }, { status: 400 })
+    }
 
     if (!customerName || !email || !serviceType) {
       return NextResponse.json(

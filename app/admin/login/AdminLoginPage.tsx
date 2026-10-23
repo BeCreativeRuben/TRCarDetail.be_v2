@@ -4,6 +4,13 @@ import { FormEvent, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Button from '@/components/ui/Button'
 
+function safeAdminNext(value: string | null): string {
+  const fallback = '/admin/bookings'
+  if (!value || !value.startsWith('/admin') || value.startsWith('//')) return fallback
+  if (value.includes('\\') || value.includes('://') || /[\u0000-\u001f\u007f]/.test(value)) return fallback
+  return value
+}
+
 export default function AdminLoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -26,7 +33,7 @@ export default function AdminLoginPage() {
         setError(data.error || 'Inloggen mislukt.')
         return
       }
-      const next = searchParams.get('next') || '/admin/bookings'
+      const next = safeAdminNext(searchParams.get('next'))
       router.push(next)
       router.refresh()
     } catch {

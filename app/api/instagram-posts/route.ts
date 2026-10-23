@@ -35,8 +35,9 @@ export async function GET() {
     const data = await res.json()
 
     if (!res.ok) {
+      console.error('Instagram API error')
       return NextResponse.json(
-        { shortcodes: [], error: data?.error?.message || 'Instagram API error' },
+        { shortcodes: [], error: 'Instagram API error' },
         { status: 200 }
       )
     }
@@ -47,9 +48,10 @@ export async function GET() {
       .filter((s: string | null): s is string => Boolean(s))
 
     return NextResponse.json({ shortcodes })
-  } catch (e) {
+  } catch {
+    console.error('Instagram posts request failed')
     return NextResponse.json(
-      { shortcodes: [], error: e instanceof Error ? e.message : 'Request failed' },
+      { shortcodes: [], error: 'Request failed' },
       { status: 200 }
     )
   }
