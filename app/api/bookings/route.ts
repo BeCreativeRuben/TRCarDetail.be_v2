@@ -5,6 +5,7 @@ import { normalizeSelectedExtras } from '@/lib/normalize-booking-extras'
 import { isPreferredDateBookable, getBlockedRangeReason } from '@/lib/booking-dates'
 import { isPreferredTimeValid } from '@/lib/booking-slots'
 import { largeCarSurchargeFor } from '@/lib/cars'
+import { singleMailbox } from '@/lib/single-mailbox'
 
 export async function POST(request: Request) {
   try {
@@ -44,6 +45,14 @@ export async function POST(request: Request) {
       )
     }
 
+    const customerEmail = singleMailbox(email)
+    if (!customerEmail) {
+      return NextResponse.json(
+        { error: 'Ongeldig e-mailadres.', field: 'email' },
+        { status: 400 }
+      )
+    }
+
     if (!isPreferredDateBookable(String(preferredDate))) {
       const blockedReason = getBlockedRangeReason(String(preferredDate))
       return NextResponse.json(
@@ -76,7 +85,7 @@ export async function POST(request: Request) {
 
     const payload = {
       customerName,
-      email,
+      email: customerEmail,
       phone,
       serviceType,
       vehicleInfo,

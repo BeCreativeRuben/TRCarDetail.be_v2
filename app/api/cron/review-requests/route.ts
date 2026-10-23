@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getBookingsForReviewRequest, markReviewRequestSent } from '@/lib/bookings-store'
 import { sendReviewRequest } from '@/lib/email'
+import { secretsEqual } from '@/lib/timing-safe-equal'
 
 /**
  * Vercel Cron: runs daily. Sends a review-request email to customers
@@ -10,8 +11,12 @@ import { sendReviewRequest } from '@/lib/email'
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET?.trim()
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secretsEqual(authHeader ?? '', `Bearer ${cronSecret}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    return NextResponse.json({ error: 'Email is not configured' }, { status: 503 })
   }
 
   try {
