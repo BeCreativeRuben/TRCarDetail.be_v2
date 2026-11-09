@@ -15,11 +15,13 @@ function BookingContent() {
         </PageHero>
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
-          <ProcessSection variant="compact" />
-          {/* Alleen het formulier leest de URL (useSearchParams); titel en uitleg blijven server-side gerenderd. */}
+          {/* Servicekeuze eerst boven de vouw; uitleg komt daarna. */}
           <Suspense fallback={<div className="py-16 text-center text-primary-dark opacity-70">Laden...</div>}>
             <BookingForm />
           </Suspense>
+          <div className="mt-12">
+            <ProcessSection variant="compact" />
+          </div>
         </div>
       </div>
     </div>
