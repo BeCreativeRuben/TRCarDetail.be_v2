@@ -65,6 +65,9 @@ const fromPriceInterieur = Math.min(...interieurCatalog.map((s) => s.basePrice))
 const fromPriceExterieur = Math.min(...exterieurCatalog.map((s) => s.basePrice))
 
 const DEFAULT_KEYWORDS = [
+  'cardetail',
+  'cardetail Vlaanderen',
+  'cardetail Sint-Niklaas',
   'car detailing Vlaanderen',
   'auto detailing Vlaanderen',
   'car detailing aan huis',
@@ -134,11 +137,11 @@ export function createPageMetadata({
 
 export const pageMetadata = {
   home: createPageMetadata({
-    title: 'Car Detailing aan Huis in Vlaanderen',
+    title: 'Cardetail aan huis in Vlaanderen',
     description:
-      `Car detailing aan huis in Vlaanderen vanuit Sint-Niklaas. Interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, polijsten en coating. Boek online in een paar stappen.`,
+      `T&R Car Detail: cardetail en car detailing aan huis vanuit Sint-Niklaas. Interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, polijsten en coating. Boek online.`,
     path: '',
-    keywords: ['car cleaning Vlaanderen', 'detailing aan huis België', 'car detailing boeken'],
+    keywords: ['cardetail', 'car cleaning Vlaanderen', 'detailing aan huis België', 'car detailing boeken'],
   }),
   about: createPageMetadata({
     title: 'Over Ons – Detailing in Vlaanderen',
@@ -147,11 +150,11 @@ export const pageMetadata = {
     path: '/about',
   }),
   services: createPageMetadata({
-    title: 'Diensten & Prijzen – Detailing Vlaanderen',
+    title: 'Cardetail diensten & prijzen',
     description:
-      `Alle pakketten en prijzen: interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, volledig pakket, polijsten, coating en extra's. Car detailing aan huis in Vlaanderen.`,
+      `Alle cardetail-pakketten en prijzen: interieur vanaf €${fromPriceInterieur}, exterieur vanaf €${fromPriceExterieur}, volledig pakket, polijsten en coating. Car detailing aan huis in Vlaanderen.`,
     path: '/services',
-    keywords: ['auto detailing pakketten', 'interieur detailing', 'exterieur detailing', 'car detailing boeken'],
+    keywords: ['cardetail', 'auto detailing pakketten', 'interieur detailing', 'exterieur detailing', 'car detailing boeken'],
   }),
   booking: createPageMetadata({
     title: 'Boek Uw Afspraak – Detailing aan Huis',

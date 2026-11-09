@@ -110,6 +110,7 @@ export default function BookingForm() {
   const [selectedExtraIds, setSelectedExtraIds] = useState<Set<string>>(() => new Set())
   const [showConfirm, setShowConfirm] = useState(false)
   const extrasRef = useRef<HTMLDivElement>(null)
+  const nextStepRef = useRef<HTMLDivElement>(null)
   const timeRef = useRef<HTMLDivElement>(null)
   const successRef = useRef<HTMLDivElement>(null)
   const travelFeeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -448,7 +449,8 @@ export default function BookingForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <p id="booking-service-label" className="block text-sm font-medium text-primary-dark mb-4">Selecteer Service *</p>
+        <p id="booking-service-label" className="block text-sm font-medium text-primary-dark mb-1">1. Kies uw service *</p>
+        <p className="text-sm text-primary-dark/70 mb-4">Klik op een pakket om verder te gaan met datum en gegevens.</p>
         <div className="space-y-6" role="group" aria-labelledby="booking-service-label">
           {SERVICE_GROUPS.map((group) => {
             const groupServices = services.filter((s) => group.ids.includes(s.id))
@@ -471,14 +473,21 @@ export default function BookingForm() {
                         }
                         setFormData({ ...formData, serviceType: service.id })
                         trackSelectService(service.id, 'form')
-                        setTimeout(() => extrasRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
+                        setTimeout(() => nextStepRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120)
                       }}
                       aria-pressed={formData.serviceType === service.id}
                       className={`p-4 rounded-lg border-2 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${formData.serviceType === service.id ? 'border-accent-red bg-accent-red bg-opacity-10 ring-2 ring-accent-red ring-offset-2' : 'border-primary-dark/20 bg-light hover:border-accent-red hover:bg-accent-red/5'}`}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                     >
-                      <h4 className="font-semibold text-primary-dark mb-1 text-sm md:text-base">{service.name}</h4>
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h4 className="font-semibold text-primary-dark text-sm md:text-base">{service.name}</h4>
+                        {formData.serviceType === service.id && (
+                          <span className="shrink-0 rounded-full bg-accent-red px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-dark">
+                            Gekozen
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-primary-dark opacity-70 mb-2 line-clamp-2">{service.description}</p>
                       <p className="text-accent-dark-red font-bold text-sm">
                         {service.id === 'full-custom'
@@ -515,6 +524,14 @@ export default function BookingForm() {
         />
       )}
 
+      {!formData.serviceType && (
+        <div className="rounded-xl border-2 border-dashed border-primary-dark/20 bg-white/70 p-5 text-center">
+          <p className="text-sm font-medium text-primary-dark">Kies eerst hierboven een service om datum, voertuig en contactgegevens in te vullen.</p>
+        </div>
+      )}
+
+      {formData.serviceType && (
+      <>
       <div
         id="booking-extras"
         ref={extrasRef}
@@ -553,8 +570,8 @@ export default function BookingForm() {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center min-h-[50vh] md:min-h-0 md:py-4">
-        <label className="block text-sm font-medium text-primary-dark mb-3 text-center">Selecteer Datum *</label>
+      <div ref={nextStepRef} className="flex flex-col justify-center min-h-[40vh] md:min-h-0 md:py-4 scroll-mt-24">
+        <label className="block text-sm font-medium text-primary-dark mb-3 text-center">2. Selecteer Datum *</label>
         <BookingCalendar
           selectedDate={formData.preferredDate || null}
           onDateSelect={(date) => {
@@ -819,6 +836,8 @@ export default function BookingForm() {
       <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Verzenden...' : 'Boeking Versturen'}
       </Button>
+      </>
+      )}
 
       <BookingConfirmModal
         open={showConfirm}
