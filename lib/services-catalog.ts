@@ -125,6 +125,25 @@ export const interieurPremiumDescription =
 
 export const fullServices: Service[] = [
   {
+    // WINTERACTIE (nov–feb). TODO T&R: prijs invullen in basePrice en pricePlaceholder weghalen.
+    id: 'full-winterklaar',
+    name: 'Winterklaar Pakket',
+    description:
+      'Zout, pekel en modder vreten aan je lak en velgen. Met het Winterklaar Pakket krijgt je auto een grondige decontaminatiewas en een beschermlaag voor de koude maanden, en frissen we het interieur op na natte schoenen en vuile matten. Aan huis, vanuit Sint-Niklaas.',
+    basePrice: 0,
+    pricePlaceholder: '€[PRIJS T&R]',
+    largeCarSurcharge: 0,
+    seasonalBadge: 'Winteractie t/m 28 februari',
+    features: [
+      'Decontaminatiewas: strooizout, remstof en vliegroest eraf',
+      'Velgen, banden en wielkasten grondig gereinigd',
+      'Lakbescherming (sealant) tegen zout en vuil',
+      'Rubbers behandeld tegen vastvriezen',
+      'Ruiten binnen en buiten streepvrij',
+      'Interieur opgefrist: stofzuigen, matten en zoutranden',
+    ],
+  },
+  {
     id: 'full-basis',
     name: 'Basis Pakket',
     description:
