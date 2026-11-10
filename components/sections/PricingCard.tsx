@@ -21,10 +21,15 @@ export default function PricingCard({ service, index }: PricingCardProps) {
       transition={{ duration: 0.5, delay: index * 0.08 }}
       className="h-full flex"
     >
-      <Card className={`overflow-hidden flex flex-col h-full min-h-full ${service.popular ? 'ring-2 ring-accent-red' : ''}`}>
+      <Card className={`overflow-hidden flex flex-col h-full min-h-full ${service.popular ? 'ring-2 ring-accent-red' : service.seasonalBadge ? 'ring-2 ring-accent-red' : ''}`}>
         {service.popular && (
           <div className="bg-accent-red text-primary-dark text-center py-2 text-sm font-semibold mb-4 -mx-6 -mt-6">
             Meest Populair
+          </div>
+        )}
+        {service.seasonalBadge && !service.popular && (
+          <div className="bg-accent-red text-primary-dark text-center py-2 text-sm font-semibold mb-4 -mx-6 -mt-6">
+            {service.seasonalBadge}
           </div>
         )}
         {service.comingSoon && (
@@ -36,6 +41,8 @@ export default function PricingCard({ service, index }: PricingCardProps) {
           <h2 className="text-2xl font-bold text-primary-dark mb-2">{service.name}</h2>
           {service.comingSoon ? (
             <span className="text-lg text-primary-dark opacity-70">Binnenkort beschikbaar</span>
+          ) : service.pricePlaceholder ? (
+            <span className="text-4xl font-bold text-accent-red">{service.pricePlaceholder}</span>
           ) : service.fromPrice && service.fromPrice > 0 && service.basePrice === 0 ? (
             <div className="flex items-baseline gap-2 flex-wrap">
               <span className="text-lg font-semibold text-primary-dark opacity-70">Vanaf</span>

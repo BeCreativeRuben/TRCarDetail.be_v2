@@ -9,6 +9,13 @@ export interface Service {
   features: string[]
   popular?: boolean
   comingSoon?: boolean
+  /** Seizoensactie: tekst in de badge bovenaan de kaart (bv. "Winteractie t/m 28 februari"). */
+  seasonalBadge?: string
+  /**
+   * PLACEHOLDER zolang T&R de prijs nog niet doorgaf: wordt i.p.v. een bedrag getoond.
+   * Verwijderen en basePrice invullen zodra de prijs bekend is.
+   */
+  pricePlaceholder?: string
 }
 
 export interface Booking {

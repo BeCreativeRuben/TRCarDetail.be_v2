@@ -36,6 +36,8 @@ import {
 } from '@/lib/custom-package-estimate'
 
 const services: Service[] = [
+  // WINTERACTIE: prijs volgt van T&R (placeholder, zie lib/services-catalog.ts)
+  { id: 'full-winterklaar', name: 'Winterklaar Pakket', description: 'Winteractie · decontaminatie + lakbescherming + interieur', basePrice: 0, pricePlaceholder: '€[PRIJS T&R]', largeCarSurcharge: 0, features: [] },
   { id: 'exterieur-basis', name: 'Exterieur Basis', description: '€50 · Glanzend en in topvorm', basePrice: 50, largeCarSurcharge: 0, features: [] },
   { id: 'exterieur-deluxe', name: 'Exterieur Deluxe', description: '€90 · Decontaminatie was', basePrice: 90, largeCarSurcharge: 0, features: [] },
   { id: 'full-basis', name: 'Basis Pakket', description: '€100 · Basis Pakket', basePrice: 100, largeCarSurcharge: 0, features: [] },
@@ -60,6 +62,7 @@ const services: Service[] = [
 ]
 
 const validServiceIds = [
+  'full-winterklaar',
   'exterieur-basis',
   'exterieur-deluxe',
   'full-basis',
@@ -77,7 +80,7 @@ const validServiceIds = [
 ]
 
 const SERVICE_GROUPS: { label: string; ids: string[] }[] = [
-  { label: 'Volledig pakket', ids: ['full-basis', 'full-deluxe', 'full-premium', 'full-custom'] },
+  { label: 'Volledig pakket', ids: ['full-winterklaar', 'full-basis', 'full-deluxe', 'full-premium', 'full-custom'] },
   { label: 'Exterieur', ids: ['exterieur-basis', 'exterieur-deluxe'] },
   { label: 'Interieur', ids: ['interieur-basis', 'interieur-deluxe', 'interieur-premium'] },
   { label: 'Polieren', ids: ['polijsten-light', 'polijsten-full'] },
@@ -414,7 +417,7 @@ export default function BookingForm() {
     servicePrice: baseServicePrice,
     largeCarSurcharge,
     isCustomPackage: formData.serviceType === 'full-custom',
-    isPrijsOpAanvraag: isPolish,
+    isPrijsOpAanvraag: isPolish || Boolean(selectedService?.pricePlaceholder),
     fromPrice: isPolish ? selectedService?.fromPrice : undefined,
     customLabel,
     selectedExtraIds,
@@ -492,6 +495,8 @@ export default function BookingForm() {
                       <p className="text-accent-dark-red font-bold text-sm">
                         {service.id === 'full-custom'
                           ? 'Richtprijs (indicatie)'
+                          : service.pricePlaceholder
+                            ? service.pricePlaceholder
                           : service.fromPrice && service.basePrice === 0
                             ? `Vanaf €${service.fromPrice}`
                             : service.basePrice > 0
